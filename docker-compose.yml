@@ -1,0 +1,85 @@
+version: "3"
+services:
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+
+      
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      
+    command: >
+      sh -c " 
+              python manage.py makemigrations &&
+              python manage.py migrate &&
+              python manage.py migrate django_celery_beat &&
+              python manage.py wait_for_db &&
+              python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DOCKER=true
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    
+    depends_on:
+      - db
+
+  redis:
+    image: redis:latest
+    restart: always
+    
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A Core worker --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - DOCKER=true
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    depends_on:
+      - db
+      - redis
+      - web
+    
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # command: celery -A Core beat -l info
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             celery -A Core beat -l info"
+    environment:
+      - DOCKER=true
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    depends_on:
+      - db
+      - redis
+      - web
+
+volumes:
+  db_data:
