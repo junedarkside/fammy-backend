@@ -114,3 +114,15 @@ This project is licensed under the MIT License.
 
 update all product progran tours: http://localhost:8000/wholesale/wholesalers/zego/sync-program-tours/
 update single programtour: http://localhost:8000/wholesale/wholesalers/zego/sync-single-program-tour/ZGARN-2504TK/
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODJjMDIyNDllNjkwNTA4N2JjMDliZWYiLCJpYXQiOjE3NTkxMDc1MDR9.2N2-1IAncKyPqABKEaqXh7rftB0wcoq6BnCgKAhoJB8
+
+
+echo "# fammy-backend" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:junedarkside/fammy-backend.git
+git push -u origin main
