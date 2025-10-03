@@ -48,7 +48,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: celery -A Core worker --loglevel=info
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate --check &&
+             celery -A Core worker --loglevel=info"
     volumes:
       - .:/app
     environment:
@@ -61,6 +64,7 @@ services:
       - db
       - redis
       - web
+    restart: always
     
   celery-beat:
     build:
@@ -69,6 +73,7 @@ services:
     # command: celery -A Core beat -l info
     command: >
       sh -c "python manage.py wait_for_db &&
+             python manage.py migrate --check &&
              celery -A Core beat -l info"
     environment:
       - DOCKER=true
@@ -80,6 +85,7 @@ services:
       - db
       - redis
       - web
+    restart: always
 
 volumes:
   db_data:

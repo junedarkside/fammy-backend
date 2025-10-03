@@ -331,6 +331,7 @@ class Provider(models.Model):
     token = models.CharField(max_length=512, blank=True, null=True, help_text="API token for the provider, if required. Store securely.")
     api_version = models.CharField(max_length=20, blank=True, null=True)
     extra = models.JSONField(blank=True, null=True)  # store provider-specific config
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -402,6 +403,11 @@ class ProgramTour(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.name} ({self.provider.code})"
+
+    @property
+    def needs_country_review(self):
+        """Flag for tours with extracted country_name but no valid Country FK"""
+        return bool(self.country_name and not self.country)
 
 
 class Period(models.Model):
@@ -499,13 +505,53 @@ class Itinerary(models.Model):
         return f"{self.program.code} - Day {self.day} ({self.provider.code})"
 
 
-class ProviderMeta(models.Model):
+class ProviderCategory(models.Model):
     """
-    Metadata for API sync (provider specific).
+    Dynamic categories for providers (e.g., Unique Inter destination categories).
+    Allows flexible category management without hardcoding in code.
     """
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name="metadata")
-    last_period_update = models.DateTimeField(blank=True, null=True)
-    fetched_at = models.DateTimeField(auto_now=True)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name="categories")
+    category_id = models.CharField(max_length=50, help_text="API category ID (e.g., '59' for Europe)")
+    name = models.CharField(max_length=100, help_text="Category name in English")
+    name_local = models.CharField(max_length=100, blank=True, help_text="Category name in local language")
+    is_active = models.BooleanField(default=True, help_text="Whether to sync this category")
+    priority = models.IntegerField(default=0, help_text="Higher priority categories sync first")
+    last_synced = models.DateTimeField(null=True, blank=True)
+    total_tours = models.IntegerField(default=0, help_text="Number of tours in this category")
+
+    class Meta:
+        unique_together = ("provider", "category_id")
+        ordering = ['-priority', 'name']
+        verbose_name_plural = "Provider Categories"
 
     def __str__(self):
-        return f"{self.provider.name} meta ({self.fetched_at})"
+        return f"{self.provider.code} - {self.name} ({self.category_id})"
+
+
+class RawVendorData(models.Model):
+    """
+    Store raw API responses before processing.
+    Allows for data preservation, debugging, and reprocessing without re-fetching.
+    """
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name="raw_data")
+    category = models.CharField(max_length=50, blank=True, help_text="Category ID if applicable")
+    external_id = models.CharField(max_length=255, help_text="Unique identifier from vendor API")
+    endpoint_type = models.CharField(max_length=50, default='departure', help_text="Type of data (tour, departure, etc.)")
+    raw_json = models.JSONField(help_text="Complete raw API response")
+
+    fetched_at = models.DateTimeField(auto_now_add=True)
+    processed = models.BooleanField(default=False, db_index=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
+    error_message = models.TextField(blank=True, help_text="Error message if processing failed")
+
+    class Meta:
+        unique_together = ("provider", "external_id", "category")
+        indexes = [
+            models.Index(fields=['provider', 'processed']),
+            models.Index(fields=['category', 'processed']),
+        ]
+        verbose_name_plural = "Raw Vendor Data"
+
+    def __str__(self):
+        status = "✓" if self.processed else "○"
+        return f"{status} {self.provider.code} - {self.external_id} (Cat: {self.category})"

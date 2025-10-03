@@ -2,7 +2,7 @@ import logging
 from typing import Dict, List, Optional, Any
 from django.db import transaction
 from django.utils import timezone
-from .models import Provider, Country, ProgramTour, Period, Flight, Itinerary, ProviderMeta
+from .models import Provider, Country, ProgramTour, Period, Flight, Itinerary
 from django.db.utils import IntegrityError, DataError # Import specific DB errors
 from django.conf import settings # For USE_TZ
 from .api_service import APIServiceFactory,ZegoAPIService
@@ -45,6 +45,8 @@ COUNTRY_NAME_TO_ISO = {
     'turkiye': 'TUR',
     'turkey': 'TUR',
     'france': 'FRA',
+    'hongkong': 'HKG',  # Common misspelling
+    'eastern europe': 'EEU',  # Custom region code
 
     # Additional Asian countries
     'thailand': 'THA',
@@ -901,3 +903,272 @@ class DataSyncService:
             logger.error(
                 f"Invalid datetime format from API: {api_latest_time}")
             return False
+
+
+# ==================== Unique Inter Wholesale Utilities ====================
+
+def clean_unique_inter_text(text: str) -> str:
+    """
+    Remove \r\n and extra whitespace from Unique Inter text fields.
+
+    Args:
+        text: Raw text from Unique Inter API
+
+    Returns:
+        Cleaned text with single spaces
+    """
+    if not text:
+        return ''
+    return ' '.join(text.replace('\r\n', ' ').split())
+
+
+def clean_unique_inter_price(price_str: str) -> int:
+    """
+    Convert string price/number to integer.
+    Handles formats: '89900', '0', '25+1' (extracts 25)
+
+    Args:
+        price_str: Price/number as string (e.g., '89900', '0', '25+1')
+
+    Returns:
+        Integer value, 0 if invalid
+    """
+    if not price_str:
+        return 0
+    try:
+        # Extract first number (before + or other separators)
+        cleaned = str(price_str).strip().split('+')[0].strip()
+        return int(float(cleaned))
+    except (ValueError, TypeError):
+        logger.warning(f"Invalid price format: {price_str}")
+        return 0
+
+
+def extract_duration_from_title(title: str) -> tuple:
+    """
+    Extract days/nights from tour title.
+
+    Args:
+        title: Tour title like 'Vietnam Danang 4 Days' or 'EASTERN EUROPE 9 DAYS'
+
+    Returns:
+        Tuple of (days, nights)
+    """
+    import re
+    days_match = re.search(r'(\d+)\s*days?', title, re.IGNORECASE)
+    if days_match:
+        days = int(days_match.group(1))
+        nights = days - 1 if days > 0 else 0
+        return days, nights
+    return 0, 0
+
+
+def extract_country_from_title(title: str) -> str:
+    """
+    Extract country/region name from Unique Inter title format.
+
+    Actual Format: PREFIX_TOURCODE_CountryName Details Days
+    Examples:
+        "UI_ASIA001A_Vietnam Danang..." → "Vietnam"
+        "UI_EU026_Eastern Europe 8 Days" → "Eastern Europe"
+        "Special Promo_UI_EU028_Swiss Italy 7 Days" → "Swiss Italy"
+
+    Args:
+        title: Tour title from Unique Inter API
+
+    Returns:
+        Extracted country/region name or empty string
+    """
+    import re
+
+    # Split by underscore to get parts
+    parts = title.split('_')
+
+    # Determine index of country part based on format
+    if title.startswith('Special'):
+        country_index = 3  # Special Promo_UI_TOURCODE_CountryName...
+    else:
+        country_index = 2  # UI_TOURCODE_CountryName...
+
+    # Validate we have enough parts
+    if len(parts) <= country_index:
+        return ''
+
+    country_part = parts[country_index].strip()
+
+    # Remove " X Days" suffix
+    if ' Days' in country_part:
+        country_part = country_part.split(' Days')[0].strip()
+
+    # Extract country name from the part
+    # "Vietnam Danang Hue Hoi-An..." → "Vietnam"
+    # "Eastern Europe" → "Eastern Europe"
+
+    words = country_part.split()
+    if not words:
+        return ''
+
+    # Take first word, or first two if it's a known compound region/country
+    first_word = words[0]
+    if len(words) >= 2:
+        second_word = words[1]
+        # Check if this looks like a multi-word region/country
+        second_word_lower = second_word.lower()
+        if second_word_lower in ['europe', 'asia', 'america', 'africa', 'kong', 'italy', 'zealand', 'korea']:
+            country_name = f"{first_word} {second_word}"
+        else:
+            country_name = first_word
+    else:
+        country_name = first_word
+
+    # Remove any trailing numbers
+    country_name = re.sub(r'\s+\d+\s*$', '', country_name).strip()
+
+    return country_name
+
+
+def get_or_create_country_for_unique_inter(provider: Provider, country_name: str) -> Optional[Country]:
+    """
+    Get or create Country from extracted name for Unique Inter.
+    Checks existing countries before creating new ones.
+    Only creates countries with valid ISO codes.
+
+    Args:
+        provider: Provider instance
+        country_name: Extracted country name from tour title
+
+    Returns:
+        Country object or None if country_name is empty or has no ISO mapping
+    """
+    if not country_name:
+        return None
+
+    normalized = normalize_country_name(country_name)
+    iso = get_iso_code(country_name)
+
+    # Skip if no ISO mapping (invalid country)
+    if not iso:
+        print(f"  ❌ SKIP: {country_name} (no ISO code)")
+        return None
+
+    country, created = Country.objects.get_or_create(
+        provider=provider,
+        provider_code=normalized,
+        defaults={
+            'name': country_name,
+            'normalized_name': normalized,
+            'iso_code': iso,
+        }
+    )
+
+    # Simple output: just show the country name
+    status = "✓ NEW" if created else "→ EXISTS"
+    print(f"  {status}: {country_name} (ISO: {iso})")
+
+    return country
+
+
+def map_unique_inter_tour_data(raw_data: dict) -> dict:
+    """
+    Map Unique Inter raw tour data to ProgramTour model format.
+
+    Args:
+        raw_data: Raw tour data from Unique Inter API
+
+    Returns:
+        Dict with ProgramTour fields
+    """
+    title = clean_unique_inter_text(raw_data.get('title', ''))
+    days, nights = extract_duration_from_title(title)
+    country_name = extract_country_from_title(title) or raw_data.get('Country', '')
+
+    # Build full URLs for documents
+    word_path = raw_data.get('word', '')
+    pdf_path = raw_data.get('pdf', '')
+    base_url = "https://uniqueinterwholesale.com"
+
+    return {
+        'external_id': str(raw_data.get('mainid', '')),
+        'code': str(raw_data.get('mainid', '')),  # Use mainid as code
+        'name': title,
+        'days': days,
+        'nights': nights,
+        'country_name': country_name,  # Extracted from title, fallback to Category
+        'airline_name': raw_data.get('Airline', ''),
+        'image_url': raw_data.get('jpg', ''),
+        'file_word': f"{base_url}/{word_path}" if word_path else '',
+        'file_pdf': f"{base_url}/{pdf_path}" if pdf_path else '',
+        'highlight': raw_data.get('story', ''),
+    }
+
+
+def map_unique_inter_period_data(raw_data: dict) -> dict:
+    """
+    Map Unique Inter raw period data to Period model format.
+
+    Args:
+        raw_data: Raw departure data from Unique Inter API
+
+    Returns:
+        Dict with Period fields including base_prices and end_prices
+    """
+    available = clean_unique_inter_price(raw_data.get('AVBL', '0'))
+
+    # Determine booking status based on availability
+    if available <= 0:
+        status = 'Soldout'
+    elif available <= 5:
+        status = 'Waitlist'
+    else:
+        status = 'Book'
+
+    # Build pricing structure (standardized to match Zego schema)
+    base_prices = {
+        'adult': clean_unique_inter_price(raw_data.get('Adult', '0')),
+        'child': clean_unique_inter_price(raw_data.get('Chd+B', '0')),
+        'child_nb': clean_unique_inter_price(raw_data.get('ChdNB', '0')),
+        'infant': 0,  # Not provided by Unique Inter
+        'single_bed': clean_unique_inter_price(raw_data.get('Single', '0')),
+        'twin_bed': 0,  # Not provided by Unique Inter
+        'double_bed': 0,  # Not provided by Unique Inter
+        'triple_bed': 0,  # Not provided by Unique Inter
+        'join_land': 0,  # Not provided by Unique Inter
+        'single_visa': 0,  # Not provided by Unique Inter
+        'group_visa': 0,  # Not provided by Unique Inter
+        'express_visa': 0,  # Not provided by Unique Inter
+    }
+
+    # Unique Inter doesn't have separate end prices, use base prices
+    end_prices = base_prices.copy()
+
+    # Build extra info for metadata
+    extra_info = {
+        'booking_count': clean_unique_inter_price(raw_data.get('Booking', '0')),
+        'deposit': clean_unique_inter_price(raw_data.get('Deposit', '0')),
+        'visa_fee': clean_unique_inter_price(raw_data.get('visa', '0')),
+        'commission': clean_unique_inter_price(raw_data.get('com', '0')),
+        'commission_plus': clean_unique_inter_price(raw_data.get('complus', '0')),
+        'promotion': raw_data.get('Pro', '0'),
+        'starting_price': clean_unique_inter_price(raw_data.get('startingprice', '0')),
+    }
+
+    return {
+        'external_id': str(raw_data.get('ProductCode', '')),
+        'code': raw_data.get('pid', ''),
+        'start_date': raw_data.get('Date'),
+        'end_date': raw_data.get('ENDDate'),
+        'airline_name': raw_data.get('Airline', ''),
+        'seats': available,
+        'booked': clean_unique_inter_price(raw_data.get('Booking', '0')),
+        'group_size': clean_unique_inter_price(raw_data.get('Size', '0')),
+        'status': status,
+        'promotion': raw_data.get('Pro', '0'),
+        'base_prices': base_prices,
+        'end_prices': end_prices,
+        'deposit': clean_unique_inter_price(raw_data.get('Deposit', '0')),
+        'deposit_end': clean_unique_inter_price(raw_data.get('Deposit', '0')),
+        'com_agent': clean_unique_inter_price(raw_data.get('com', '0')),
+        'com_agent_end': clean_unique_inter_price(raw_data.get('com', '0')),
+        'com_sale': clean_unique_inter_price(raw_data.get('complus', '0')),
+        'com_sale_end': clean_unique_inter_price(raw_data.get('complus', '0')),
+    }

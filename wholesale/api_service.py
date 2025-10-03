@@ -247,20 +247,33 @@ class APIServiceFactory:
     def create_service(provider) -> BaseAPIService:
         """Create API service based on provider configuration"""
 
-        # Check if provider has a specific service type
-        service_type = getattr(provider, 'api_service_type', 'auto')
-        if service_type == 'zego' or 'zego' in provider.name.lower():
+        # Check provider code for exact match first
+        provider_code = provider.code.lower()
+
+        if provider_code == 'zego' or 'zego' in provider.name.lower():
             return ZegoAPIService(provider)
-        elif service_type == 'generic':
-            # Check if provider has custom endpoint configuration
-            endpoint_config = getattr(provider, 'endpoint_config', None)
-            return GenericAPIService(provider, endpoint_config)
+        elif provider_code == 'unique_inter' or 'unique' in provider_code:
+            return UniqueInterAPIService(provider)
+        elif provider_code == 'tourism_thailand':
+            return TourismThailandAPIService(provider)
+        elif provider_code == 'europe_packages':
+            return EuropePackagesAPIService(provider)
         else:
-            # Auto-detect based on API base URL
-            if provider.base_url and 'zegoapi.com' in provider.base_url:
-                return ZegoAPIService(provider)
+            # Check if provider has a specific service type
+            service_type = getattr(provider, 'api_service_type', 'auto')
+            if service_type == 'generic':
+                # Check if provider has custom endpoint configuration
+                endpoint_config = getattr(provider, 'endpoint_config', None)
+                return GenericAPIService(provider, endpoint_config)
             else:
-                return GenericAPIService(provider)
+                # Auto-detect based on API base URL
+                if provider.base_url and 'zegoapi.com' in provider.base_url:
+                    return ZegoAPIService(provider)
+                elif provider.base_url and 'uniqueinterwholesale.com' in provider.base_url:
+                    return UniqueInterAPIService(provider)
+                else:
+                    logger.warning(f"No specific API service for '{provider.code}', using GenericAPIService")
+                    return GenericAPIService(provider)
 
 
 # Example usage for different wholesaler types:
@@ -303,3 +316,152 @@ class EuropePackagesAPIService(BaseAPIService):
     def get_program_tour_details(self, product_id: str) -> Optional[Dict]:
         # Example: This API might use /v3/tours/{product_id}
         return self._make_request(f"v3/tours/{product_id}")
+
+
+class UniqueInterAPIService(BaseAPIService):
+    """
+    API Service for Unique Inter Wholesale.
+    Uses category-based endpoints where each category represents a destination region.
+    """
+
+    CATEGORY_MAPPING = {
+        '59': 'Europe',
+        '60': 'Russia',
+        '61': 'UK',
+        '62': 'Hong Kong',
+        '63': 'Special Promotion Europe',
+        '64': 'Vietnam',
+    }
+
+    def __init__(self, provider):
+        # Override base_url since Unique Inter uses a specific domain
+        if not provider.base_url or 'uniqueinterwholesale.com' not in provider.base_url:
+            provider.base_url = "https://uniqueinterwholesale.com"
+        super().__init__(provider)
+
+        # Get user email from provider.extra
+        self.user_email = provider.extra.get('user_email', '') if provider.extra else ''
+        if not self.user_email:
+            logger.warning(f"No user_email configured for {provider.name} in provider.extra")
+
+    def _setup_authentication(self):
+        """Unique Inter uses query parameter authentication, not headers"""
+        # No header-based authentication needed
+        pass
+
+    def get_tour_packages_by_category(self, category_id: str) -> Optional[List[Dict]]:
+        """
+        Fetch tour packages for a specific category.
+
+        Args:
+            category_id: The category ID (e.g., '59' for Europe, '64' for Vietnam)
+
+        Returns:
+            List of tour packages or None if request fails
+        """
+        if not self.user_email:
+            logger.error(f"Cannot fetch tours: user_email not configured in {self.provider.name}.extra")
+            return None
+
+        params = {
+            'id': category_id,
+            'user': self.user_email
+        }
+
+        logger.info(f"Fetching category {category_id} ({self.CATEGORY_MAPPING.get(category_id, 'Unknown')}) for {self.provider.name}")
+        return self._make_request('apiweb.php', params=params)
+
+    def get_countries(self) -> Optional[List[Dict]]:
+        """
+        Return category-based 'countries' for Unique Inter.
+        Note: Unique Inter doesn't have a dedicated countries endpoint.
+        Categories represent destination regions instead.
+        """
+        return [
+            {'code': cat_id, 'name': cat_name}
+            for cat_id, cat_name in self.CATEGORY_MAPPING.items()
+        ]
+
+    def get_program_tours(self) -> Optional[List[Dict]]:
+        """
+        Fetch tours from all active categories configured for this provider.
+        Queries the ProviderCategory model to get active categories dynamically.
+        """
+        from wholesale.models import ProviderCategory
+
+        all_tours = []
+
+        # Get active categories from database
+        active_categories = ProviderCategory.objects.filter(
+            provider=self.provider,
+            is_active=True
+        ).order_by('-priority', 'name')
+
+        if not active_categories.exists():
+            logger.warning(f"No active categories configured for {self.provider.name}")
+            return None
+
+        for category in active_categories:
+            logger.info(f"Fetching tours for category: {category.name} ({category.category_id})")
+            tours = self.get_tour_packages_by_category(category.category_id)
+
+            if tours:
+                # Add category metadata to each tour for tracking
+                for tour in tours:
+                    tour['_category_id'] = category.category_id
+                    tour['_category_name'] = category.name
+                all_tours.extend(tours)
+            else:
+                logger.warning(f"No tours returned for category {category.category_id}")
+
+        return all_tours if all_tours else None
+
+    def get_program_tour_details(self, product_code: str) -> Optional[Dict]:
+        """
+        Unique Inter doesn't have a separate detail endpoint.
+        All tour information is included in the list response.
+        """
+        logger.info("Unique Inter API doesn't support separate detail endpoint")
+        return None
+
+    def discover_categories(self) -> List[Dict]:
+        """
+        Auto-discover available categories by testing known category IDs.
+        Returns categories that have active tour data.
+
+        Returns:
+            List of dicts with category_id, name, name_local, and tour_count
+        """
+        if not self.user_email:
+            logger.error("Cannot discover categories: user_email not configured")
+            return []
+
+        available_categories = []
+
+        # Known category mappings with Thai translations
+        known_categories = {
+            '59': {'name': 'Europe Tours', 'name_th': 'ทัวร์เส้นทางยุโรป'},
+            '60': {'name': 'Russia Tours', 'name_th': 'ทัวร์เส้นทางรัสเซีย'},
+            '61': {'name': 'UK Tours', 'name_th': 'ทัวร์อังกฤษ สหราชอาณาจักร (UK)'},
+            '62': {'name': 'Hong Kong Tours', 'name_th': 'ทัวร์เส้นทางฮ่องกง'},
+            '63': {'name': 'Special Promotion Europe', 'name_th': 'Special Promotion ยุโรป'},
+            '64': {'name': 'Vietnam Tours', 'name_th': 'ทัวร์เส้นทางเวียดนาม'},
+        }
+
+        logger.info(f"Discovering active categories for {self.provider.name}...")
+
+        for cat_id, cat_info in known_categories.items():
+            tours = self.get_tour_packages_by_category(cat_id)
+
+            if tours and isinstance(tours, list) and len(tours) > 0:
+                available_categories.append({
+                    'category_id': cat_id,
+                    'name': cat_info['name'],
+                    'name_local': cat_info['name_th'],
+                    'tour_count': len(tours)
+                })
+                logger.info(f"✓ Category {cat_id} ({cat_info['name']}): {len(tours)} tours")
+            else:
+                logger.info(f"✗ Category {cat_id} ({cat_info['name']}): No active tours")
+
+        return available_categories

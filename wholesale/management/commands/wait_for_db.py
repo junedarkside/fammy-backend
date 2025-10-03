@@ -12,6 +12,8 @@ class Command(BaseCommand):
         while not db_conn:
             try:
                 db_conn = connections['default']
+                # Actually test the connection by executing a query
+                db_conn.cursor()
                 self.stdout.write(self.style.SUCCESS("Database is ready!"))
                 break
             except OperationalError:
