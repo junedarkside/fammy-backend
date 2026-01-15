@@ -396,10 +396,20 @@ class ProgramTour(models.Model):
     total_meals = models.PositiveIntegerField(blank=True, null=True)
     locations = models.JSONField(blank=True, null=True)
 
+    # Data completeness flags
+    has_flights = models.BooleanField(default=True)
+    has_itineraries = models.BooleanField(default=True)
+    has_full_pricing = models.BooleanField(default=True)
+    data_quality_score = models.IntegerField(default=100)
+
     last_synced = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("provider", "external_id")
+        indexes = [
+            models.Index(fields=['data_quality_score']),
+            models.Index(fields=['has_flights', 'has_itineraries']),
+        ]
 
     def __str__(self):
         return f"{self.code} - {self.name} ({self.provider.code})"

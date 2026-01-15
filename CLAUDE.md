@@ -1,298 +1,292 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+AI assistant instructions for this B2B Travel Platform codebase.
 
-## Development Commands
+> **Comprehensive documentation**: [`docs/`](docs/) - All project documentation lives here
+> **Project overview**: [`readme.md`](readme.md) - Quick project introduction
 
-### Local Development
+## Quick Reference
+
+**What this project is**: B2B platform connecting Thai travel agencies with wholesale tour operators via automated data synchronization.
+
+**Key technologies**: Django, PostgreSQL, Redis, Celery, Docker Compose
+
+**Core apps**:
+- `Core/` - Project config, settings, URLs, Celery
+- `Accounts/` - Email-based user authentication
+- `tours/` - Tour management (categories, locations, dates)
+- `wholesale/` - Provider integration and API synchronization
+- `management/` - Custom Django management commands
+
+**Quick start**:
 ```bash
-# Activate virtual environment
-source venv/bin/activate
-
-# Run migrations and start development server
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
-
-# Create superuser
-python manage.py createsuperuser
-
-# Create new Django app
-python manage.py startapp [appname]
+docker-compose up -d                    # Start all services
+docker-compose exec web python manage.py sync_zego    # Sync Zego data
+docker-compose exec web python manage.py sync_unique_inter  # Sync Unique Inter
+docker-compose exec web python manage.py sync_checkingroup  # Sync CheckIn Group
+docker-compose logs -f web              # View logs
 ```
 
-### Docker Development
-```bash
-# Start local development with Docker
-docker-compose -f docker-compose.yml up
+## Development Policies
 
-# Create superuser in Docker environment
-docker-compose -f docker-compose.yml run --rm web sh -c "python manage.py createsuperuser"
+### Code Consistency (MANDATORY)
 
-# View Docker logs
-docker-compose -f docker-compose.yml logs
+1. **ALWAYS search before writing** - Find existing patterns to copy
+2. **Match existing style exactly** - Naming, formatting, structure
+3. **Reuse existing code** - Don't reinvent utilities/helpers
+4. **Keep it simple** - YAGNI principle, no over-engineering
+5. **Modular over monolithic** - Small, focused functions
 
-# Production mode (with RDS)
-docker-compose -f docker-compose-rds.yml up
-```
+**Naming conventions**:
+- Classes: `CapitalizedWords`
+- Functions/variables: `lowercase_with_underscores`
+- Constants: `UPPERCASE_WITH_UNDERSCORES`
+- Private: `_leading_underscore`
 
-### Data Synchronization
+**Before writing code checklist**:
+- [ ] Searched codebase for similar implementations?
+- [ ] Found existing patterns to follow?
+- [ ] Matched existing naming conventions?
+- [ ] Used existing utilities/helpers?
+- [ ] Followed existing file structure?
 
-#### Zego Data Sync
-```bash
-# Sync all data from active wholesalers
-python manage.py sync_zego_data
+### Code Quality Standards
 
-# Sync specific wholesaler
-python manage.py sync_zego_data --wholesaler "WholesalerName"
-
-# Sync only countries or tours
-python manage.py sync_zego_data --countries-only
-python manage.py sync_zego_data --tours-only
-
-# Check for updates before syncing
-python manage.py sync_zego_data --check-updates
-```
-
-#### Unique Inter Wholesale Sync
-```bash
-# 1. First time setup: Discover and sync categories
-python manage.py sync_unique_inter_categories
-
-# 2. Full sync (fetch raw data + process into models)
-python manage.py sync_unique_inter
-
-# 3. Fetch only (store raw data without processing)
-python manage.py sync_unique_inter --fetch-only
-
-# 4. Process only (clean and map existing raw data)
-python manage.py sync_unique_inter --process-only
-
-# 5. Sync specific category only (e.g., category 64 = Vietnam)
-python manage.py sync_unique_inter --category 64
-
-# 6. Combine options (fetch only for specific category)
-python manage.py sync_unique_inter --fetch-only --category 59
-```
-
-## Project Architecture
-
-### Core Structure
-- **Core/**: Django project configuration with settings, URLs, Celery setup
-- **Accounts/**: Custom user authentication using email-based login
-- **tours/**: Travel tour management with categories, types, locations, and flash sales
-- **wholesale/**: Wholesale travel provider integration with external API synchronization
-- **management/**: Custom Django management commands for data operations
-
-### Database Configuration
-The project uses conditional database settings:
-- **Docker mode** (`DOCKER=true`): PostgreSQL with configurable credentials
-- **Local development**: SQLite3 database
-- Configuration managed through environment variables with `python-decouple`
-
-### Key Models and Relationships
-
-#### Tours App
-- **Tour**: Main tour entity with operator, locations, categories, and travel dates
-- **TravelDate**: Specific departure dates with pricing and availability
-- **FlashSale**: Time-based discount system for travel dates
-- **Location, Country, Airline, Operator**: Supporting entities for tour organization
-
-#### Wholesale App
-- **Provider**: External API providers (e.g., Zego, Unique Inter) with authentication tokens and configuration
-- **ProviderCategory**: Dynamic category management for providers (e.g., destination regions)
-- **RawVendorData**: Raw API response storage for data preservation and debugging
-- **ProgramTour**: Synchronized tour programs from providers with detailed itineraries
-- **Period**: Specific tour periods with pricing, availability, and booking status
-- **Flight, Itinerary**: Detailed tour components including flight schedules and daily activities
-- **Country, Location**: Geographical entities linked to providers
-
-### Celery Configuration
-- **Redis**: Used as message broker and result backend
-- **Celery Beat**: Scheduled task management using django-celery-beat
-- **Workers**: Background task processing for data synchronization
-- Environment-aware Redis connection (Docker vs local)
-
-### API Integration
-- RESTful endpoints for tour management and wholesale data
-- External API synchronization with wholesaler systems
-- Custom management commands for bulk data operations
-- Django REST Framework for API serialization
-
-### Environment Configuration
-Key environment variables:
-- `DOCKER`: Boolean flag for deployment mode
-- `DB_*`: Database connection parameters
-- `SECRET_KEY`, `DEBUG`: Standard Django settings
-- `CELERY_BROKER_URL`, `CACHE_LOCATION_URL`: Redis configuration
-- `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`: Security settings
-
-### Data Synchronization Pattern
-The wholesale app implements a comprehensive data sync service that:
-1. Fetches data from external provider APIs
-2. Synchronizes countries, locations, and program tours
-3. Maintains relationship integrity between entities
-4. Provides status tracking and error handling
-5. Supports incremental updates and full synchronization
-
-#### Two-Stage Sync Pattern (Unique Inter)
-For vendors with complex data formats, the system uses a two-stage approach:
-1. **Fetch Stage**: Store raw API responses in `RawVendorData` model
-2. **Process Stage**: Clean, validate, and map raw data to `ProgramTour` and `Period` models
-
-Benefits:
-- Preserves original API responses for debugging
-- Allows reprocessing without re-fetching
-- Enables data validation and error tracking
-- Supports iterative data cleaning improvements
-
-### Provider Configuration
-
-#### Zego Provider Setup
+**Import organization**:
 ```python
-Provider.objects.create(
-    name='Zego Travel',
-    code='zego',
-    base_url='https://zegoapi.com',
-    token='your-api-token',
-)
+# 1. Standard library
+import os
+from datetime import datetime
+
+# 2. Third-party
+from django.db import models
+from rest_framework import serializers
+
+# 3. Local
+from .models import Tour
+from .services import TourService
 ```
 
-#### Unique Inter Provider Setup
+**File structure** (Django apps):
+```
+models.py         # Database models
+serializers.py    # DRF serializers
+views.py          # API views (ViewSets)
+urls.py           # URL routing
+admin.py          # Django admin config
+services.py       # Business logic (complex operations)
+utils.py          # Helper functions
+```
+
+**Required practices**:
+- Type hints on all function signatures
+- Google-style docstrings for public methods
+- Max line length: 100 characters
+- Validate syntax: `python manage.py check`
+
+### Safety Requirements
+
+- **Backward compatibility** - Don't break existing functionality
+- **Production safety** - Test before deploying
+- **Migration safety** - Use Django migrations properly
+- **Error handling** - Handle edge cases and validation
+
+## Provider Integration
+
+### Current Providers
+
+**Zego** (API-based):
+- Command: `python manage.py sync_zego`
+- Auth: API token
+- Data: Tours, countries, pricing, availability
+
+**Unique Inter** (API-based, departure-centric):
+- Commands:
+  - `python manage.py sync_unique_inter_categories` (discover categories)
+  - `python manage.py sync_unique_inter` (full sync)
+  - `python manage.py sync_unique_inter --fetch-only` (fetch raw data)
+  - `python manage.py sync_unique_inter --process-only` (process raw data)
+- Auth: Email-based
+- Categories: 59 (Europe), 60 (Russia), 61 (UK), 62 (HK), 63 (Promo), 64 (Vietnam)
+
+**CheckIn Group** (API-based, Thai B2B wholesaler):
+- Command: `python manage.py sync_checkingroup`
+- Auth: None (public API)
+- Data: Tours, periods, complete pricing, availability, commissions
+- Data Quality: 85/100 (high quality)
+
+**Go365** (Manual entry):
+- Command: `python manage.py sync_go365`
+- Data entry via Django Admin or CSV import
+
+### Provider Adapter Pattern
+
 ```python
-Provider.objects.create(
-    name='Unique Inter Wholesale',
-    code='unique_inter',
-    base_url='https://uniqueinterwholesale.com',
-    extra={'user_email': 'your-email@example.com'}
-)
+class BaseAPIService:
+    def fetch_countries()     # Fetch country/destination data
+    def fetch_tours()         # Fetch tour packages
+    def fetch_availability()  # Fetch real-time availability
+    def authenticate()        # Handle vendor authentication
+
+# Vendor implementations: ZegoAdapter, UniqueInterAdapter, CheckInGroupAdapter, Go365Adapter
 ```
 
-**Important**: After creating Unique Inter provider, run `python manage.py sync_unique_inter_categories` to discover and configure available categories.
+**Adding new vendors**:
+1. Create adapter class implementing `BaseAPIService`
+2. Implement vendor-specific auth and data mapping
+3. Create management command for data sync
+4. Configure provider in Django Admin
+5. Set up Celery Beat scheduled tasks
 
-### Category Management (Unique Inter)
-Categories are managed via Django Admin or can be auto-discovered:
+### Data Normalization
 
-1. **Auto-discover**: `python manage.py sync_unique_inter_categories`
-2. **Manage in Admin**: Navigate to `Wholesale > Provider Categories`
-   - Enable/disable categories with `is_active` flag
-   - Set sync priority (higher priority = syncs first)
-   - View tour counts per category
-   - Add custom categories manually
+All providers normalize to:
+- **Countries**: ISO standard codes
+- **Pricing**: THB (Thai Baht)
+- **Dates**: YYYY-MM-DD format
+- **Categories**: Internal category system
+- **Commissions**: Standard agent/sales structure
 
-Known Categories:
-- `59` - Europe Tours
-- `60` - Russia Tours
-- `61` - UK Tours
-- `62` - Hong Kong Tours
-- `63` - Special Promotion Europe
-- `64` - Vietnam Tours
+## Docker Development
 
-### Unique Inter Data Mapping
+### Services
 
-The Unique Inter API is **departure-centric** (not tour-centric). Each API record represents a specific departure date for a tour program.
+| Service | Purpose | Ports |
+|---------|---------|-------|
+| db | PostgreSQL 13 | 5432 (internal) |
+| web | Django app | 8000 |
+| redis | Message broker | 6379 (internal) |
+| celery-worker | Background tasks | - |
+| celery-beat | Scheduled tasks | - |
 
-#### API Response Structure
-```json
-{
-  "mainid": "2680",           // Tour program ID
-  "ProductCode": "58543",     // Departure ID
-  "title": "Tour Name 8 Days",
-  "Country": "Category Name", // NOT actual country - it's the category
-  "Airline": "Emirates",
-  "jpg": "image_url",
-  "word": "path/to/doc",
-  "pdf": "path/to/pdf",
-  "Date": "2025-10-21",       // Departure date
-  "ENDDate": "2025-10-28",    // Return date
-  "Adult": "65900",
-  "Single": "15000",
-  "Booking": "16",            // Number booked
-  "AVBL": "0",                // Available seats
-  "com": "3000",              // Commission
-  "Deposit": "30000"
-}
+### Common Commands
+
+```bash
+# Start/stop
+docker-compose up -d                    # Start all services
+docker-compose down                     # Stop services
+docker-compose down -v                  # Stop and delete database
+
+# Management
+docker-compose exec web python manage.py createsuperuser
+docker-compose exec web python manage.py makemigrations
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py shell
+
+# Logs
+docker-compose logs -f                  # All services
+docker-compose logs -f web              # Specific service
+docker-compose logs --tail=100 web      # Last 100 lines
+
+# Database
+docker-compose exec db psql -U myuser -d mydatabase
+docker-compose exec db pg_dump -U myuser mydatabase > backup.sql
+docker-compose exec -T db psql -U myuser mydatabase < backup.sql
+
+# Rebuild
+docker-compose up --build               # Rebuild containers
 ```
 
-#### Model Mapping
+### Troubleshooting
 
-**ProgramTour** (Tour Programs):
-| API Field | Model Field | Notes |
-|-----------|-------------|-------|
-| `mainid` | `external_id`, `code` | Unique tour program ID |
-| `title` | `name`, `days`, `nights` | Duration extracted from title |
-| `Airline` | `airline_name` | Airline name only (no code) |
-| `jpg` | `image_url` | Tour image |
-| `word` | `file_word` | Word document URL |
-| `pdf` | `file_pdf` | PDF document URL |
-| `story` | `highlight` | Tour highlights/period info |
+**Database connection**: Ensure `DB_HOST=db` in `.env` (not localhost)
 
-**Period** (Departure Dates):
-| API Field | Model Field | Notes |
-|-----------|-------------|-------|
-| `ProductCode` | `external_id` | Unique departure ID |
-| `pid` | `code` | Period identifier |
-| `Date` | `start_date` | Departure date |
-| `ENDDate` | `end_date` | Return date |
-| `Airline` | `airline_name` | Airline for this departure |
-| `AVBL` | `seats` | Available seats |
-| `Booking` | `booked` | Number of bookings |
-| `Size` | `group_size` | Total group size |
-| `Adult` | `base_prices['adult']` | Adult price |
-| `Single` | `base_prices['single']` | Single supplement |
-| `Deposit` | `deposit`, `deposit_end` | Deposit amount |
-| `com` | `com_agent`, `com_agent_end` | Agent commission |
-| `complus` | `com_sale`, `com_sale_end` | Sales commission |
-| `Pro` | `promotion` | Promotion flag |
+**Code not reflecting**: Check volume mount with `docker-compose exec web ls -la /app`
 
-**NOT Mapped** (Data Not Available in API):
-- ❌ **Country Model**: API `Country` field is category name, not actual country
-- ❌ **Flight Model**: No flight schedules (airline name only)
-- ❌ **Itinerary Model**: No day-by-day breakdown
+**Celery issues**:
+```bash
+docker-compose restart celery-worker
+docker-compose logs -f celery-worker
+```
 
-**Important**: Flight schedules and detailed itineraries exist only in the PDF/Word documents, not in the API response.
+**Complete reset** (last resort):
+```bash
+docker-compose down -v
+docker-compose up
+```
 
 ## Data Quality Management
 
-### Country Validation for Unique Inter
+### Country Validation (Unique Inter)
 
-Due to inconsistent title formats in Unique Inter API data, some tours may have invalid country names extracted (e.g., "Christmas", "Winter", "AURORA" instead of actual countries).
+Inconsistent API data may extract invalid country names ("Christmas", "Winter" vs actual countries).
 
-#### Identifying Invalid Country Data
-
-**Via Command Line:**
+**Audit**:
 ```bash
-# Audit all tours with invalid country names
-python manage.py audit_tour_countries
-
-# Audit specific provider only
-python manage.py audit_tour_countries --provider-code unique_inter
+docker-compose exec web python manage.py audit_tour_countries
 ```
 
-**Via Django Admin:**
-1. Navigate to **Wholesale > Program Tours**
-2. Use **Country Status** filter → Select "Needs Review (extracted but no FK)"
-3. Tours with invalid country names will be shown with orange ⚠ indicator
+**Fix**: Manually update via Django Admin or re-process with improved extraction
 
-#### Fixing Invalid Country Data
-
-**Manual Fix (Recommended for small datasets):**
-1. Open tour in Django Admin
-2. Select correct Country from dropdown (or leave empty if unknown)
-3. Save changes
-
-**Automatic Fix (Re-sync after improving extraction):**
-```bash
-# Re-process existing raw data with improved extraction
-python manage.py sync_unique_inter --process-only
-```
-
-**Visual Indicators in Admin:**
+**Admin indicators**:
 - ✓ Green: Valid country (has Country FK)
-- ⚠ Orange: Needs review (extracted name but no valid Country FK)
-- ✗ Red: Missing (no country data)
+- ⚠ Orange: Needs review (extracted but no FK)
+- ✗ Red: Missing data
 
-**Note**: Tours will function normally even without valid country data. The Country field is optional and used primarily for filtering and organization.
+## Environment Variables
 
-### Custom User Model
-Uses `Accounts.Account` as the custom user model for email-based authentication instead of username-based login.
+**Required** (.env file):
+```bash
+DOCKER=true                          # Enable PostgreSQL
+SECRET_KEY=your-secret-key
+DB_HOST=db
+DB_NAME=mydatabase
+DB_USER=myuser
+DB_PASS=mypassword
+```
+
+**Optional**:
+```bash
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+WS_API_ENDPOINT_01_URL=https://www.zegoapi.com/v1.5
+WS_API_ENDPOINT_01_TOKEN=your-token
+```
+
+## Documentation Structure
+
+All documentation in [`docs/`](docs/):
+
+- `docs/README.md` - Documentation index
+- `docs/getting-started/` - Quick start, project overview
+- `docs/development/` - Commands reference, policies
+- `docs/api/` - API endpoints documentation
+- `docs/provider-integration/` - Provider adapter guides
+- `docs/architecture/` - System design, database
+- `docs/reference/` - Travel industry guide
+
+**Before creating docs**:
+1. Search existing docs with `grep -r "keyword" docs/`
+2. Update existing docs rather than create duplicates
+3. Add to `docs/README.md` index
+4. Use consistent formatting
+
+**DO NOT create documentation in project root** - use `docs/` directory.
+
+## Key Models
+
+**Tours app**: Tour, TravelDate, FlashSale, Location, Country, Airline, Operator
+
+**Wholesale app**: Provider, ProviderCategory, RawVendorData, ProgramTour, Period, Flight, Itinerary, Country, Location
+
+## Custom User Model
+
+Uses `Accounts.Account` - email-based authentication (not username).
+
+## Architecture
+
+```
+Tour Operators (APIs)
+    ↓
+Provider Adapters (BaseAPIService implementations)
+    ↓
+Django Models (ProgramTour, Period, Country, Provider)
+    ↓
+Travel Agencies (Thai B2B Portal)
+```
+
+**Provider Adapter Benefits**:
+- Easy addition of new operators
+- Consistent data processing
+- Isolated provider logic
+- Simplified testing

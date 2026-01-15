@@ -70,7 +70,7 @@ class Airline(models.Model):
 
 class Tour(models.Model):
     operator = models.ForeignKey(Operator, on_delete=models.SET_NULL, null=True, blank=True)
-    slug = models.SlugField(unique=True,blank=True)
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
     highlight = models.TextField()

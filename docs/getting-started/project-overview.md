@@ -110,15 +110,10 @@ This platform serves the B2B travel industry by:
 
 ## Documentation
 
-> **Comprehensive documentation is available in the [docs/](./docs/) directory.**
-
-- **[docs/README.md](./docs/README.md)** - Documentation index and navigation
-- **[Getting Started](./docs/getting-started/)** - Quick start, project overview, new developer guide
-- **[Development](./docs/development/)** - Commands reference, development policies
-- **[API Documentation](./docs/api/)** - API overview and endpoints
-- **[Provider Integration](./docs/provider-integration/)** - Provider adapter guides
-- **[Architecture](./docs/architecture/)** - System design and database
-- **[CLAUDE.md](./CLAUDE.md)** - AI assistant instructions and project policies
+- **[CLAUDE.md](./CLAUDE.md)** - Main project documentation
+- **[TRAVEL_INDUSTRY_GUIDE.md](./TRAVEL_INDUSTRY_GUIDE.md)** - Industry concepts
+- **[PROVIDER_INTEGRATION.md](./PROVIDER_INTEGRATION.md)** - Integration guide
+- **[NEW_DEVELOPER_GUIDE.md](./NEW_DEVELOPER_GUIDE.md)** - Developer onboarding
 
 ## Provider Integration
 

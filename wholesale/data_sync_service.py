@@ -9,6 +9,11 @@ from .api_service import APIServiceFactory,ZegoAPIService
 from datetime import datetime
 
 
+class APIRequestError(Exception):
+    """Custom exception for API request failures"""
+    pass
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -576,13 +581,13 @@ class DataSyncService:
         """
         Syncs a single program tour by its ProductID from the API.
         """
-        logger.info(f"Attempting to sync single program tour with ProductID: {product_code_to_sync} for wholesaler {self.wholesaler.name}")
+        logger.info(f"Attempting to sync single program tour with ProductID: {product_code_to_sync} for provider {self.provider.name}")
 
         raw_tour_data_from_api = self.api_service.get_program_tour_details(product_code_to_sync) # type: Optional[Union[Dict, List]]
         if raw_tour_data_from_api is None:
-            msg = f"API request for program tour ProductID {product_code_to_sync} failed or returned no data for wholesaler {self.wholesaler.name}."
+            msg = f"API request for program tour ProductID {product_code_to_sync} failed or returned no data for provider {self.provider.name}."
             logger.error(msg)
-            return {'created': 0, 'updated': 0, 'errors': 1, 'message': msg, 'product_id': product_code_to_sync}
+            raise APIRequestError(msg)
         
         # Intermediate variable to hold the potential single tour data item
         tour_data_intermediate: Any = None 
@@ -722,9 +727,18 @@ class DataSyncService:
         return timezone.now()
 
     def _sync_periods(self, tour: ProgramTour, periods_data: List[Dict], tour_level_flights_data: List[Dict]):
-        """Sync periods for a tour"""
-        # Clear existing periods
-        tour.periods.all().delete()
+        """Sync periods for a tour using bulk operations for better performance"""
+        if not periods_data:
+            return
+
+        # Use bulk delete for better performance
+        period_ids_to_delete = tour.periods.values_list('id', flat=True)
+        if period_ids_to_delete:
+            Period.objects.filter(id__in=period_ids_to_delete).delete()
+
+        # Prepare periods for bulk creation
+        periods_to_create = []
+        flights_to_create = []
 
         for period_data in periods_data:
             api_period_id = period_data.get('PeriodID')
@@ -738,50 +752,76 @@ class DataSyncService:
                 # Transform pricing data to JSON structure
                 base_prices, end_prices = transform_pricing_data(period_data)
 
-                period = Period.objects.create(
-                    provider=self.provider,
-                    external_id=str(api_period_id),
-                    program=tour,
-                    code=period_data.get('PeriodCode', ''),
-                    start_date=parse_api_date(period_data.get('PeriodStartDate')),
-                    end_date=parse_api_date(period_data.get('PeriodEndDate')),
-                    bus=period_data.get('Bus', ''),
-                    country_name=period_data.get('CountryName', ''),
-                    airline_code=period_data.get('AirlineCode', ''),
-                    airline_name=period_data.get('AirlineName', ''),
-                    airport=period_data.get('Airport', ''),
-                    group_size=safe_int(period_data.get('GroupSize')),
-                    booked=safe_int(period_data.get('Book')),
-                    seats=safe_int(period_data.get('Seat')),
-                    status=period_data.get('PeriodStatus', ''),
-                    promotion=period_data.get('Promotion', ''),
-                    base_prices=base_prices,
-                    end_prices=end_prices,
-                    deposit=safe_int(period_data.get('Deposit')),
-                    deposit_end=safe_int(period_data.get('Deposit_End')),
-                    com_agent=safe_int(period_data.get('ComAgent')),
-                    com_agent_end=safe_int(period_data.get('ComAgent_End')),
-                    com_sale=safe_int(period_data.get('ComSale')),
-                    com_sale_end=safe_int(period_data.get('ComSale_End')),
-                    update_date=parse_api_datetime(period_data.get('UpdateDate')),
-                )
+                period_kwargs = {
+                    'provider': self.provider,
+                    'external_id': str(api_period_id),
+                    'program': tour,
+                    'code': period_data.get('PeriodCode', ''),
+                    'start_date': parse_api_date(period_data.get('PeriodStartDate')),
+                    'end_date': parse_api_date(period_data.get('PeriodEndDate')),
+                    'bus': period_data.get('Bus', ''),
+                    'country_name': period_data.get('CountryName', ''),
+                    'airline_code': period_data.get('AirlineCode', ''),
+                    'airline_name': period_data.get('AirlineName', ''),
+                    'airport': period_data.get('Airport', ''),
+                    'group_size': safe_int(period_data.get('GroupSize')),
+                    'booked': safe_int(period_data.get('Book')),
+                    'seats': safe_int(period_data.get('Seat')),
+                    'status': period_data.get('PeriodStatus', ''),
+                    'promotion': period_data.get('Promotion', ''),
+                    'base_prices': base_prices,
+                    'end_prices': end_prices,
+                    'deposit': safe_int(period_data.get('Deposit')),
+                    'deposit_end': safe_int(period_data.get('Deposit_End')),
+                    'com_agent': safe_int(period_data.get('ComAgent')),
+                    'com_agent_end': safe_int(period_data.get('ComAgent_End')),
+                    'com_sale': safe_int(period_data.get('ComSale')),
+                    'com_sale_end': safe_int(period_data.get('ComSale_End')),
+                    'update_date': parse_api_datetime(period_data.get('UpdateDate')),
+                }
 
-                # Sync flights for this period using tour_level_flights_data
-                if tour_level_flights_data:
-                    self._sync_flights(tour, period, tour_level_flights_data)
+                periods_to_create.append(Period(**period_kwargs))
 
             except (IntegrityError, DataError) as db_err_period:
                 logger.error(
                     f"Database error processing period for tour '{tour.code}' (ID: {tour.external_id}), "
                     f"PeriodCode: '{api_period_code}'. Error: {type(db_err_period).__name__} - {str(db_err_period)}. Period Data: {period_data}"
                 )
-                raise
+                continue  # Skip this period but continue processing others
             except Exception as ex_period:
                 logger.error(
                     f"Unexpected error processing period for tour '{tour.code}' (ID: {tour.external_id}), "
                     f"PeriodCode: '{api_period_code}'. Error: {type(ex_period).__name__} - {str(ex_period)}. Period Data: {period_data}"
                 )
-                raise
+                continue  # Skip this period but continue processing others
+
+        # Bulk create periods with batch size
+        if periods_to_create:
+            created_periods = Period.objects.bulk_create(periods_to_create, batch_size=100)
+
+            # Sync flights for created periods if flight data exists
+            if tour_level_flights_data and created_periods:
+                for period in created_periods:
+                    flights_to_create.extend([
+                        Flight(
+                            provider=self.provider,
+                            program=tour,
+                            period=period,
+                            airline_code=flight_data.get('AirlineCode', ''),
+                            airline_name=flight_data.get('AirlineName', ''),
+                            flight_no=flight_data.get('FlightNo', ''),
+                            route=flight_data.get('Route', ''),
+                            departure_time=parse_api_time(flight_data.get('DepartureTime')),
+                            arrival_time=parse_api_time(flight_data.get('ArrivalTime')),
+                        )
+                        for flight_data in tour_level_flights_data
+                    ])
+
+                # Bulk create flights
+                if flights_to_create:
+                    Flight.objects.bulk_create(flights_to_create, batch_size=200)
+
+        logger.info(f"Successfully synced {len(periods_to_create)} periods for tour {tour.external_id}")
 
     def _sync_flights(self, tour: ProgramTour, period: Period, flights_data: List[Dict]):
         """Sync flights for a tour and period"""

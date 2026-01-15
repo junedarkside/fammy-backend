@@ -1,6 +1,9 @@
 from django.contrib import admin, messages
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import path
+from django.urls import path, reverse
+from django.utils.html import format_html
+from django.db.models import Q, Count, Prefetch
+from django.utils import timezone
 from .models import Provider, Country, ProgramTour, Period, Flight, Itinerary, ProviderCategory, RawVendorData
 from .data_sync_service import DataSyncService
 
@@ -95,14 +98,22 @@ class ProviderAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     actions = [sync_data_for_provider, sync_unique_inter_data]
 
+    def get_queryset(self, request):
+        """Optimize queryset with tour count annotation."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            tours_count=Count('program_tours')
+        )
+        return queryset
+
     def tour_count(self, obj):
-        return obj.program_tours.count()
+        """Display number of tours for this provider."""
+        return obj.tours_count
     tour_count.short_description = 'Tours'
+    tour_count.admin_order_field = 'tours_count'
 
     def sync_button(self, obj):
-        from django.urls import reverse
-        from django.utils.html import format_html
-
+        """Display sync button for active providers."""
         if not obj.is_active:
             return format_html('<span style="color: #999;">Inactive</span>')
 
@@ -112,7 +123,6 @@ class ProviderAdmin(admin.ModelAdmin):
             url
         )
     sync_button.short_description = 'Quick Sync'
-    sync_button.allow_tags = True
 
     def get_urls(self):
         urls = super().get_urls()
@@ -122,6 +132,19 @@ class ProviderAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def sync_provider_view(self, request, provider_id):
+        """
+        Custom admin view for syncing a single provider.
+
+        Handles both standard providers (via DataSyncService) and
+        Unique Inter providers (via management command).
+
+        Args:
+            request: Django HttpRequest
+            provider_id: Primary key of Provider to sync
+
+        Returns:
+            HttpResponse redirect to provider changelist
+        """
         provider = get_object_or_404(Provider, pk=provider_id)
 
         if not provider.is_active:
@@ -159,6 +182,7 @@ class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'provider_code', 'provider', 'normalized_name', 'iso_code')
     search_fields = ('name', 'provider_code', 'normalized_name', 'iso_code')
     list_filter = ('provider', 'iso_code')
+    list_select_related = ('provider',)
     readonly_fields = ('normalized_name', 'iso_code')
 
 class PeriodInline(admin.TabularInline):
@@ -244,9 +268,10 @@ class ItineraryStatusFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'has_itinerary':
-            return queryset.filter(itineraries__isnull=False).distinct()
+            return queryset.prefetch_related('itineraries').filter(
+                itineraries__isnull=False
+            ).distinct()
         elif self.value() == 'has_documents':
-            from django.db.models import Q
             return queryset.filter(
                 itineraries__isnull=True
             ).filter(
@@ -255,7 +280,6 @@ class ItineraryStatusFilter(admin.SimpleListFilter):
                 Q(file_pdf='') & Q(file_word='')
             )
         elif self.value() == 'needs_manual':
-            from django.db.models import Q
             return queryset.filter(
                 itineraries__isnull=True
             ).filter(
@@ -273,11 +297,29 @@ class ProgramTourAdmin(admin.ModelAdmin):
     list_filter = ('provider', 'country', ISOCountryFilter, CountryStatusFilter, ItineraryStatusFilter, 'last_synced')
     inlines = [PeriodInline, ItineraryInline]
     readonly_fields = ('external_id', 'last_synced')
+    list_per_page = 50
+    ordering = ('-last_synced', 'name')
+
+    def get_queryset(self, request):
+        """Optimize queryset with select_related and annotations."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('country', 'provider')
+        queryset = queryset.prefetch_related('itineraries')
+        queryset = queryset.annotate(
+            itinerary_count=Count('itineraries')
+        )
+        return queryset
 
     def country_display(self, obj):
-        """Show country status with visual indicators"""
-        from django.utils.html import format_html
+        """
+        Display country validation status with visual indicators.
 
+        - Green ✓: Valid Country FK relationship
+        - Orange ⚠: Extracted country_name but no FK (needs review)
+        - Red ✗: No country data
+
+        Used in ProgramTourAdmin list_display for data quality assessment.
+        """
         if obj.country:
             return format_html(
                 '<span style="color: green;">✓ {}</span>',
@@ -295,10 +337,14 @@ class ProgramTourAdmin(admin.ModelAdmin):
     country_display.admin_order_field = 'country'
 
     def itinerary_status(self, obj):
-        """Show itinerary availability with visual indicators"""
-        from django.utils.html import format_html
+        """
+        Display itinerary availability with visual indicators.
 
-        itinerary_count = obj.itineraries.count()
+        - Green ✓: Has complete day-by-day itinerary
+        - Orange ⚠: Has PDF/Word documents only
+        - Red ✗: Needs manual entry (no itinerary or documents)
+        """
+        itinerary_count = obj.itinerary_count
         has_pdf = bool(obj.file_pdf)
         has_word = bool(obj.file_word)
 
@@ -321,16 +367,24 @@ class ProgramTourAdmin(admin.ModelAdmin):
             return format_html('<span style="color: red;">✗ Needs manual entry</span>')
 
     itinerary_status.short_description = 'Itinerary'
-    itinerary_status.admin_order_field = 'itineraries'
 
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
     list_display = ('code', 'program', 'start_date', 'end_date', 'status', 'seats_available')
     search_fields = ('code', 'program__name', 'program__code')
     list_filter = ('status', 'provider', 'start_date')
+    list_select_related = ('program', 'provider')
     readonly_fields = ('external_id', 'update_date')
+    ordering = ('start_date', 'program')
+
+    def get_queryset(self, request):
+        """Optimize queryset with select_related."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('program', 'provider')
+        return queryset
 
     def seats_available(self, obj):
+        """Calculate available seats (total - booked)."""
         if obj.seats and obj.booked:
             return obj.seats - obj.booked
         return obj.seats or 0
@@ -341,8 +395,16 @@ class FlightAdmin(admin.ModelAdmin):
     list_display = ('flight_no', 'airline_name', 'route', 'schedule', 'program', 'period')
     search_fields = ('flight_no', 'airline_name', 'route')
     list_filter = ('airline_name', 'provider')
+    list_select_related = ('program', 'period', 'provider')
+
+    def get_queryset(self, request):
+        """Optimize queryset with select_related."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('program', 'period', 'provider')
+        return queryset
 
     def schedule(self, obj):
+        """Display flight schedule (departure - arrival)."""
         if obj.departure_time and obj.arrival_time:
             return f"{obj.departure_time} - {obj.arrival_time}"
         return "N/A"
@@ -354,7 +416,14 @@ class ItineraryAdmin(admin.ModelAdmin):
     search_fields = ('program__name', 'program__code', 'hotel')
     list_filter = ('program__provider',)
 
+    def get_queryset(self, request):
+        """Optimize queryset with select_related."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('program', 'program__provider')
+        return queryset
+
     def meal_info(self, obj):
+        """Display abbreviated meal information (B/L/D)."""
         meals = []
         if obj.breakfast:
             meals.append('B')
@@ -375,8 +444,12 @@ class ProviderCategoryAdmin(admin.ModelAdmin):
     ordering = ('provider', '-priority', 'name')
 
 def process_raw_data(modeladmin, request, queryset):
-    """Process selected raw vendor data records (Unique Inter format)"""
-    from django.utils import timezone
+    """
+    Process selected raw vendor data records (Unique Inter format).
+
+    Groups raw records by mainid (tour program ID), creates/updates
+    ProgramTour and Period models, and tracks processing status.
+    """
     from .data_sync_service import map_unique_inter_tour_data, map_unique_inter_period_data
     import logging
 
@@ -462,11 +535,20 @@ class RawVendorDataAdmin(admin.ModelAdmin):
     list_display = ('external_id', 'provider', 'category', 'endpoint_type', 'processed', 'fetched_at', 'has_error')
     search_fields = ('external_id', 'category')
     list_filter = ('provider', 'processed', 'endpoint_type', 'category', 'fetched_at')
+    list_select_related = ('provider',)
     readonly_fields = ('fetched_at', 'processed_at', 'raw_json')
     list_per_page = 50
+    ordering = ('-fetched_at', 'provider')
     actions = [process_raw_data]
 
+    def get_queryset(self, request):
+        """Optimize queryset with select_related."""
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('provider')
+        return queryset
+
     def has_error(self, obj):
+        """Check if raw data has processing errors."""
         return bool(obj.error_message)
     has_error.boolean = True
     has_error.short_description = 'Error'

@@ -9,6 +9,39 @@ from abc import ABC, abstractmethod
 logger = logging.getLogger(__name__)
 
 
+# Custom API exceptions for better error handling
+class APIError(Exception):
+    """Base class for API errors"""
+    pass
+
+
+class APITimeoutError(APIError):
+    """Raised when API request times out"""
+    pass
+
+
+class APIConnectionError(APIError):
+    """Raised when API connection fails"""
+    pass
+
+
+class APIHTTPError(APIError):
+    """Raised when API returns HTTP error status"""
+    def __init__(self, message, status_code=None):
+        super().__init__(message)
+        self.status_code = status_code
+
+
+class APIResponseError(APIError):
+    """Raised when API response is invalid"""
+    pass
+
+
+class APIRequestError(APIError):
+    """Raised when API request fails"""
+    pass
+
+
 class BaseAPIService(ABC):
     """Abstract base class for API services"""
 
@@ -48,7 +81,7 @@ class BaseAPIService(ABC):
 
     def _make_request(self, endpoint: str, method: str = 'GET', params: Optional[Dict] = None,
                       data: Optional[Dict] = None, timeout: int = 30) -> Optional[Union[Dict, List]]:
-        """Make HTTP request to API"""
+        """Make HTTP request to API with improved error handling"""
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         try:
             logger.info(f"Making {method} request to: {url}")
@@ -56,39 +89,48 @@ class BaseAPIService(ABC):
             if method.upper() == 'GET':
                 response = self.session.get(
                     url, params=params, timeout=timeout)
-            # elif method.upper() == 'POST':
-            #     response = self.session.post(url, json=data, params=params, timeout=timeout)
-            # elif method.upper() == 'PUT':
-            #     response = self.session.put(url, json=data, params=params, timeout=timeout)
-            # elif method.upper() == 'DELETE':
-            #     response = self.session.delete(url, params=params, timeout=timeout)
+            elif method.upper() == 'POST':
+                response = self.session.post(
+                    url, json=data, params=params, timeout=timeout)
+            elif method.upper() == 'PUT':
+                response = self.session.put(
+                    url, json=data, params=params, timeout=timeout)
+            elif method.upper() == 'DELETE':
+                response = self.session.delete(
+                    url, params=params, timeout=timeout)
             else:
                 logger.error(f"Unsupported HTTP method: {method}")
-                return None
+                raise ValueError(f"Unsupported HTTP method: {method}")
 
             response.raise_for_status()
 
             # Handle empty responses
             if response.status_code == 204 or not response.content:
+                logger.debug(f"Empty response from {url} (status: {response.status_code})")
                 return {}
-            return response.json()
 
-        except requests.exceptions.Timeout:
-            logger.error(f"Request timeout for {url}")
-            return None
-        except requests.exceptions.ConnectionError:
-            logger.error(f"Connection error for {url}")
-            return None
+            try:
+                return response.json()
+            except ValueError as json_error:
+                logger.error(f"JSON decode error for {url}: {str(json_error)}. Response content: {response.text[:200]}")
+                raise APIResponseError(f"Invalid JSON response from {url}: {str(json_error)}")
+
+        except requests.exceptions.Timeout as e:
+            error_msg = f"Request timeout for {url} (timeout: {timeout}s)"
+            logger.error(error_msg)
+            raise APITimeoutError(error_msg) from e
+        except requests.exceptions.ConnectionError as e:
+            error_msg = f"Connection error for {url}: {str(e)}"
+            logger.error(error_msg)
+            raise APIConnectionError(error_msg) from e
         except requests.exceptions.HTTPError as e:
-            logger.error(
-                f"HTTP error for {url}: {e.response.status_code} - {e.response.text}")
-            return None
+            error_msg = f"HTTP error for {url}: {e.response.status_code} - {e.response.text[:200]}"
+            logger.error(error_msg)
+            raise APIHTTPError(error_msg, status_code=e.response.status_code) from e
         except requests.exceptions.RequestException as e:
-            logger.error(f"Request failed for {url}: {str(e)}")
-            return None
-        except ValueError as e:
-            logger.error(f"JSON decode error for {url}: {str(e)}")
-            return None
+            error_msg = f"Request failed for {url}: {str(e)}"
+            logger.error(error_msg)
+            raise APIRequestError(error_msg) from e
 
     def test_connection(self) -> bool:
         """Test API connection"""
@@ -240,8 +282,184 @@ class GenericAPIService(BaseAPIService):
         return self._make_request(endpoint, params=params)
 
 
+class Go365APIService(BaseAPIService):
+    """
+    Go365 Travel API integration service.
+    Supports multi-language (Thai, English, Chinese) and standard REST endpoints.
+    """
+
+    def __init__(self, provider):
+        # Get default language from provider extra config before calling parent __init__
+        self.default_language = 'en'
+        if hasattr(provider, 'extra') and provider.extra:
+            self.default_language = provider.extra.get('default_language', 'en')
+
+        # Validate language support
+        supported_languages = ['th', 'en', 'ch']
+        if self.default_language not in supported_languages:
+            logger.warning(f"Unsupported language '{self.default_language}', using 'en'")
+            self.default_language = 'en'
+
+        super().__init__(provider)
+
+    def _setup_authentication(self):
+        """Setup Go365 API authentication with token and optional secret key"""
+        if not self.token:
+            logger.warning(f"No token configured for {self.provider.name}")
+            return
+
+        # Get secret key from provider extra config
+        secret_key = None
+        if hasattr(self.provider, 'extra') and self.provider.extra:
+            secret_key = self.provider.extra.get('secret_key')
+
+        # Setup language header
+        self.session.headers.update({
+            'x-accept-language': self.default_language
+        })
+
+        # Determine authentication method based on available credentials
+        if secret_key:
+            # Dual authentication: token + secret key (HMAC signature)
+            logger.info(f"Setting up dual authentication for {self.provider.name}")
+            self._setup_hmac_authentication(self.token, secret_key)
+        else:
+            # Simple API key authentication (current method)
+            logger.info(f"Setting up API key authentication for {self.provider.name}")
+            self.session.headers.update({
+                'x-api-key': self.token
+            })
+
+    def _setup_hmac_authentication(self, api_key: str, secret_key: str):
+        """
+        Setup HMAC signature authentication using API key and secret key
+
+        Common patterns for travel APIs:
+        1. x-api-key + x-signature headers
+        2. Authorization header with HMAC signature
+        3. Custom signature in query parameters
+        """
+        import hashlib
+        import hmac
+        import time
+
+        # Store credentials for signature generation
+        self.api_key = api_key
+        self.secret_key = secret_key
+
+        # Add API key header
+        self.session.headers.update({
+            'x-api-key': api_key
+        })
+
+        # Override _make_request to add signature to each request
+        original_make_request = self._make_request
+
+        def make_request_with_signature(endpoint: str, method: str = 'GET', params: Optional[Dict] = None,
+                                      data: Optional[Dict] = None, timeout: int = 30) -> Optional[Union[Dict, List]]:
+            """Make request with HMAC signature"""
+
+            # Generate timestamp and nonce for signature
+            timestamp = str(int(time.time()))
+            nonce = hashlib.md5(f"{timestamp}{endpoint}".encode()).hexdigest()[:16]
+
+            # Prepare string to sign (method + endpoint + timestamp + nonce + body)
+            string_to_sign = f"{method.upper()}\n{endpoint}\n{timestamp}\n{nonce}"
+
+            # Add request body to signature if present
+            if data:
+                import json
+                body_json = json.dumps(data, sort_keys=True, separators=(',', ':'))
+                string_to_sign += f"\n{body_json}"
+
+            # Generate HMAC signature
+            signature = hmac.new(
+                secret_key.encode(),
+                string_to_sign.encode(),
+                hashlib.sha256
+            ).hexdigest()
+
+            # Add signature headers
+            self.session.headers.update({
+                'x-timestamp': timestamp,
+                'x-nonce': nonce,
+                'x-signature': signature,
+                'x-signature-method': 'HMAC-SHA256'
+            })
+
+            # Make the original request
+            return original_make_request(endpoint, method, params, data, timeout)
+
+        # Replace the _make_request method
+        self._make_request = make_request_with_signature
+
+    def get_countries(self) -> Optional[List[Dict]]:
+        """Fetch available countries/destinations from Go365 API"""
+        return self._make_request('api/v1/tours/country')
+
+    def get_program_tours(self, page: int = 1, limit: int = 10, tour_ids: Optional[List[str]] = None) -> Optional[List[Dict]]:
+        """Fetch tour list with pagination support"""
+        params = {
+            'start_page': page,
+            'limit_page': limit
+        }
+
+        if tour_ids:
+            params['tour_id'] = tour_ids
+
+        return self._make_request('api/v1/tours/list', params=params)
+
+    def get_program_tour_details(self, tour_id: str) -> Optional[Dict]:
+        """Fetch detailed information for a specific tour"""
+        return self._make_request(f'api/v1/tours/detail/{tour_id}')
+
+    def get_tour_periods(self, tour_id: str) -> Optional[List[Dict]]:
+        """Get available departure dates/periods for a tour"""
+        response = self._make_request(f'api/v1/tours/period/{tour_id}')
+        return response.get('periods', []) if response else None
+
+    def search_tours(self, search_query: str = None, rate_start: float = None, rate_end: float = None,
+                    sort_by: str = None, page: int = 1, limit: int = 10) -> Optional[List[Dict]]:
+        """
+        Search tours with multiple filters
+
+        Args:
+            search_query: Text search term
+            rate_start: Minimum price/rate filter
+            rate_end: Maximum price/rate filter
+            sort_by: Sort option ('price_min', 'price_max', 'name_min', 'name_max', 'date_min', 'date_max')
+            page: Page number for pagination
+            limit: Results per page
+        """
+        data = {}
+        params = {
+            'start_page': page,
+            'limit_page': limit
+        }
+
+        if search_query:
+            data['search'] = search_query
+        if rate_start is not None:
+            data['rate_start'] = rate_start
+        if rate_end is not None:
+            data['rate_end'] = rate_end
+        if sort_by:
+            data['sort'] = sort_by
+
+        return self._make_request('api/v1/tours/search', method='POST', data=data, params=params)
+
+    def set_language(self, language: str):
+        """Change API response language"""
+        supported_languages = ['th', 'en', 'ch']
+        if language in supported_languages:
+            self.session.headers.update({'x-accept-language': language})
+            logger.info(f"Language changed to: {language}")
+        else:
+            logger.warning(f"Unsupported language: {language}")
+
+
 class APIServiceFactory:
-    """Factory class to create appropriate API service based on provider type"""
+    """Factory class to create appropriate API service and mapper based on provider type"""
 
     @staticmethod
     def create_service(provider) -> BaseAPIService:
@@ -250,14 +468,15 @@ class APIServiceFactory:
         # Check provider code for exact match first
         provider_code = provider.code.lower()
 
-        if provider_code == 'zego' or 'zego' in provider.name.lower():
+        if provider_code == 'zego':
             return ZegoAPIService(provider)
-        elif provider_code == 'unique_inter' or 'unique' in provider_code:
+        elif provider_code == 'unique_inter':
             return UniqueInterAPIService(provider)
-        elif provider_code == 'tourism_thailand':
-            return TourismThailandAPIService(provider)
-        elif provider_code == 'europe_packages':
-            return EuropePackagesAPIService(provider)
+        elif provider_code == 'go365':
+            return Go365APIService(provider)
+        elif provider_code == 'checkingroup':
+            return CheckInGroupAPIService(provider)
+        # Note: Remove non-existent provider services to prevent AttributeError
         else:
             # Check if provider has a specific service type
             service_type = getattr(provider, 'api_service_type', 'auto')
@@ -271,9 +490,33 @@ class APIServiceFactory:
                     return ZegoAPIService(provider)
                 elif provider.base_url and 'uniqueinterwholesale.com' in provider.base_url:
                     return UniqueInterAPIService(provider)
+                elif provider.base_url and 'go365travel.com' in provider.base_url:
+                    return Go365APIService(provider)
                 else:
                     logger.warning(f"No specific API service for '{provider.code}', using GenericAPIService")
                     return GenericAPIService(provider)
+
+    @staticmethod
+    def create_mapper(provider):
+        """Create appropriate mapper for provider"""
+        from .provider_mappers import (
+            ZegoMapper,
+            UniqueInterMapper,
+            Go365Mapper,
+            GenericMapper
+        )
+
+        provider_code = provider.code.lower()
+
+        if provider_code == 'zego':
+            return ZegoMapper(provider)
+        elif provider_code == 'unique_inter':
+            return UniqueInterMapper(provider)
+        elif provider_code == 'go365':
+            return Go365Mapper(provider)
+        else:
+            logger.warning(f"No specific mapper for '{provider.code}', using GenericMapper")
+            return GenericMapper(provider)
 
 
 # Example usage for different wholesaler types:
@@ -465,3 +708,82 @@ class UniqueInterAPIService(BaseAPIService):
                 logger.info(f"✗ Category {cat_id} ({cat_info['name']}): No active tours")
 
         return available_categories
+
+
+class CheckInGroupAPIService(BaseAPIService):
+    """
+    API Service for CheckIn Group Wholesale.
+
+    CheckIn Group is a Thai B2B travel wholesaler with a public API.
+    No authentication required. Provides tours with embedded periods.
+
+    Base URL: https://api.checkingroup.co.th
+    API Version: v1
+    """
+
+    def _setup_authentication(self):
+        """No authentication required for CheckIn Group API."""
+        pass
+
+    def get_countries(self) -> Optional[List[Dict]]:
+        """
+        CheckIn Group doesn't have a countries endpoint.
+
+        Returns empty list - countries must be extracted from tour names.
+        """
+        return []
+
+    def get_program_tours(self, page: Optional[int] = None, limit: Optional[int] = None) -> Optional[List[Dict]]:
+        """
+        Fetch all program tours with embedded periods.
+
+        GET /v1/programtours
+
+        Returns:
+            List of tour dictionaries with embedded periods
+
+        Note:
+            CheckIn Group returns all tours in a single response (no pagination).
+            The page and limit parameters are accepted but ignored by the API.
+        """
+        response = self._make_request('GET', 'v1/programtours')
+        return response if isinstance(response, list) else []
+
+    def get_program_tour_details(self, tour_id: str) -> Optional[Dict]:
+        """
+        Fetch single program tour details.
+
+        GET /v1/programtours/{tour_id}
+
+        Args:
+            tour_id: The tour ID (integer as string)
+
+        Returns:
+            Tour dictionary with embedded periods
+
+        Note:
+            The single tour endpoint wraps response in "data" key,
+            unlike the list endpoint which returns array directly.
+        """
+        response = self._make_request('GET', f'v1/programtours/{tour_id}')
+        return response.get('data', response) if isinstance(response, dict) else response
+
+    def get_about(self) -> Optional[Dict]:
+        """
+        Fetch company information.
+
+        GET /v1/about
+
+        Returns:
+            Company information dictionary including:
+            - company_id
+            - company_name
+            - company_license
+            - company_address
+            - company_phone
+            - company_lineid
+            - company_email
+            - company_taxid
+            - company_vat
+        """
+        return self._make_request('GET', 'v1/about')
