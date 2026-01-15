@@ -12,7 +12,8 @@ from .field_normalizers import (
     FieldNormalizer,
     ZegoNormalizer,
     UniqueInterNormalizer,
-    Go365Normalizer
+    Go365Normalizer,
+    CheckInGroupNormalizer
 )
 
 
@@ -486,6 +487,320 @@ class Go365Mapper(ProviderMapper):
             'description': raw_data.get('description', ''),
             'hotel': raw_data.get('hotel_name', ''),
         }
+
+
+class CheckInGroupMapper(ProviderMapper):
+    """
+    CheckIn Group data mapper.
+
+    Handles transformation from CheckIn Group API format to standard model format.
+    """
+
+    def __init__(self, provider: Provider):
+        super().__init__(provider)
+        self.normalizer = CheckInGroupNormalizer()
+
+    def map_tour_data(self, raw_data: Dict) -> Dict:
+        """
+        Map CheckIn Group tour data to standard format.
+
+        API Fields → Model Fields:
+        - id → external_id
+        - code → code
+        - name → name
+        - day → days
+        - night → nights
+        - highlight → highlight
+        - banner → image_url
+        - pdf → file_pdf
+        - word → file_word
+        - vehicle → airline_name, airline_code
+        - countries → country, country_name
+        - type → tour_type
+        - createdAt → provider_created_at
+        - updatedAt → provider_updated_at
+        """
+        # Extract airline info from vehicle field
+        # Format: "CHINA EASTERN AIRLINES (MU)" or "THAI AIRWAYS (TG)"
+        vehicle = raw_data.get('vehicle', '')
+        airline_name = ''
+        airline_code = ''
+
+        if vehicle:
+            # Extract airline name (before the parenthesis)
+            airline_name = vehicle.split('(')[0].strip() if '(' in vehicle else vehicle.strip()
+            # Extract airline code (inside parenthesis)
+            airline_code = vehicle.split('(')[1].rstrip(')') if '(' in vehicle else ''
+
+        # Extract country info from countries array
+        countries_list = raw_data.get('countries', [])
+        country_name = ''
+        country_code = ''
+        country_icon_url = ''
+
+        if countries_list and len(countries_list) > 0:
+            country_data = countries_list[0]  # Use first country
+            country_name = country_data.get('name', '')
+            country_code = country_data.get('code', '')
+            country_icon_url = country_data.get('icon', '')
+
+        return {
+            'provider': self.provider.id,
+            'external_id': str(raw_data.get('id', '')),
+            'code': raw_data.get('code', ''),
+            'name': raw_data.get('name', ''),
+            'days': self.normalizer.normalize_integer(raw_data.get('day')),
+            'nights': self.normalizer.normalize_integer(raw_data.get('night')),
+            'file_pdf': raw_data.get('pdf', ''),
+            'file_word': raw_data.get('word', ''),
+            'image_url': raw_data.get('banner', ''),
+            'highlight': raw_data.get('highlight', ''),
+            # Airline information
+            'airline_name': airline_name,
+            'airline_code': airline_code,
+            # Country information - use CheckIn Group specific method
+            'country': self._get_or_create_country_for_checkingroup(country_name, country_code, country_icon_url) if country_name else None,
+            'country_name': country_name,  # Snapshot
+            # Tour type and pricing
+            'tour_type': raw_data.get('type', ''),
+            # Note: starting_price and starting_price_air_ticket are calculated
+            # after all periods are synced, not during tour mapping
+            # Provider timestamps
+            'provider_created_at': self.normalizer.normalize_datetime(raw_data.get('createdAt')),
+            'provider_updated_at': self.normalizer.normalize_datetime(raw_data.get('updatedAt')),
+            # Data completeness
+            'has_flights': True,  # Text format in remark field
+            'has_itineraries': False,  # Not available via API
+            'has_full_pricing': True,  # Complete pricing structure
+            'data_quality_score': 85,
+        }
+
+    def _get_or_create_country_for_checkingroup(
+        self, country_name: str, country_code: str = None, icon_url: str = None
+    ) -> Optional[Country]:
+        """
+        CheckIn Group specific: Get or create country.
+
+        CheckIn Group provides ISO 2-letter codes (CN, JP, KR, etc.)
+        This method creates Country records when they don't exist.
+
+        Args:
+            country_name: Country name from API (e.g., "จีน", "ญี่ปุ่น")
+            country_code: ISO 2-letter code from API (e.g., "CN", "JP")
+            icon_url: URL to country icon/flag image
+
+        Returns:
+            Country instance or None
+        """
+        if not country_name or not country_code:
+            return None
+
+        # Try to find existing country
+        normalized = normalize_country_name(country_name)
+        if not normalized:
+            return None
+
+        try:
+            country = Country.objects.get(
+                provider=self.provider,
+                normalized_name=normalized
+            )
+            # Update icon_url if provided and different
+            if icon_url and country.icon_url != icon_url:
+                country.icon_url = icon_url
+                country.save(update_fields=['icon_url'])
+            return country
+        except Country.DoesNotExist:
+            # Create new country record
+            iso_code_3 = self._convert_iso2_to_iso3(country_code)
+
+            country = Country.objects.create(
+                provider=self.provider,
+                provider_code=country_code,
+                name=country_name,
+                normalized_name=normalized,
+                iso_code=iso_code_3,
+                icon_url=icon_url
+            )
+            return country
+
+    def _convert_iso2_to_iso3(self, iso2_code: str) -> str:
+        """
+        Convert ISO 2-letter code to 3-letter code.
+
+        Args:
+            iso2_code: 2-letter ISO 3166-1 alpha-2 code (e.g., 'CN', 'JP', 'TH')
+
+        Returns:
+            3-letter ISO 3166-1 alpha-3 code (e.g., 'CHN', 'JPN', 'THA')
+
+        Note:
+            Common mappings for CheckIn Group destinations.
+            Returns ISO2 code if not found in mapping.
+        """
+        iso2_to_iso3 = {
+            'CN': 'CHN',  # China
+            'JP': 'JPN',  # Japan
+            'KR': 'KOR',  # South Korea
+            'TH': 'THA',  # Thailand
+            'TW': 'TWN',  # Taiwan
+            'HK': 'HKG',  # Hong Kong
+            'SG': 'SGP',  # Singapore
+            'MY': 'MYS',  # Malaysia
+            'VN': 'VNM',  # Vietnam
+            'KH': 'KHM',  # Cambodia
+            'LA': 'LAO',  # Laos
+            'MM': 'MMR',  # Myanmar
+            'ID': 'IDN',  # Indonesia
+            'PH': 'PHL',  # Philippines
+            'IN': 'IND',  # India
+            'NP': 'NPL',  # Nepal
+            'LK': 'LKA',  # Sri Lanka
+            'BD': 'BGD',  # Bangladesh
+            'MV': 'MDV',  # Maldives
+            'BT': 'BTN',  # Bhutan
+            'MO': 'MAC',  # Macau
+            'AU': 'AUS',  # Australia
+            'NZ': 'NZL',  # New Zealand
+            'GB': 'GBR',  # United Kingdom
+            'FR': 'FRA',  # France
+            'DE': 'DEU',  # Germany
+            'IT': 'ITA',  # Italy
+            'ES': 'ESP',  # Spain
+            'CH': 'CHE',  # Switzerland
+            'AT': 'AUT',  # Austria
+            'CZ': 'CZE',  # Czech Republic
+            'GR': 'GRC',  # Greece
+            'TR': 'TUR',  # Turkey
+            'EG': 'EGY',  # Egypt
+            'ZA': 'ZAF',  # South Africa
+            'US': 'USA',  # United States
+            'CA': 'CAN',  # Canada
+            'BR': 'BRA',  # Brazil
+            'AR': 'ARG',  # Argentina
+            'MX': 'MEX',  # Mexico
+            'RU': 'RUS',  # Russia
+            'UA': 'UKR',  # Ukraine
+            'SE': 'SWE',  # Sweden
+            'NO': 'NOR',  # Norway
+            'DK': 'DNK',  # Denmark
+            'FI': 'FIN',  # Finland
+            'PL': 'POL',  # Poland
+            'NL': 'NLD',  # Netherlands
+            'BE': 'BEL',  # Belgium
+            'LU': 'LUX',  # Luxembourg
+            'IE': 'IRL',  # Ireland
+            'PT': 'PRT',  # Portugal
+            'IS': 'ISL',  # Iceland
+        }
+
+        return iso2_to_iso3.get(iso2_code.upper(), iso2_code.upper())
+
+    def map_period_data(self, raw_data: Dict, program_tour=None) -> Dict:
+        """
+        Map CheckIn Group period data to standard format.
+
+        Builds base_prices JSONField with all price types:
+        - priceAdultDouble → adult_double
+        - priceAdultTriple → adult_triple
+        - priceChild → child
+        - priceChildNoBed → child_no_bed
+        - priceInfant → infant
+        - priceSingleRoomAdd → single_supplement
+        - priceAirTicket → air_ticket
+        - serviceFeeVat → service_fee
+        - price → price (general price)
+        - priceForOne → price_for_one
+        - beforePrice → before_price
+        """
+        # Convert Decimal to float for JSON serialization
+        def to_float(value):
+            """Convert Decimal to float, return None if value is None."""
+            if value is None:
+                return None
+            return float(value)
+
+        base_prices = {
+            'adult_double': to_float(self.normalizer.normalize_price(raw_data.get('priceAdultDouble'))),
+            'adult_triple': to_float(self.normalizer.normalize_price(raw_data.get('priceAdultTriple'))),
+            'child': to_float(self.normalizer.normalize_price(raw_data.get('priceChild'))),
+            'child_no_bed': to_float(self.normalizer.normalize_price(raw_data.get('priceChildNoBed'))),
+            'infant': to_float(self.normalizer.normalize_price(raw_data.get('priceInfant'))),
+            'single_supplement': to_float(self.normalizer.normalize_price(raw_data.get('priceSingleRoomAdd'))),
+            'air_ticket': to_float(self.normalizer.normalize_price(raw_data.get('priceAirTicket'))),
+            'service_fee': to_float(self.normalizer.normalize_price(raw_data.get('serviceFeeVat'))),
+            # Add missing price fields
+            'price': to_float(self.normalizer.normalize_price(raw_data.get('price'))),
+            'price_for_one': to_float(self.normalizer.normalize_price(raw_data.get('priceForOne'))),
+            'before_price': to_float(self.normalizer.normalize_price(raw_data.get('beforePrice'))),
+            # Store CheckIn Group specific fields in base_prices._meta
+            '_meta': {
+                'group': raw_data.get('group'),
+                'seat': raw_data.get('seat'),
+                'available': raw_data.get('available'),
+                'join': raw_data.get('join'),
+                'flight_info': raw_data.get('flight', ''),
+                # Booking deadlines (CheckIn Group specific)
+                'expire1': raw_data.get('expire1'),
+                'expire2': raw_data.get('expire2'),
+                'expire3': raw_data.get('expire3'),
+                # Additional period information
+                'note': raw_data.get('note'),
+                'remark': raw_data.get('remark'),
+                'ticket_pnr': raw_data.get('ticketPnr'),
+            }
+        }
+
+        # Map bus field (integer to string)
+        # API uses 1 for Yes, 0 for No
+        bus_value = raw_data.get('bus')
+        if bus_value == 1:
+            bus_mapped = 'Yes'
+        elif bus_value == 0:
+            bus_mapped = 'No'
+        else:
+            bus_mapped = ''
+
+        return {
+            'provider': self.provider.id,
+            'external_id': str(raw_data.get('id', '')),
+            'code': f"{program_tour.code}_{raw_data.get('id')}" if program_tour else '',
+            'start_date': self.normalizer.normalize_date(raw_data.get('start')),
+            'end_date': self.normalizer.normalize_date(raw_data.get('end')),
+            'status': self.normalizer.normalize_status(raw_data.get('status')),
+            'base_prices': base_prices,
+            'deposit': self.normalizer.normalize_price(raw_data.get('deposit')),
+            'com_agent': self.normalizer.normalize_price(raw_data.get('comAgent')),
+            'com_sale': self.normalizer.normalize_price(raw_data.get('comSales')),
+            'group_size': self.normalizer.normalize_integer(raw_data.get('group')),
+            'seats': self.normalizer.normalize_integer(raw_data.get('seat')),
+            'booked': self.normalizer.normalize_integer(raw_data.get('join')),
+            'bus': bus_mapped,
+        }
+
+    def map_flight_data(self, raw_data: Dict, period=None) -> Dict:
+        """
+        CheckIn Group doesn't provide structured flight data.
+        Flight info is text format in remark/flight fields.
+
+        Raises NotImplementedError.
+        """
+        raise NotImplementedError(
+            "CheckIn Group provides flight data as text only, not structured format. "
+            "Flight information is available in period.extra['flight_info']"
+        )
+
+    def map_itinerary_data(self, raw_data: Dict, program_tour=None) -> Dict:
+        """
+        CheckIn Group doesn't provide itinerary data via API.
+        Itineraries are only available in PDF/Word documents.
+
+        Raises NotImplementedError.
+        """
+        raise NotImplementedError(
+            "CheckIn Group does not provide itinerary data in API. "
+            "Itineraries are only available in PDF/Word documents."
+        )
 
 
 class GenericMapper(ProviderMapper):

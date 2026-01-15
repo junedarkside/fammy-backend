@@ -413,9 +413,32 @@ class CheckInGroupNormalizer(FieldNormalizer):
 
     Handles CheckIn Group API response formats including:
     - ISO date format (YYYY-MM-DD)
+    - ISO datetime format (YYYY-MM-DDTHH:MM:SSZ)
     - Multiple price types
-    - Status normalization (Open/Closed/Waiting)
+    - Status normalization (Open/Closed/Waiting/Cancel)
     """
+
+    @staticmethod
+    def normalize_datetime(raw_datetime: str) -> Optional[datetime]:
+        """
+        Normalize CheckIn Group datetime values.
+
+        CheckIn Group returns ISO 8601 format: 2025-11-28T03:17:40.000000Z
+
+        Args:
+            raw_datetime: Raw datetime string from API
+
+        Returns:
+            datetime object or None if invalid
+        """
+        if not raw_datetime:
+            return None
+
+        try:
+            # Parse ISO 8601 datetime
+            return datetime.fromisoformat(raw_datetime.replace('Z', '+00:00'))
+        except (ValueError, AttributeError):
+            return None
 
     @staticmethod
     def normalize_status(raw_status: str) -> str:
@@ -426,6 +449,7 @@ class CheckInGroupNormalizer(FieldNormalizer):
         - 'Open' -> 'Book'
         - 'Closed' -> 'Soldout'
         - 'Waiting' -> 'Waitlist'
+        - 'Cancel' -> 'Cancelled'
 
         Args:
             raw_status: Raw status string from API
@@ -440,6 +464,7 @@ class CheckInGroupNormalizer(FieldNormalizer):
             'open': 'Book',
             'closed': 'Soldout',
             'waiting': 'Waitlist',
+            'cancel': 'Cancelled',
         }
 
         normalized = raw_status.strip().lower()

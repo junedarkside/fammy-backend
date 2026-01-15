@@ -318,6 +318,8 @@
 #         ]
 
 """------------------------- new models -------------------------"""
+from typing import Optional
+
 from django.db import models
 
 
@@ -350,6 +352,7 @@ class Country(models.Model):
     # Normalized fields for deduplication
     normalized_name = models.CharField(max_length=255, db_index=True, blank=True, help_text="Normalized country name for deduplication (lowercase, trimmed)")
     iso_code = models.CharField(max_length=3, blank=True, help_text="ISO 3166-1 alpha-3 country code (e.g., JOR, ESP, RUS)")
+    icon_url = models.URLField(blank=True, null=True, help_text="URL to country icon/flag image")
 
     class Meta:
         unique_together = ("provider", "provider_code")
@@ -395,6 +398,21 @@ class ProgramTour(models.Model):
     plane_meals = models.BooleanField(default=False)
     total_meals = models.PositiveIntegerField(blank=True, null=True)
     locations = models.JSONField(blank=True, null=True)
+
+    # Tour type and pricing (CheckIn Group specific)
+    tour_type = models.CharField(max_length=50, blank=True, null=True)  # Series, FIT, etc.
+    starting_price = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True,
+        help_text="Minimum price across all periods"
+    )
+    starting_price_air_ticket = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True,
+        help_text="Minimum air ticket price across all periods"
+    )
+
+    # Provider timestamps for change tracking
+    provider_created_at = models.DateTimeField(blank=True, null=True)
+    provider_updated_at = models.DateTimeField(blank=True, null=True)
 
     # Data completeness flags
     has_flights = models.BooleanField(default=True)
@@ -460,6 +478,18 @@ class Period(models.Model):
     com_sale_end = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
 
     update_date = models.DateTimeField(blank=True, null=True)
+
+    @property
+    def availability(self) -> Optional[int]:
+        """
+        Calculate available seats.
+
+        Returns:
+            Number of available seats (seats - booked), or None if not available
+        """
+        if self.seats is None or self.booked is None:
+            return None
+        return self.seats - self.booked
 
     class Meta:
         unique_together = ("provider", "external_id")

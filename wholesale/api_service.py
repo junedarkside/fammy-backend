@@ -503,6 +503,7 @@ class APIServiceFactory:
             ZegoMapper,
             UniqueInterMapper,
             Go365Mapper,
+            CheckInGroupMapper,
             GenericMapper
         )
 
@@ -514,6 +515,8 @@ class APIServiceFactory:
             return UniqueInterMapper(provider)
         elif provider_code == 'go365':
             return Go365Mapper(provider)
+        elif provider_code == 'checkingroup':
+            return CheckInGroupMapper(provider)
         else:
             logger.warning(f"No specific mapper for '{provider.code}', using GenericMapper")
             return GenericMapper(provider)
@@ -746,7 +749,7 @@ class CheckInGroupAPIService(BaseAPIService):
             CheckIn Group returns all tours in a single response (no pagination).
             The page and limit parameters are accepted but ignored by the API.
         """
-        response = self._make_request('GET', 'v1/programtours')
+        response = self._make_request('v1/programtours')
         return response if isinstance(response, list) else []
 
     def get_program_tour_details(self, tour_id: str) -> Optional[Dict]:
@@ -765,7 +768,7 @@ class CheckInGroupAPIService(BaseAPIService):
             The single tour endpoint wraps response in "data" key,
             unlike the list endpoint which returns array directly.
         """
-        response = self._make_request('GET', f'v1/programtours/{tour_id}')
+        response = self._make_request(f'v1/programtours/{tour_id}')
         return response.get('data', response) if isinstance(response, dict) else response
 
     def get_about(self) -> Optional[Dict]:
@@ -786,4 +789,4 @@ class CheckInGroupAPIService(BaseAPIService):
             - company_taxid
             - company_vat
         """
-        return self._make_request('GET', 'v1/about')
+        return self._make_request('v1/about')
