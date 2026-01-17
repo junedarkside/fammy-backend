@@ -1,0 +1,85 @@
+{% extends "wholesale/evaluation/base.html" %}
+
+{% block title %}Evaluation Sessions - Provider Adapter Tool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>Provider Evaluation Sessions</h1>
+                <p class="text-muted mb-0">Analyze new provider APIs and generate adapter code</p>
+            </div>
+            <div class="btn-group">
+                <a href="{% url 'wholesale:provider_compare' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-bar-chart"></i> Compare Providers
+                </a>
+                <a href="{% url 'wholesale:evaluation_create' %}" class="btn btn-primary">
+                    + New Evaluation
+                </a>
+            </div>
+        </div>
+
+        {% if sessions %}
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Provider</th>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>Recommendation</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in sessions %}
+                        <tr>
+                            <td><strong>{{ session.provider_name }}</strong></td>
+                            <td><code>{{ session.provider_code }}</code></td>
+                            <td>
+                                {% if session.status == 'draft' %}
+                                    <span class="badge bg-secondary">Draft</span>
+                                {% elif session.status == 'analyzing' %}
+                                    <span class="badge bg-info">Analyzing</span>
+                                {% elif session.status == 'complete' %}
+                                    <span class="badge bg-success">Complete</span>
+                                {% else %}
+                                    <span class="badge bg-dark">Implemented</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if session.analysis_results %}
+                                    <code>{{ session.analysis_results.recommendation.action }}</code>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ session.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                {% if session.status == 'draft' %}
+                                    <a href="{% url 'wholesale:evaluation_upload_samples' session.session_id %}"
+                                       class="btn btn-sm btn-outline-primary">Continue</a>
+                                {% else %}
+                                    <a href="{% url 'wholesale:evaluation_analyze' session.session_id %}"
+                                       class="btn btn-sm btn-outline-secondary">View</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h4>No evaluation sessions yet</h4>
+            <p>Create your first evaluation session to analyze a new provider's API structure.</p>
+            <a href="{% url 'wholesale:evaluation_create' %}" class="btn btn-primary">Get Started</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

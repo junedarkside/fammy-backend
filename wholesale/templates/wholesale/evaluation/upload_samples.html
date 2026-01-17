@@ -1,0 +1,424 @@
+{% extends "wholesale/evaluation/base.html" %}
+
+{% block title %}Upload Samples - {{ session.provider_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step complete">1. Create Session</div>
+            <div class="step active">2. Upload Samples</div>
+            <div class="step">3. Analyze</div>
+            <div class="step">4. Generate Code</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Upload API Response Samples - {{ session.provider_name }}</h3>
+                <p class="mb-0 text-muted">Load sample data from database or paste JSON responses from the provider's API</p>
+            </div>
+            <div class="card-body">
+                <!-- Tabbed Interface -->
+                <ul class="nav nav-tabs mb-4" id="uploadTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="quickload-tab" data-bs-toggle="tab" data-bs-target="#quickload-panel" type="button" role="tab">
+                            📦 Quick Load from Database
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-panel" type="button" role="tab">
+                            📝 Manual JSON Paste
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <!-- Tab 1: Quick Load from Database -->
+                    <div class="tab-pane fade show active" id="quickload-panel" role="tabpanel">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">Load Samples from Database</h5>
+                                <p class="text-muted">Quickly load existing API samples from the RawVendorData table.</p>
+
+                                {% if providers_with_data %}
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Select Provider</label>
+                                        <select class="form-select" id="db-provider-select">
+                                            <option value="">-- Choose Provider --</option>
+                                            {% for provider in providers_with_data %}
+                                            <option value="{{ provider.code }}" data-count="{{ provider.record_count }}">
+                                                {{ provider.name }} ({{ provider.record_count }} records)
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Sample Size</label>
+                                        <select class="form-select" id="db-sample-size">
+                                            <option value="5">5 samples</option>
+                                            <option value="10" selected>10 samples</option>
+                                            <option value="20">20 samples</option>
+                                            <option value="50">50 samples (max)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Category Filter</label>
+                                        <select class="form-select" id="db-category-filter">
+                                            <option value="all">All Categories</option>
+                                        </select>
+                                        <small class="form-text text-muted">For Unique Inter providers only</small>
+                                    </div>
+                                </div>
+
+                                <button id="load-samples-btn" class="btn btn-primary" disabled>
+                                    🚀 Load Samples
+                                </button>
+
+                                <div id="load-status" class="mt-3"></div>
+                                {% else %}
+                                <div class="alert alert-warning">
+                                    <strong>No providers available</strong>
+                                    <p class="mb-0">No providers with raw data found in the database. Please sync data from a provider first, or use the Manual JSON Paste tab instead.</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Manual JSON Paste (EXISTING) -->
+                    <div class="tab-pane fade" id="manual-panel" role="tabpanel">
+                        <form method="post" id="manual-form">
+                            {% csrf_token %}
+
+                            <div class="alert alert-info">
+                                <strong>Tip:</strong> Use tools like Postman or curl to fetch sample responses.
+                                Paste the raw JSON here. Tour data is required; others are optional.
+                            </div>
+
+                            <!-- Smart Paste Helper -->
+                            <div class="card mb-4 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">🚀 Smart Paste Helper</h5>
+                                    <p class="card-text">Paste your complete API response here, and we'll automatically split it into the correct fields below.</p>
+                                    <textarea class="form-control font-monospace mb-3"
+                                              id="smart_paste"
+                                              rows="6"
+                                              placeholder='Paste full API response here, e.g.: {"data": {"id": 1, "name": "Tour...", "periods": [...], "countries": [...]}}'></textarea>
+                                    <button type="button" class="btn btn-success" onclick="smartPaste()">
+                                        ✨ Auto-Fill Fields
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="clearSmartPaste()">
+                                        Clear
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tour Sample (Required) -->
+                            <div class="mb-4">
+                                <label for="sample_tours" class="form-label">
+                                    <strong>Tour Sample (Required)</strong>
+                                    <span class="badge bg-danger">Required</span>
+                                </label>
+                                <textarea class="form-control font-monospace"
+                                          id="sample_tours"
+                                          name="sample_tours"
+                                          rows="8"
+                                          placeholder='[{"tour_id": "BKK001", "name": "Bangkok 5D4N", ...}]'
+                                          required></textarea>
+                                <small class="form-text text-muted">Array of tour objects</small>
+                            </div>
+
+                            <!-- Period Sample (Optional) -->
+                            <div class="mb-4">
+                                <label for="sample_periods" class="form-label">
+                                    <strong>Period/Departure Sample</strong>
+                                    <span class="badge bg-secondary">Optional</span>
+                                </label>
+                                <textarea class="form-control font-monospace"
+                                          id="sample_periods"
+                                          name="sample_periods"
+                                          rows="6"
+                                          placeholder='[{"departure_date": "2024-12-01", "price": 25000, ...}]'></textarea>
+                            </div>
+
+                            <!-- Country Sample (Optional) -->
+                            <div class="mb-4">
+                                <label for="sample_countries" class="form-label">
+                                    <strong>Country Sample</strong>
+                                    <span class="badge bg-secondary">Optional</span>
+                                </label>
+                                <textarea class="form-control font-monospace"
+                                          id="sample_countries"
+                                          name="sample_countries"
+                                          rows="4"
+                                          placeholder='[{"country_code": "TH", "name": "Thailand", ...}]'></textarea>
+                                <small class="form-text text-muted">Array of country objects</small>
+                            </div>
+
+                            <!-- Flight Sample (Optional) -->
+                            <div class="mb-4">
+                                <label for="sample_flights" class="form-label">
+                                    <strong>Flight Sample</strong>
+                                    <span class="badge bg-secondary">Optional</span>
+                                </label>
+                                <textarea class="form-control font-monospace"
+                                          id="sample_flights"
+                                          name="sample_flights"
+                                          rows="4"
+                                          placeholder='[{"flight_number": "TG123", ...}]'></textarea>
+                                <small class="form-text text-muted">Array of flight objects</small>
+                            </div>
+
+                            <!-- Itinerary Sample (Optional) -->
+                            <div class="mb-4">
+                                <label for="sample_itineraries" class="form-label">
+                                    <strong>Itinerary Sample</strong>
+                                    <span class="badge bg-secondary">Optional</span>
+                                </label>
+                                <textarea class="form-control font-monospace"
+                                          id="sample_itineraries"
+                                          name="sample_itineraries"
+                                          rows="6"
+                                          placeholder='[{"day": 1, "title": "Arrival", "description": "...", ...}]'></textarea>
+                                <small class="form-text text-muted">Array of day-by-day itinerary objects</small>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Save Samples & Analyze
+                                </button>
+                                <a href="{% url 'wholesale:evaluation_home' %}" class="btn btn-outline-secondary">
+                                    Save Draft & Exit
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Provider selection handling
+const providerSelect = document.getElementById('db-provider-select');
+const categoryFilter = document.getElementById('db-category-filter');
+const loadBtn = document.getElementById('load-samples-btn');
+
+if (providerSelect) {
+    providerSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const providerCode = this.value;
+
+        // Enable load button if provider selected
+        loadBtn.disabled = !providerCode;
+
+        // Show category options for Unique Inter
+        if (providerCode === 'unique_inter') {
+            categoryFilter.innerHTML = `
+                <option value="all">All Categories</option>
+                <option value="59">59 - Europe</option>
+                <option value="60">60 - Russia</option>
+                <option value="61">61 - UK</option>
+                <option value="62">62 - Hong Kong</option>
+                <option value="63">63 - Special Promotion</option>
+                <option value="64">64 - Vietnam</option>
+            `;
+        } else {
+            categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+        }
+    });
+}
+
+// Load samples button handler
+if (loadBtn) {
+    loadBtn.addEventListener('click', async function() {
+        const providerCode = providerSelect.value;
+        const sampleSize = document.getElementById('db-sample-size').value;
+        const category = categoryFilter.value;
+
+        const statusDiv = document.getElementById('load-status');
+        statusDiv.innerHTML = '<div class="alert alert-info">Loading samples...</div>';
+
+        try {
+            const response = await fetch(`/wholesale/evaluation/ajax/load-db-samples/?provider=${providerCode}&sample_size=${sampleSize}&category=${category}`);
+            const result = await response.json();
+
+            if (result.success) {
+                // Switch to manual tab and fill forms
+                const manualTabEl = document.getElementById('manual-tab');
+                const manualTab = new bootstrap.Tab(manualTabEl);
+                manualTab.show();
+
+                // Fill the form fields with loaded data
+                document.getElementById('sample_tours').value = JSON.stringify(result.data.tours, null, 2);
+                document.getElementById('sample_periods').value = JSON.stringify(result.data.periods, null, 2);
+                document.getElementById('sample_countries').value = JSON.stringify(result.data.countries, null, 2);
+                document.getElementById('sample_flights').value = JSON.stringify(result.data.flights, null, 2);
+                document.getElementById('sample_itineraries').value = JSON.stringify(result.data.itineraries, null, 2);
+
+                // Trigger validation on all fields
+                ['sample_tours', 'sample_periods', 'sample_countries', 'sample_flights', 'sample_itineraries'].forEach(id => {
+                    const field = document.getElementById(id);
+                    if (field.value.trim()) {
+                        field.classList.add('is-valid');
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                statusDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Loaded ${result.stats.tours} tours, ${result.stats.periods} periods!</strong>
+                        Samples are ready. Click "Save Samples & Analyze" to continue.
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `<div class="alert alert-danger">Error: ${result.error}</div>`;
+            }
+        } catch (error) {
+            statusDiv.innerHTML = `<div class="alert alert-danger">Error loading samples: ${error}</div>`;
+        }
+    });
+}
+
+// Smart Paste Function
+function smartPaste() {
+    const smartPasteField = document.getElementById('smart_paste');
+    const value = smartPasteField.value.trim();
+
+    if (!value) {
+        alert('Please paste your API response in the Smart Paste field first.');
+        return;
+    }
+
+    try {
+        let data = JSON.parse(value);
+
+        // Handle different API response structures
+        // Case 1: {"data": {...}} - unwrap data
+        if (data.data && typeof data.data === 'object' && !Array.isArray(data.data)) {
+            data = data.data;
+        }
+
+        // Case 2: {"data": [{...}]} - unwrap data array
+        if (data.data && Array.isArray(data.data)) {
+            data = data.data;
+        }
+
+        // Now data is either an object or an array
+        let tourData = [];
+        let periodsData = [];
+        let countriesData = [];
+        let flightsData = [];
+        let itinerariesData = [];
+
+        // If data is a single object, convert to array
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+
+        // Process each tour object
+        data.forEach(tour => {
+            // Extract nested arrays if they exist
+            if (tour.periods && Array.isArray(tour.periods)) {
+                periodsData = periodsData.concat(tour.periods);
+            }
+
+            if (tour.countries && Array.isArray(tour.countries)) {
+                countriesData = countriesData.concat(tour.countries);
+            }
+
+            if (tour.flights && Array.isArray(tour.flights)) {
+                flightsData = flightsData.concat(tour.flights);
+            }
+
+            if (tour.itineraries && Array.isArray(tour.itineraries)) {
+                itinerariesData = itinerariesData.concat(tour.itineraries);
+            }
+
+            // Create a clean tour object without nested arrays
+            const cleanTour = {...tour};
+            delete cleanTour.periods;
+            delete cleanTour.countries;
+            delete cleanTour.flights;
+            delete cleanTour.itineraries;
+
+            tourData.push(cleanTour);
+        });
+
+        // Fill in the form fields
+        if (tourData.length > 0) {
+            document.getElementById('sample_tours').value = JSON.stringify(tourData, null, 2);
+            document.getElementById('sample_tours').classList.add('is-valid');
+            document.getElementById('sample_tours').classList.remove('is-invalid');
+        }
+
+        if (periodsData.length > 0) {
+            document.getElementById('sample_periods').value = JSON.stringify(periodsData, null, 2);
+            document.getElementById('sample_periods').classList.add('is-valid');
+            document.getElementById('sample_periods').classList.remove('is-invalid');
+        }
+
+        if (countriesData.length > 0) {
+            document.getElementById('sample_countries').value = JSON.stringify(countriesData, null, 2);
+            document.getElementById('sample_countries').classList.add('is-valid');
+            document.getElementById('sample_countries').classList.remove('is-invalid');
+        }
+
+        if (flightsData.length > 0) {
+            document.getElementById('sample_flights').value = JSON.stringify(flightsData, null, 2);
+            document.getElementById('sample_flights').classList.add('is-valid');
+            document.getElementById('sample_flights').classList.remove('is-invalid');
+        }
+
+        if (itinerariesData.length > 0) {
+            document.getElementById('sample_itineraries').value = JSON.stringify(itinerariesData, null, 2);
+            document.getElementById('sample_itineraries').classList.add('is-valid');
+            document.getElementById('sample_itineraries').classList.remove('is-invalid');
+        }
+
+        // Show success message
+        alert(`✅ Successfully extracted:\n- ${tourData.length} tour(s)\n- ${periodsData.length} period(s)\n- ${countriesData.length} country/countries\n- ${flightsData.length} flight(s)\n- ${itinerariesData.length} itinerary/itineraries`);
+
+        // Clear smart paste field
+        smartPasteField.value = '';
+
+    } catch (e) {
+        alert('❌ Invalid JSON format. Please check your API response and try again.\n\nError: ' + e.message);
+        smartPasteField.classList.add('is-invalid');
+    }
+}
+
+function clearSmartPaste() {
+    document.getElementById('smart_paste').value = '';
+    document.getElementById('smart_paste').classList.remove('is-valid', 'is-invalid');
+}
+
+// Basic JSON validation on blur
+document.querySelectorAll('textarea').forEach(textarea => {
+    // Skip smart_paste field
+    if (textarea.id === 'smart_paste') return;
+
+    textarea.addEventListener('blur', function() {
+        const value = this.value.trim();
+        if (!value) return;
+
+        try {
+            JSON.parse(value);
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        } catch (e) {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+        }
+    });
+});
+</script>
+{% endblock %}

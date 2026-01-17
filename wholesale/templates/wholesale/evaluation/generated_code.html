@@ -1,0 +1,126 @@
+{% extends "wholesale/evaluation/base.html" %}
+
+{% block title %}Generated Code - {{ session.provider_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="step-indicator">
+            <div class="step complete">1. Create Session</div>
+            <div class="step complete">2. Upload Samples</div>
+            <div class="step complete">3. Analyze</div>
+            <div class="step active">4. Generate Code</div>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>Code Generated Successfully!</h4>
+            <p>Review the generated code below. You can copy or download each file.</p>
+        </div>
+
+        <!-- API Service Code -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">API Service Class</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyCode('service-code')">
+                        Copy
+                    </button>
+                    <a href="{% url 'wholesale:evaluation_download' session.session_id 'service' %}"
+                       class="btn btn-sm btn-primary">
+                        Download
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <pre><code id="service-code" class="language-python">{{ session.generated_service_code }}</code></pre>
+            </div>
+        </div>
+
+        <!-- Mapper Code -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Mapper Class</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyCode('mapper-code')">
+                        Copy
+                    </button>
+                    <a href="{% url 'wholesale:evaluation_download' session.session_id 'mapper' %}"
+                       class="btn btn-sm btn-primary">
+                        Download
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <pre><code id="mapper-code" class="language-python">{{ session.generated_mapper_code }}</code></pre>
+            </div>
+        </div>
+
+        <!-- Management Command -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Management Command</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyCode('command-code')">
+                        Copy
+                    </button>
+                    <a href="{% url 'wholesale:evaluation_download' session.session_id 'command' %}"
+                       class="btn btn-sm btn-primary">
+                        Download
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <pre><code id="command-code" class="language-python">{{ session.generated_command_code }}</code></pre>
+            </div>
+        </div>
+
+        <!-- Provider Mappings Config -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Provider Mappings Configuration</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyCode('mappings-code')">
+                        Copy
+                    </button>
+                    <a href="{% url 'wholesale:evaluation_download' session.session_id 'mappings' %}"
+                       class="btn btn-sm btn-primary">
+                        Download
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <pre><code id="mappings-code" class="language-python">{{ session.generated_mappings_config }}</code></pre>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-4 mb-4">
+            <a href="{% url 'wholesale:evaluation_home' %}" class="btn btn-success btn-lg">
+                Done - Return to Home
+            </a>
+            <a href="{% url 'wholesale:evaluation_analyze' session.session_id %}" class="btn btn-outline-secondary">
+                Back to Analysis
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyCode(elementId) {
+    const codeElement = document.getElementById(elementId);
+    const text = codeElement.textContent;
+
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Code copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+}
+
+// Initialize Prism syntax highlighting
+document.addEventListener('DOMContentLoaded', function() {
+    Prism.highlightAll();
+});
+</script>
+{% endblock %}

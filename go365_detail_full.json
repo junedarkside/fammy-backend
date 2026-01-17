@@ -1,0 +1,1340 @@
+{
+  "status": true,
+  "data": [
+    {
+      "tour_id": 13632,
+      "tour_code": "GO1KMG-FD011",
+      "tour_name": "สายลมหวน ชวนให้คิดถึง คุนหมิง ต้าหลี่ ลี่เจียง นั่งรถไฟความเร็วสูง (ไม่ลงร้านช้อปปิ้ง) 6 วัน 5 คืน โดยสายการบินแอร์เอเชีย (FD)",
+      "tour_description": "กรุงเทพฯ (สนามบินดอนเมือง) – คุนหมิง (ท่าอากาศยานนานาชาติคุนหมิงฉางสุ่ย) (FD582: 08:00 - 11:25)-ต้าหลี่-ผ่านชมเจดีย์สามองค์-วัดเจ้าแม่กวนอิม–เมืองโบราณต้าหลี่-ลี่เจียง-สระมังกรดำ-เมืองโบราณลี่เจียง-ภูเขาหิมะมังกรหยก (รวมกระเช้าใหญ่) -โชว์ IMPRESSION LIJIANG – หุบเขาสีน้ำเงิน (รวมรถราง) -เมืองโบราณไป๋ซา+ร้านกาแฟหยุนตี้อัน (ไม่รวมค่าเครื่องดื่ม)-ลี่เจียง-นั่งรถไฟความเร็วสู่คุนหมิง (รวมรถขนกระเป๋า)-คุนหมิง-เมืองโบราณกวนตู้-วัดหยวนทง - ตำหนักทอง- อิสระช้อปปิ้งหนานผิงเจี่ย+ POP MART-คุนหมิง – กรุงเทพฯ (สนามบินดอนเมือง)(FD583 : 12.30 – 13.50)",
+      "tour_cover_image": "http://www.qualityb2bpackage.com/upload_photo/travel/112025/1763351469.jpg",
+      "tour_country": [
+        {
+          "country_id": 48,
+          "country_code_2": "CN",
+          "country_code_3": "CHN",
+          "country_numeric": "156",
+          "country_name": "China",
+          "country_name_th": "จีน",
+          "country_name_en": "China",
+          "country_zone_id": 3,
+          "country_zone_name": "asia"
+        }
+      ],
+      "tour_city": [
+        {
+          "city_id": 4648,
+          "city_name": "Kunming",
+          "country_id": 48
+        },
+        {
+          "city_id": 4654,
+          "city_name": "Lijiang",
+          "country_id": 48
+        },
+        {
+          "city_id": 4726,
+          "city_name": "Dali",
+          "country_id": 48
+        }
+      ],
+      "tour_area": [],
+      "tour_owner": {
+        "owner_id": 48,
+        "owner_agent_id": 3148,
+        "owner_company_show": "Go365Travel-GO",
+        "owner_company_th": "บริษัท โก 365 ทราเวล จำกัด",
+        "owner_company_en": "GO 365 TRAVEL CO., LTD. (BRANCH00001)",
+        "owner_license_no": "11/07615",
+        "owner_license_file": "",
+        "owner_company_tax_id": "0105557086021",
+        "owner_tax_id_number": "",
+        "owner_banner_package": "http://www.qualityb2bpackage.com/upload_photo/partner/1717484085.jpg",
+        "owner_banner_package_sub": "http://www.qualityb2bpackage.com/upload_photo/partner/sub_17174840851.jpg",
+        "owner_logo": "http://www.qualityb2bpackage.com/upload_photo/partner/1681281492.jpg",
+        "owner_address": "275/6 อาคารซี ชั้นที่ 5 ห้อง เอ ถนนรัชดาภิเษก แขวงรัชดาภิเษก เขตดินแดง กรุงเทพมหานคร",
+        "owner_telephone": "02-277-6000",
+        "owner_fax": "-",
+        "owner_email": "test1@goholidaytour.com"
+      },
+      "tour_sale": [
+        {
+          "sale_id": 1092,
+          "sale_name": "พิกุล (นุ้ย)",
+          "sale_lastname": "คุลิลัง",
+          "sale_username": "pigul",
+          "sale_fulllname": "พิกุล (นุ้ย) คุลิลัง (pigul)",
+          "sale_tel": "097-2296941",
+          "sale_mobile": "097-2296941",
+          "sale_email": "pigul.k89@gmail.com"
+        }
+      ],
+      "tour_menu": [
+        {
+          "menu_id": 4,
+          "menu_name_th": "จีน",
+          "menu_name_en": "China",
+          "menu_sub": [
+            {
+              "menu_sub_id": 6,
+              "menu_sub_name_th": "คุนหมิง",
+              "menu_sub_name_en": "Kunming"
+            },
+            {
+              "menu_sub_id": 342,
+              "menu_sub_name_th": "ลี่เจียง",
+              "menu_sub_name_en": "Lijiang"
+            },
+            {
+              "menu_sub_id": 707,
+              "menu_sub_name_th": "ต้าหลี่",
+              "menu_sub_name_en": "Dali"
+            }
+          ]
+        }
+      ],
+      "tour_num_day": 6,
+      "tour_num_night": 5,
+      "tour_num_program": 0,
+      "tour_type_package_title": 0,
+      "tour_type_package": "jointour",
+      "tour_format_package": "Major",
+      "tour_price_start": 19900,
+      "tour_price_min": 19900,
+      "tour_price_promotion": 0,
+      "tour_price_discount": 0,
+      "tour_thai_project_id": 0,
+      "tour_thai_project_name": "ไม่ได้เข้าร่วมโครงการของรัฐ",
+      "tour_date_min": "2026-01-17",
+      "tour_date_max": "2026-02-05",
+      "tour_airline": {
+        "airline_id": 4937,
+        "airline_iata": "FD",
+        "airline_icao": "AIQ",
+        "airline_name": "Thai AirAsia",
+        "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+        "airport_iata": "DMK",
+        "airport_name": "Don Mueang International Airport (DMK)"
+      },
+      "tour_car": "",
+      "tour_format": {
+        "format_id": 1,
+        "format_name_th": "โปรแกรมทัวร์ธรรมดา",
+        "format_name_en": "Defalut Package",
+        "format_drop": "DF"
+      },
+      "tour_file": {
+        "file_doc": "http://www.qualityb2bpackage.com/upload_file/travel/word/112025/1763351692.docx",
+        "file_pdf": "http://www.qualityb2bpackage.com/upload_file/travel/pdf/112025/1763351692.pdf",
+        "file_banner": "http://www.qualityb2bpackage.com/upload_photo/travel/112025/17633514691.jpg"
+      },
+      "tour_update_remark": {
+        "status": "programtour",
+        "remark": "เพิ่มพรีเรียดการเดินทาง",
+        "date_create": "2025-08-22 15:47:49"
+      },
+      "tour_period": [
+        {
+          "period_id": 97683,
+          "period_code": "GO1KMG5NKMGFD260117",
+          "period_date": "2026-01-17",
+          "period_back": "2026-01-22",
+          "period_price_min": 19900,
+          "period_price_start": 19900,
+          "period_order_time": 24,
+          "period_unpaid_time": 720,
+          "period_airline": {
+            "airline_id": 4937,
+            "airline_iata": "FD",
+            "airline_icao": "AIQ",
+            "airline_name": "Thai AirAsia",
+            "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+            "airport_iata": "DMK",
+            "airport_name": "Don Mueang International Airport (DMK)"
+          },
+          "period_quota": 26,
+          "period_total": 26,
+          "period_available": 0,
+          "period_seat_hold": 0,
+          "period_sale": [
+            {
+              "sale_id": 1632,
+              "sale_name": "ฐิติกานต์(ป๊อป)",
+              "sale_lastname": "ยอดเถื่อน",
+              "sale_username": "Thitikanb2b",
+              "sale_fulllname": "ฐิติกานต์(ป๊อป) ยอดเถื่อน (Thitikanb2b)",
+              "sale_tel": "",
+              "sale_mobile": "0954623443",
+              "sale_email": "chairoek.p@gmail.com"
+            }
+          ],
+          "period_remark": [],
+          "period_remark_status": "",
+          "period_name_list": {
+            "PDF": "http://www.qualityb2bpackage.com/upload_file/group/1768189762.pdf",
+            "DOC": ""
+          },
+          "period_visible": 1,
+          "period_visible_text": "เปิดให้จอง",
+          "period_status": "ปิดกรุ๊ป",
+          "agentDiscount": 0,
+          "period_promotion": {},
+          "period_promotion_group": {},
+          "period_discount": [],
+          "period_rate": [
+            {
+              "rate_id": 363692,
+              "rate_type_id": 50830,
+              "rate_title_id": 2,
+              "rate_title": "ผู้ใหญ่ 2 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 2,
+              "rate_room_abbr": "TWN",
+              "rate_room_name": "TWIN",
+              "rate_room_person": 2,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363693,
+              "rate_type_id": 50831,
+              "rate_title_id": 3,
+              "rate_title": "ผู้ใหญ่ 3 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 3,
+              "rate_room_abbr": "TRP",
+              "rate_room_name": "TRIPLE",
+              "rate_room_person": 3,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363694,
+              "rate_type_id": 50832,
+              "rate_title_id": 1,
+              "rate_title": "ผู้ใหญ่ 1 ท่าน พักเดี่ยว 1 ห้อง(Single room) ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 25400,
+              "rate_price_net": 25400,
+              "rate_price_on_ticket": 20400,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 1,
+              "rate_room_abbr": "SGL",
+              "rate_room_name": "SINGLE",
+              "rate_room_person": 1,
+              "rate_room_extra_bed": 0
+            }
+          ],
+          "period_rate_adult_twn": 19900,
+          "period_rate_adult_trp": 19900,
+          "period_rate_adult_sgl": 25400,
+          "period_commission": null,
+          "period_option_price": [],
+          "period_flight": [
+            {
+              "flight_id": 244807,
+              "flight_route": "DMK - KMG",
+              "flight_date": "2026-01-17 - 2026-01-17",
+              "flight_time": "08:00 - 11:25",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD582",
+              "flight_from_airport": "DMK",
+              "flight_from_date": "2026-01-17",
+              "flight_from_time": "08:00",
+              "flight_to_airport": "KMG",
+              "flight_to_date": "2026-01-17",
+              "flight_to_time": "11:25",
+              "flight_remark": "",
+              "system_remark": null
+            },
+            {
+              "flight_id": 244808,
+              "flight_route": "KMG - DMK",
+              "flight_date": "2026-01-22 - 2026-01-22",
+              "flight_time": "12:30 - 13:50",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD583",
+              "flight_from_airport": "KMG",
+              "flight_from_date": "2026-01-22",
+              "flight_from_time": "12:30",
+              "flight_to_airport": "DMK",
+              "flight_to_date": "2026-01-22",
+              "flight_to_time": "13:50",
+              "flight_remark": "",
+              "system_remark": null
+            }
+          ],
+          "period_car": "",
+          "period_update_remark": {}
+        },
+        {
+          "period_id": 97684,
+          "period_code": "GO1KMG5NKMGFD260120",
+          "period_date": "2026-01-20",
+          "period_back": "2026-01-25",
+          "period_price_min": 19900,
+          "period_price_start": 19900,
+          "period_order_time": 24,
+          "period_unpaid_time": 720,
+          "period_airline": {
+            "airline_id": 4937,
+            "airline_iata": "FD",
+            "airline_icao": "AIQ",
+            "airline_name": "Thai AirAsia",
+            "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+            "airport_iata": "DMK",
+            "airport_name": "Don Mueang International Airport (DMK)"
+          },
+          "period_quota": 12,
+          "period_total": 12,
+          "period_available": 0,
+          "period_seat_hold": 0,
+          "period_sale": [
+            {
+              "sale_id": 1632,
+              "sale_name": "ฐิติกานต์(ป๊อป)",
+              "sale_lastname": "ยอดเถื่อน",
+              "sale_username": "Thitikanb2b",
+              "sale_fulllname": "ฐิติกานต์(ป๊อป) ยอดเถื่อน (Thitikanb2b)",
+              "sale_tel": "",
+              "sale_mobile": "0954623443",
+              "sale_email": "chairoek.p@gmail.com"
+            }
+          ],
+          "period_remark": [],
+          "period_remark_status": "",
+          "period_name_list": {
+            "PDF": "http://www.qualityb2bpackage.com/upload_file/group/1768363518.pdf",
+            "DOC": ""
+          },
+          "period_visible": 2,
+          "period_visible_text": "ตรวจสอบเงื่อนไขอัตโนมัติ",
+          "period_status": "ปิดกรุ๊ป",
+          "agentDiscount": 0,
+          "period_promotion": {},
+          "period_promotion_group": {},
+          "period_discount": [],
+          "period_rate": [
+            {
+              "rate_id": 363695,
+              "rate_type_id": 50830,
+              "rate_title_id": 2,
+              "rate_title": "ผู้ใหญ่ 2 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 2,
+              "rate_room_abbr": "TWN",
+              "rate_room_name": "TWIN",
+              "rate_room_person": 2,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363696,
+              "rate_type_id": 50831,
+              "rate_title_id": 3,
+              "rate_title": "ผู้ใหญ่ 3 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 3,
+              "rate_room_abbr": "TRP",
+              "rate_room_name": "TRIPLE",
+              "rate_room_person": 3,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363697,
+              "rate_type_id": 50832,
+              "rate_title_id": 1,
+              "rate_title": "ผู้ใหญ่ 1 ท่าน พักเดี่ยว 1 ห้อง(Single room) ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 25400,
+              "rate_price_net": 25400,
+              "rate_price_on_ticket": 20400,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 1,
+              "rate_room_abbr": "SGL",
+              "rate_room_name": "SINGLE",
+              "rate_room_person": 1,
+              "rate_room_extra_bed": 0
+            }
+          ],
+          "period_rate_adult_twn": 19900,
+          "period_rate_adult_trp": 19900,
+          "period_rate_adult_sgl": 25400,
+          "period_commission": null,
+          "period_option_price": [],
+          "period_flight": [
+            {
+              "flight_id": 244809,
+              "flight_route": "DMK - KMG",
+              "flight_date": "2026-01-20 - 2026-01-20",
+              "flight_time": "08:00 - 11:25",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD582",
+              "flight_from_airport": "DMK",
+              "flight_from_date": "2026-01-20",
+              "flight_from_time": "08:00",
+              "flight_to_airport": "KMG",
+              "flight_to_date": "2026-01-20",
+              "flight_to_time": "11:25",
+              "flight_remark": "",
+              "system_remark": null
+            },
+            {
+              "flight_id": 244810,
+              "flight_route": "KMG - DMK",
+              "flight_date": "2026-01-25 - 2026-01-25",
+              "flight_time": "12:30 - 13:50",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD583",
+              "flight_from_airport": "KMG",
+              "flight_from_date": "2026-01-25",
+              "flight_from_time": "12:30",
+              "flight_to_airport": "DMK",
+              "flight_to_date": "2026-01-25",
+              "flight_to_time": "13:50",
+              "flight_remark": "",
+              "system_remark": null
+            }
+          ],
+          "period_car": "",
+          "period_update_remark": {}
+        },
+        {
+          "period_id": 97687,
+          "period_code": "GO1KMG5NKMGFD260129",
+          "period_date": "2026-01-29",
+          "period_back": "2026-02-03",
+          "period_price_min": 19900,
+          "period_price_start": 19900,
+          "period_order_time": 24,
+          "period_unpaid_time": 720,
+          "period_airline": {
+            "airline_id": 4937,
+            "airline_iata": "FD",
+            "airline_icao": "AIQ",
+            "airline_name": "Thai AirAsia",
+            "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+            "airport_iata": "DMK",
+            "airport_name": "Don Mueang International Airport (DMK)"
+          },
+          "period_quota": 21,
+          "period_total": 21,
+          "period_available": 0,
+          "period_seat_hold": 0,
+          "period_sale": [
+            {
+              "sale_id": 1632,
+              "sale_name": "ฐิติกานต์(ป๊อป)",
+              "sale_lastname": "ยอดเถื่อน",
+              "sale_username": "Thitikanb2b",
+              "sale_fulllname": "ฐิติกานต์(ป๊อป) ยอดเถื่อน (Thitikanb2b)",
+              "sale_tel": "",
+              "sale_mobile": "0954623443",
+              "sale_email": "chairoek.p@gmail.com"
+            }
+          ],
+          "period_remark": [],
+          "period_remark_status": "",
+          "period_name_list": {
+            "PDF": "",
+            "DOC": ""
+          },
+          "period_visible": 1,
+          "period_visible_text": "เปิดให้จอง",
+          "period_status": "ปิดกรุ๊ป",
+          "agentDiscount": 0,
+          "period_promotion": {},
+          "period_promotion_group": {},
+          "period_discount": [],
+          "period_rate": [
+            {
+              "rate_id": 363704,
+              "rate_type_id": 50830,
+              "rate_title_id": 2,
+              "rate_title": "ผู้ใหญ่ 2 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 2,
+              "rate_room_abbr": "TWN",
+              "rate_room_name": "TWIN",
+              "rate_room_person": 2,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363705,
+              "rate_type_id": 50831,
+              "rate_title_id": 3,
+              "rate_title": "ผู้ใหญ่ 3 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 3,
+              "rate_room_abbr": "TRP",
+              "rate_room_name": "TRIPLE",
+              "rate_room_person": 3,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363706,
+              "rate_type_id": 50832,
+              "rate_title_id": 1,
+              "rate_title": "ผู้ใหญ่ 1 ท่าน พักเดี่ยว 1 ห้อง(Single room) ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 25400,
+              "rate_price_net": 25400,
+              "rate_price_on_ticket": 20400,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 1,
+              "rate_room_abbr": "SGL",
+              "rate_room_name": "SINGLE",
+              "rate_room_person": 1,
+              "rate_room_extra_bed": 0
+            }
+          ],
+          "period_rate_adult_twn": 19900,
+          "period_rate_adult_trp": 19900,
+          "period_rate_adult_sgl": 25400,
+          "period_commission": null,
+          "period_option_price": [],
+          "period_flight": [
+            {
+              "flight_id": 258671,
+              "flight_route": "DMK - KMG",
+              "flight_date": "2026-01-29 - 2026-01-29",
+              "flight_time": "08:00 - 11:25",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD582",
+              "flight_from_airport": "DMK",
+              "flight_from_date": "2026-01-29",
+              "flight_from_time": "08:00",
+              "flight_to_airport": "KMG",
+              "flight_to_date": "2026-01-29",
+              "flight_to_time": "11:25",
+              "flight_remark": "",
+              "system_remark": null
+            },
+            {
+              "flight_id": 258672,
+              "flight_route": "KMG - DMK",
+              "flight_date": "2026-02-03 - 2026-02-03",
+              "flight_time": "12:30 - 13:50",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD583",
+              "flight_from_airport": "KMG",
+              "flight_from_date": "2026-02-03",
+              "flight_from_time": "12:30",
+              "flight_to_airport": "DMK",
+              "flight_to_date": "2026-02-03",
+              "flight_to_time": "13:50",
+              "flight_remark": "",
+              "system_remark": null
+            }
+          ],
+          "period_car": "",
+          "period_update_remark": {}
+        },
+        {
+          "period_id": 97688,
+          "period_code": "GO1KMG5NKMGFD260131",
+          "period_date": "2026-01-31",
+          "period_back": "2026-02-05",
+          "period_price_min": 19900,
+          "period_price_start": 19900,
+          "period_order_time": 24,
+          "period_unpaid_time": 720,
+          "period_airline": {
+            "airline_id": 4937,
+            "airline_iata": "FD",
+            "airline_icao": "AIQ",
+            "airline_name": "Thai AirAsia",
+            "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+            "airport_iata": "DMK",
+            "airport_name": "Don Mueang International Airport (DMK)"
+          },
+          "period_quota": 26,
+          "period_total": 0,
+          "period_available": 25,
+          "period_seat_hold": 1,
+          "period_sale": [
+            {
+              "sale_id": 1632,
+              "sale_name": "ฐิติกานต์(ป๊อป)",
+              "sale_lastname": "ยอดเถื่อน",
+              "sale_username": "Thitikanb2b",
+              "sale_fulllname": "ฐิติกานต์(ป๊อป) ยอดเถื่อน (Thitikanb2b)",
+              "sale_tel": "",
+              "sale_mobile": "0954623443",
+              "sale_email": "chairoek.p@gmail.com"
+            }
+          ],
+          "period_remark": [],
+          "period_remark_status": "",
+          "period_name_list": {
+            "PDF": "",
+            "DOC": ""
+          },
+          "period_visible": 3,
+          "period_visible_text": "ปิดไม่ให้จอง (ติดต่อเรา)",
+          "period_status": "ติดต่อเรา",
+          "agentDiscount": 0,
+          "period_promotion": {},
+          "period_promotion_group": {},
+          "period_discount": [],
+          "period_rate": [
+            {
+              "rate_id": 363707,
+              "rate_type_id": 50830,
+              "rate_title_id": 2,
+              "rate_title": "ผู้ใหญ่ 2 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 2,
+              "rate_room_abbr": "TWN",
+              "rate_room_name": "TWIN",
+              "rate_room_person": 2,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363708,
+              "rate_type_id": 50831,
+              "rate_title_id": 3,
+              "rate_title": "ผู้ใหญ่ 3 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 3,
+              "rate_room_abbr": "TRP",
+              "rate_room_name": "TRIPLE",
+              "rate_room_person": 3,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363709,
+              "rate_type_id": 50832,
+              "rate_title_id": 1,
+              "rate_title": "ผู้ใหญ่ 1 ท่าน พักเดี่ยว 1 ห้อง(Single room) ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 25400,
+              "rate_price_net": 25400,
+              "rate_price_on_ticket": 20400,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 1,
+              "rate_room_abbr": "SGL",
+              "rate_room_name": "SINGLE",
+              "rate_room_person": 1,
+              "rate_room_extra_bed": 0
+            }
+          ],
+          "period_rate_adult_twn": 19900,
+          "period_rate_adult_trp": 19900,
+          "period_rate_adult_sgl": 25400,
+          "period_commission": null,
+          "period_option_price": [],
+          "period_flight": [
+            {
+              "flight_id": 244813,
+              "flight_route": "DMK - KMG",
+              "flight_date": "2026-01-31 - 2026-01-31",
+              "flight_time": "08:00 - 11:25",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD582",
+              "flight_from_airport": "DMK",
+              "flight_from_date": "2026-01-31",
+              "flight_from_time": "08:00",
+              "flight_to_airport": "KMG",
+              "flight_to_date": "2026-01-31",
+              "flight_to_time": "11:25",
+              "flight_remark": "",
+              "system_remark": null
+            },
+            {
+              "flight_id": 244814,
+              "flight_route": "KMG - DMK",
+              "flight_date": "2026-02-05 - 2026-02-05",
+              "flight_time": "12:30 - 13:50",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD583",
+              "flight_from_airport": "KMG",
+              "flight_from_date": "2026-02-05",
+              "flight_from_time": "12:30",
+              "flight_to_airport": "DMK",
+              "flight_to_date": "2026-02-05",
+              "flight_to_time": "13:50",
+              "flight_remark": "",
+              "system_remark": null
+            }
+          ],
+          "period_car": "",
+          "period_update_remark": {}
+        },
+        {
+          "period_id": 97689,
+          "period_code": "GO1KMG5NKMGFD260203TR",
+          "period_date": "2026-02-03",
+          "period_back": "2026-02-08",
+          "period_price_min": 19900,
+          "period_price_start": 19900,
+          "period_order_time": 24,
+          "period_unpaid_time": 720,
+          "period_airline": {
+            "airline_id": 4937,
+            "airline_iata": "FD",
+            "airline_icao": "AIQ",
+            "airline_name": "Thai AirAsia",
+            "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+            "airport_iata": "DMK",
+            "airport_name": "Don Mueang International Airport (DMK)"
+          },
+          "period_quota": 21,
+          "period_total": 21,
+          "period_available": 0,
+          "period_seat_hold": 0,
+          "period_sale": [
+            {
+              "sale_id": 1632,
+              "sale_name": "ฐิติกานต์(ป๊อป)",
+              "sale_lastname": "ยอดเถื่อน",
+              "sale_username": "Thitikanb2b",
+              "sale_fulllname": "ฐิติกานต์(ป๊อป) ยอดเถื่อน (Thitikanb2b)",
+              "sale_tel": "",
+              "sale_mobile": "0954623443",
+              "sale_email": "chairoek.p@gmail.com"
+            }
+          ],
+          "period_remark": [],
+          "period_remark_status": "",
+          "period_name_list": {
+            "PDF": "",
+            "DOC": ""
+          },
+          "period_visible": 2,
+          "period_visible_text": "ตรวจสอบเงื่อนไขอัตโนมัติ",
+          "period_status": "ที่นั่งเต็ม",
+          "agentDiscount": 0,
+          "period_promotion": {},
+          "period_promotion_group": {},
+          "period_discount": [],
+          "period_rate": [
+            {
+              "rate_id": 363710,
+              "rate_type_id": 50830,
+              "rate_title_id": 2,
+              "rate_title": "ผู้ใหญ่ 2 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 2,
+              "rate_room_abbr": "TWN",
+              "rate_room_name": "TWIN",
+              "rate_room_person": 2,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363711,
+              "rate_type_id": 50831,
+              "rate_title_id": 3,
+              "rate_title": "ผู้ใหญ่ 3 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 3,
+              "rate_room_abbr": "TRP",
+              "rate_room_name": "TRIPLE",
+              "rate_room_person": 3,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363712,
+              "rate_type_id": 50832,
+              "rate_title_id": 1,
+              "rate_title": "ผู้ใหญ่ 1 ท่าน พักเดี่ยว 1 ห้อง(Single room) ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 25400,
+              "rate_price_net": 25400,
+              "rate_price_on_ticket": 20400,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 1,
+              "rate_room_abbr": "SGL",
+              "rate_room_name": "SINGLE",
+              "rate_room_person": 1,
+              "rate_room_extra_bed": 0
+            }
+          ],
+          "period_rate_adult_twn": 19900,
+          "period_rate_adult_trp": 19900,
+          "period_rate_adult_sgl": 25400,
+          "period_commission": null,
+          "period_option_price": [],
+          "period_flight": [
+            {
+              "flight_id": 244815,
+              "flight_route": "DMK - KMG",
+              "flight_date": "2026-02-03 - 2026-02-03",
+              "flight_time": "08:00 - 11:25",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD582",
+              "flight_from_airport": "DMK",
+              "flight_from_date": "2026-02-03",
+              "flight_from_time": "08:00",
+              "flight_to_airport": "KMG",
+              "flight_to_date": "2026-02-03",
+              "flight_to_time": "11:25",
+              "flight_remark": "",
+              "system_remark": null
+            },
+            {
+              "flight_id": 244816,
+              "flight_route": "KMG - DMK",
+              "flight_date": "2026-02-08 - 2026-02-08",
+              "flight_time": "12:30 - 13:50",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD583",
+              "flight_from_airport": "KMG",
+              "flight_from_date": "2026-02-08",
+              "flight_from_time": "12:30",
+              "flight_to_airport": "DMK",
+              "flight_to_date": "2026-02-08",
+              "flight_to_time": "13:50",
+              "flight_remark": "",
+              "system_remark": null
+            }
+          ],
+          "period_car": "",
+          "period_update_remark": {}
+        },
+        {
+          "period_id": 97690,
+          "period_code": "GO1KMG5NKMGFD260205",
+          "period_date": "2026-02-05",
+          "period_back": "2026-02-10",
+          "period_price_min": 19900,
+          "period_price_start": 19900,
+          "period_order_time": 24,
+          "period_unpaid_time": 720,
+          "period_airline": {
+            "airline_id": 4937,
+            "airline_iata": "FD",
+            "airline_icao": "AIQ",
+            "airline_name": "Thai AirAsia",
+            "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+            "airport_iata": "DMK",
+            "airport_name": "Don Mueang International Airport (DMK)"
+          },
+          "period_quota": 26,
+          "period_total": 2,
+          "period_available": 23,
+          "period_seat_hold": 1,
+          "period_sale": [
+            {
+              "sale_id": 1632,
+              "sale_name": "ฐิติกานต์(ป๊อป)",
+              "sale_lastname": "ยอดเถื่อน",
+              "sale_username": "Thitikanb2b",
+              "sale_fulllname": "ฐิติกานต์(ป๊อป) ยอดเถื่อน (Thitikanb2b)",
+              "sale_tel": "",
+              "sale_mobile": "0954623443",
+              "sale_email": "chairoek.p@gmail.com"
+            }
+          ],
+          "period_remark": [],
+          "period_remark_status": "",
+          "period_name_list": {
+            "PDF": "",
+            "DOC": ""
+          },
+          "period_visible": 1,
+          "period_visible_text": "เปิดให้จอง",
+          "period_status": "จอง",
+          "agentDiscount": 0,
+          "period_promotion": {},
+          "period_promotion_group": {},
+          "period_discount": [],
+          "period_rate": [
+            {
+              "rate_id": 363713,
+              "rate_type_id": 50830,
+              "rate_title_id": 2,
+              "rate_title": "ผู้ใหญ่ 2 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 2,
+              "rate_room_abbr": "TWN",
+              "rate_room_name": "TWIN",
+              "rate_room_person": 2,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363714,
+              "rate_type_id": 50831,
+              "rate_title_id": 3,
+              "rate_title": "ผู้ใหญ่ 3 ท่านพัก 1 ห้อง ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 19900,
+              "rate_price_net": 19900,
+              "rate_price_on_ticket": 14900,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 3,
+              "rate_room_abbr": "TRP",
+              "rate_room_name": "TRIPLE",
+              "rate_room_person": 3,
+              "rate_room_extra_bed": 0
+            },
+            {
+              "rate_id": 363715,
+              "rate_type_id": 50832,
+              "rate_title_id": 1,
+              "rate_title": "ผู้ใหญ่ 1 ท่าน พักเดี่ยว 1 ห้อง(Single room) ราคาท่านละ",
+              "rate_extra_bed": 0,
+              "rate_price": 25400,
+              "rate_price_net": 25400,
+              "rate_price_on_ticket": 20400,
+              "rate_deposit": 10000,
+              "rate_commission": 1100,
+              "rate_categories_id": 1,
+              "rate_categories_name": "ผู้ใหญ่",
+              "rate_room_type": 1,
+              "rate_room_abbr": "SGL",
+              "rate_room_name": "SINGLE",
+              "rate_room_person": 1,
+              "rate_room_extra_bed": 0
+            }
+          ],
+          "period_rate_adult_twn": 19900,
+          "period_rate_adult_trp": 19900,
+          "period_rate_adult_sgl": 25400,
+          "period_commission": null,
+          "period_option_price": [],
+          "period_flight": [
+            {
+              "flight_id": 244817,
+              "flight_route": "DMK - KMG",
+              "flight_date": "2026-02-05 - 2026-02-05",
+              "flight_time": "08:00 - 11:25",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD582",
+              "flight_from_airport": "DMK",
+              "flight_from_date": "2026-02-05",
+              "flight_from_time": "08:00",
+              "flight_to_airport": "KMG",
+              "flight_to_date": "2026-02-05",
+              "flight_to_time": "11:25",
+              "flight_remark": "",
+              "system_remark": null
+            },
+            {
+              "flight_id": 244818,
+              "flight_route": "KMG - DMK",
+              "flight_date": "2026-02-10 - 2026-02-10",
+              "flight_time": "12:30 - 13:50",
+              "flight_airline_id": 4937,
+              "flight_airline_name": "Thai AirAsia",
+              "flight_airline_iata": "FD",
+              "flight_code": "FD583",
+              "flight_from_airport": "KMG",
+              "flight_from_date": "2026-02-10",
+              "flight_from_time": "12:30",
+              "flight_to_airport": "DMK",
+              "flight_to_date": "2026-02-10",
+              "flight_to_time": "13:50",
+              "flight_remark": "",
+              "system_remark": null
+            }
+          ],
+          "period_car": "",
+          "period_update_remark": {}
+        }
+      ],
+      "tour_promotion": [],
+      "tour_discount_event": {},
+      "tour_gallery": [],
+      "tour_daily": [
+        {
+          "day_num": 1,
+          "day_topics": "กรุงเทพฯ (สนามบินดอนเมือง) – คุนหมิง (ท่าอากาศยานนานาชาติคุนหมิงฉางสุ่ย)  (FD582 : 08:00 – 11:25) – ต้าหลี่",
+          "day_picture": [],
+          "day_list": [
+            {
+              "day_icon": "",
+              "day_title": "05.00 น.",
+              "day_description": "พร้อมกันที่ ท่าอากาศยานดอนเมือง อาคารผู้โดยสารระหว่างประเทศเคาน์เตอร์ สายการบินแอร์เอเชีย (FD) โดยมีเจ้าหน้าที่คอยให้การต้อนรับและอำนวยความสะดวกตรวจเช็คสัมภาระและเอกสารการเดินทางให้กับทุกท่าน"
+            },
+            {
+              "day_icon": "",
+              "day_title": "08.00 น.",
+              "day_description": "ออกเดินทางสู่ คุนหมิง ประเทศจีน โดยเที่ยวบินที่ FD582 \n* น้ำหนักกระเป๋า 20 กิโลกรัม/ท่าน  \n* ไม่มีอาหารบริการบนเครื่อง (ท่านสามารถเลือกซื้อได้ที่พนักงานบริการบนเครื่องบิน)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "11.25 น.",
+              "day_description": "เดินทางถึง ท่าอากาศยานนานาชาติคุนหมิงฉางสุ่ย เมืองเอกและเป็นเมืองที่ใหญ่ที่สุดในมณฑลยูนนานมีประชากร 33 ล้านคน โดยเป็นชนกลุ่มน้อยถึง 24 เผ่าครอบคลุมพื้นที่ถึง 15,561 ตารางกิโลเมตร อยู่สูงเหนือระดับน้ำทะเลประมาณ 2,000 เมตร คุนหมิงได้ชื่อว่าเป็นเมืองแห่งฤดูใบไม้ผลิเพราะมีภูมิอากาศที่เย็นสบายตลอดทั้งปี ไม่ร้อนหรือหนาวจนเกินไปแล้ว สิ่งที่มีเสน่ห์ดึงดูดนักท่องเที่ยวก็คือธรรมชาติที่สวยงาม ผ่านพิธีการตรวจคนเข้าเมือง"
+            },
+            {
+              "day_icon": "",
+              "day_title": "กลางวัน",
+              "day_description": "รับประทานอาหารกลางวัน ณ ภัตตาคาร (1)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "บ่าย",
+              "day_description": "จากนั้นนำท่านเดินทางสู่ เมืองต้าหลี่ (ระยะทางประมาณ 338 ก.ม. ใช้เวลาเดินทางประมาณ 4 ชั่วโมง) เขตปกครองตนเองของชนเผ่าไป๋ ทางตะวันตกเฉียงใต้ของจีนในมณฑลยูนนานตั้งอยู่ระหว่างทะเลสาบเอ๋อไห่กับภูเขาฉางซานที่ระดับ 1,975 เมตรเหนือระดับน้ำทะเล โดยมีชนกลุ่มน้อยอาศัยอยู่ร่วมกันกว่า 20 เชื้อชาติ เดิมมีชื่อว่า “หนันเจา” หรืออาณาจักรน่านเจ้า (ค.ศ. 738 – 903) จนกระทั่งชาวไป๋ได้เข้ามาสถาปนาอาณาจักรต้าหลี่ (ค.ศ. 937) และต่อมาในค.ศ. 1253 อาณาจักรต้าหลี่ก็ถูก กุบไลข่าน ผู้เป็นจักรพรรดิชาวมองโกลพิชิตลง แต่ก็ยังคงเหลือร่องรอยอารยธรรมเก่าให้พบเห็นได้บนเส้นทางจากต้าหลี่ถึงลี่เจียง"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ค่ำ",
+              "day_description": "รับประทานอาหารค่ำ ณ ภัตตาคาร (มื้อที่ 2)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ที่พัก",
+              "day_description": "MEI RUI HOTEL หรือเทียบเท่าระดับ 4 ดาว"
+            }
+          ]
+        },
+        {
+          "day_num": 2,
+          "day_topics": "ผ่านชมเจดีย์สามองค์-วัดเจ้าแม่กวนอิม–เมืองโบราณต้าหลี่-ลี่เจียง-สระมังกรดำ-เมืองโบราณลี่เจียง",
+          "day_picture": [],
+          "day_list": [
+            {
+              "day_icon": "",
+              "day_title": "เช้า",
+              "day_description": "รับประทานอาหารเช้า ณ ห้องอาหารของโรงแรม  (มื้อที่ 3)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำท่าน ผ่านชม “ซานถ่า” หรือ เจดีย์สามองค์ อันเป็นสัญลักษณ์ของเมืองต้าหลี่ที่โดดเด่นงดงาม ตั้งอยู่ริมทะเลสาบเอ๋อไห่ ประกอบด้วยเจดีย์สีขาวสวยงาม 3 องค์โดยองค์กลางมีความสูงถึง 70 เมตรซึ่งสร้างขึ้นในสมัยราชวงศ์ถังจึงมีลักษณะเหมือนกับเจดีย์ในเมืองซีอาน ส่วนองค์เล็กอีก 2 องค์ สร้างเพิ่มเติมทีหลังในสมัยราชวงศ์หยวน ซึ่งเป็นช่วงที่พุทธศาสนากำลังได้รับความนิยมสูงสุด ในประเทศจีน เจดีย์ 3 องค์มีอายุกว่า 1,000 ปี และได้มีการบูรณะเจดีย์เหล่านี้ในช่วงปี ค.ศ.1978 ก็ได้ค้นพบโบราณวัตถุจากศตวรรษที่ 7-10 กว่า 600 ชิ้น ในองค์เจดีย์"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "จากนั้นนำท่านสู่ วัดเจ้าแม่กวนอิม ตามตำนานเล่าว่าเจ้าแม่กวนอิมได้แปลงกายเป็นหญิงชราแบกก้อนหินใหญ่ไว้บนหลังเพื่อให้ทหารของฝ่ายตรงข้ามได้เห็น เมื่อทหารของฝ่ายศัตรูได้เห็นว่าแม้แต่หญิงชรายังแข็งแรงถึงเพียงนี้ ถ้าเป็นคนวัยหนุ่มสาวจะต้องมีพละกำลังมากมายยากจะต่อสู้ จึงไม่ได้ทำการเข้าโจมตีเมืองและถอยทัพกลับไปชาวเมืองจึงสร้างวัดแห่งนี้ขึ้นในสมัยราชวงศ์ถัง เป็นวัดที่มีประติมากรรมเยี่ยมยอดแห่งหนึ่งในต้าหลี่"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "จากนั้นนำท่านชม เมืองโบราณต้าหลี่ (Dali Old Town) เมืองสวยยูนนาน ที่อบอวลไปด้วยเสน่ห์ของเมืองหลวงเก่าที่มีอายุยาวนานถึง 1,200 ปี ท่านจะพบกับตึกอาคารสถาปัตยกรรมเก่าแก่ที่ยังคงอนุรักษ์เอาไว้เป็นอย่างดีบรรยากาศคลาสสิกมากให้ความรู้สึกเหมือนหลุดเข้าไปในซีรีส์ยุคจีนโบราณเลยทีเดียว"
+            },
+            {
+              "day_icon": "",
+              "day_title": "กลางวัน",
+              "day_description": "รับประทานอาหารกลางวัน ณ ภัตตาคาร (มื้อที่ 4)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "บ่าย",
+              "day_description": "นำท่านเดินทางสู่ เมืองลี่เจียง (ระยะทางประมาณ 193 ก.ม. ใช้เวลาเดินทางประมาณ 2.30 ชั่วโมง) เป็นเมืองซึ่งตั้งอยู่ในหุบเขาที่มีทัศนียภาพงดงามเป็นถิ่นที่อยู่ของชาวน่าซีถือเป็นชนกลุ่มน้อยที่มีความน่าสนใจทั้งทางขนบธรรมเนียมและวัฒนธรรมเช่นการมีโครงสร้างทางสังคมแบบสตรีเป็นใหญ่นอกจากนั้นยังมีภาษาภาพที่เป็นเอกลักษณ์อีก"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำท่านชม สระน้ำมังกรดำ หรือที่รู้จักกันว่า สวนยู้วฉวน (Yuquan) ตั้งอยู่ในตัวเมืองลี่เจียง ห่างจากตัวเมืองเก่าลี่เจียงไปทางทิศเหนือประมาณ 1 กิโลเมตร มีพื้นที่ประมาณ 11,390 ตารางเมตร สระน้ำมังกรดำมีจุดเด่นที่ความใสของน้ำที่ใสราวกับมรกต นอกจากนี้ ภายในสวนยังมีการสถาปัตยกรรมต่าง ๆ ที่ผสมผสานวัฒนธรรมของชาวฮั่น ทิเบต และหน่าซี ไว้ด้วยกัน"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำท่านชม เมืองโบราณลี่เจียง หรือเมืองโบราณต้าเหยียนเจิ้งซึ่งเป็นเมืองที่สร้างขึ้นมาในสมัยต้นราชวงศ์ถังมีประวัติยาวนานกว่า 1,300 ปีตัวเมืองตั้งอยู่ท่ามกลางการโอบล้อมด้วยสายน้ำน้อยใหญ่ที่ไหลมาจากสระมังกรดำพื้นที่ตั้งของเมืองโบราณแห่งนี้มีรูปร่างลักษณะคล้ายหินฝนหมึกจีนในเขตเมืองโบราณยังคงความงามในอดีตไว้อย่างสมบูรณ์เช่นอาคารไม้แบบจีนโบราณต้นหลิวริมธารที่ยังคงปลิวไปมาตามสายลมลำธารน้ำที่ไหลผ่านเมืองแห่งนี้ด้วยความสวยงามเหล่านี้ทำให้เมืองโบราณลี่เจียงได้ถูกบันทึกเป็นมรดกทางวัฒนธรรมของโลกโดยองค์การยูเนสโก้นอกจากนี้ยามค่ำคืนก็มีการประดับไฟแสงสีงดงามอีกด้วย"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ค่ำ",
+              "day_description": "รับประทานอาหารค่ำ ณ ภัตตาคาร (มื้อที่ 5)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ที่พัก",
+              "day_description": "MAN BO HAO TING HOTEL หรือเทียบเท่าระดับ 4 ดาว"
+            }
+          ]
+        },
+        {
+          "day_num": 3,
+          "day_topics": "ภูเขาหิมะมังกรหยก (รวมกระเช้าใหญ่) โชว์ IMPRESSION LIJIANG – หุบเขาสีน้ำเงิน (รวมรถราง)  เมืองโบราณไป๋ซา+ร้านกาแฟหยุนตี้อัน (ไม่รวมค่าเครื่องดื่ม)",
+          "day_picture": [],
+          "day_list": [
+            {
+              "day_icon": "",
+              "day_title": "เช้า",
+              "day_description": "รับประทานอาหารเช้า ณ ห้องอาหารของโรงแรม  (มื้อที่ 6)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำท่านเดินทางสู่ ภูเขาหิมะมังกรหยก ตั้งอยู่ทางตะวันตกเฉียงเหนือของเมืองเก่าลี่เจียง เป็นภูเขาสูงที่ตั้งตระหง่าน ซึ่งมีหิมะปกคลุมอยู่ตลอดทั้งปี ขึ้นสู่บริเวณจุดชมวิว โดยสารกระเช้าไฟฟ้า (กระเช้าใหญ่) สู่ความสูงระดับ 4,506 เมตร ให้ท่านได้สัมผัสความหนาวเย็นและยิ่งใหญ่ของภูเขาแห่งนี้ บริเวณเขามีต้นฉำฉายูนนานที่มีอายุกว่าพันปีเทือกเขานี้หากมองดูแล้วลักษณะคล้ายมังกรนอนอยู่บนก้อนเมฆ จึงเป็นที่มาของชื่อเทือกเขา"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "หมายเหตุ : หากกระเช้าปิดทำการเนื่องจากสภาพอากาศหรือเหตุฉุกเฉิน ทางบริษัทจะเปลี่ยนเป็นการโดยสารโดยกระเช้าเล็กแทน โดยไม่ต้องแจ้งให้ทราบล่วงหน้าและไม่มีการคืนค่าใช้จ่ายใดๆทั้งสิ้น"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "จากนั้นชม  โชว์ IMPRESSION LIJIANG โชว์อันยิ่งใหญ่ โดยผู้กำกับชื่อก้องโลก จาง อวี้ โหมว ได้เนรมิตให้ภูเขาหิมะมังกรหยกเป็นฉากหลัง และบริเวณทุ่งหญ้าเป็นเวทีการแสดง โดยใช้นักแสดงกว่า 600 ชีวิต แสง สี เสียงการแต่งกายตระการตา เล่าเรื่องราวชีวิตความเป็นอยู่ และชาวเผ่าต่างๆ ของเมืองลี่เจียงความสำเร็จของการแสดงคงต้องยกเครดิตให้กับจางอี้โหมวผู้กำกับชาวจีนที่มีชื่อเสียงในระดับโลกล่าสุดได้ฝากผลงานไห้กับพิธีเปิด-ปิดกีฬาโอลิมปิก(BEIJING 2008) ที่สร้างความประทับใจไปทั้งโลกเมื่อปลายปี 2551"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "หมายเหตุ : ช่วงหน้าหนาว โชว์ IMPRESSION  LIJIANG  ปิด หากวันเดินทางดังกล่าวทางโชว์งดการแสดง ทางบริษัทขอสงวนสิทธิ์เปลี่ยนเป็นโชว์ลี่สุ่ยจินซาแทน โดยไม่ต้องแจ้งให้ทราบล่วงหน้าและไม่มีการคืนค่าใช้จ่ายใดๆทั้งสิ้น"
+            },
+            {
+              "day_icon": "",
+              "day_title": "กลางวัน",
+              "day_description": "รับประทานอาหารกลางวัน ณ ภัตตาคาร (มื้อที่ 7)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "บ่าย",
+              "day_description": "เดินทางสู่ หุบเขาน้ำเงิน หรือ ไป๋สุ่ยเหอ (รวมรถราง)  หุบเขาที่อยู่ติดด้านหลังของภูเขาหิมะมังกรหยก ทัศนียภาพสวยงามกับทะเลสาบสีฟ้าคราม น้ำตกหินปูนขนาดเล็กและภูเขาหิมะมังกรหยกเป็นพื้นหลัง น้ำที่ไหลผ่านหุบเขานี้คือน้ำที่ละลายจากหิมะบนยอดเขาหิมะมังกรหยก เนื่องจากจุดนี้มีทิวทัศน์ที่สวยงามที่มีฉากหลังคือภูเขาหิมะมังกรหยกมีน้ำตกและแม่น้ำกึ่งทะเลสาบจึงเป็นที่นิยมของศิลปินนักวาดภาพและคู่รักที่มักจะมาถ่ายภาพที่น่าประทับใจ"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำท่านเดินทางสู่ หมู่บ้านโบราณไป๋ซา ตั้งอยู่ทางตอนเหนือของลี่เจียง ใต้เงาอันยิ่งใหญ่ของภูเขาหิมะมังกรหยก เป็นศูนย์กลางแห่งแรกของชาวหน่าซีที่ยังคงรักษากลิ่นอายของอดีตไว้อย่างสมบูรณ์แบบ ที่นี่เป็นต้นกำเนิดของราชวงศ์มู่และเป็นหนึ่งในมรดกทางวัฒนธรรมอันล้ำค่าของลี่เจียง เต็มไปด้วยบ้านเรือนโบราณ ถนนหินเก่าแก่ และลวดลายศิลปะที่สะท้อนถึงวัฒนธรรมที่หลอมรวมระหว่างพุทธศาสนาแบบทิเบต ขงจื๊อ และเต๋าภายในเมืองโบราณ คุณจะได้พบเหล่าบ้านไม้โบราณ ซึ่งสร้างขึ้นตั้งแต่สมัยราชวงศ์หมิงและชิง ที่มีอายุหลายร้อยปี ซึ่งสะท้อนถึงการผสมผสานระหว่างพุทธศาสนาแบบทิเบต ลัทธิเต๋า และวัฒนธรรมฮั่นได้อย่างลงตัว นอกจากนี้ยังมีถนนสายเก่าแก่ที่เคยเป็นเส้นทางสำคัญของ \"เส้นทางสายชาและม้า\" เต็มไปด้วยร้านค้าหัตถกรรมพื้นเมือง ถ่ายทอดเรื่องราวทางศาสนาและประวัติศาสตร์ที่หาชมได้ยาก พร้อมเดินสำรวจตลาดเก่าที่เงียบสงบ ชมงานหัตถกรรมปักผ้าโบราณ และสัมผัสเสน่ห์แห่งชีวิต"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "จากนั้นนำท่านสู่ ร้านกาแฟ หยุนตี้อัน (ไม่รวมค่ากาแฟ) เป็นจุดแวะพักที่ผสานกลิ่นอายของศิลปะและธรรมชาติอย่างลงตัว คาเฟ่แห่งนี้มอบประสบการณ์การดื่มกาแฟท่ามกลางวิวภูเขาหิมะมังกรหยกอันตระการตา โดยเฉพาะช่วงเช้าที่แสงแดดส่องกระทบยอดเขา เกิดเป็นภาพ “อาทิตย์ทองคำ” ที่งดงามราวกับภาพวาด ที่นี่ไม่ได้มีดีแค่กาแฟรสเลิศ แต่ยังเต็มไปด้วยมุมถ่ายรูปที่สวยเกินบรรยาย ไม่ว่าจะเป็นเก้าอี้เอนนอนสำหรับการพักผ่อน หรือระเบียงกว้างที่ให้คุณได้ดื่มด่ำกับธรรมชาติแบบเต็มตา"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ค่ำ",
+              "day_description": "รับประทานอาหารค่ำ ณ ภัตตาคาร (มื้อที่ 8)  เมนูพิเศษ สุกี้ปลาแซลมอน"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ที่พัก",
+              "day_description": "MAN BO HAO TING HOTEL หรือเทียบเท่าระดับ 4 ดาว"
+            }
+          ]
+        },
+        {
+          "day_num": 4,
+          "day_topics": "ลี่เจียง-นั่งรถไฟความเร็วสู่คุนหมิง (รวมรถขนกระเป๋า)-คุนหมิง-เมืองโบราณกวนตู้",
+          "day_picture": [],
+          "day_list": [
+            {
+              "day_icon": "",
+              "day_title": "เช้า",
+              "day_description": "รับประทานอาหารเช้า ณ ห้องอาหารของโรงแรม (มื้อที่ 9)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำคณะเดินทางสู่สถานีรถไฟ เพื่อนำท่านเดินทางกลับสู่ เมืองคุนหมิง  (ใช้เวลาประมาณ 3 ชั่วโมง) เมืองเอกและเป็นเมืองที่ใหญ่ที่สุดในมณฑลยูนนานมีประชากร 33 ล้านคน โดยเป็นชนกลุ่มน้อยถึง 24 เผ่าครอบคลุมพื้นที่ถึง 15,561 ตารางกิโลเมตร อยู่สูงเหนือระดับน้ำทะเลประมาณ 2,000 เมตร  คุนหมิงได้ชื่อว่าเป็นเมืองแห่งฤดูใบไม้ผลิเพราะมีภูมิอากาศที่เย็นสบายตลอดทั้งปี ไม่ร้อนหรือหนาวจนเกินไปแล้ว สิ่งที่มีเสน่ห์ดึงดูดนักท่องเที่ยวก็คือธรรมชาติที่สวยงาม"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "หมายเหตุ  \n- รถไฟอาจจะมีการเปลี่ยนขบวนเวลา ขอสงวนสิทธิ์จัดขบวนและเวลาตามความเหมาะสม\nพิเศษสำหรับคณะ รวมรถขนกระเป๋าสัมภาระจากลี่เจียงสู่คุนหมิง โดยท่านจะได้รับสัมภาระอีกครั้งตอนเช็คอินเข้าพักที่โรงแรม"
+            },
+            {
+              "day_icon": "",
+              "day_title": "กลางวัน",
+              "day_description": "รับประทานอาหารกลางวัน ณ ภัตตาคาร (มื้อที่ 10) เมนูพิเศษ ขนมจีนข้ามสะพาน"
+            },
+            {
+              "day_icon": "",
+              "day_title": "บ่าย",
+              "day_description": "จากนั้นเดินทางสู่ เมืองโบราณกวนตู้ ที่ใครมาเที่ยวคุณหมิงไม่ควรพลาดชม เพราะเป็นหมู่บ้านโบราณที่รวบรวมวัฒนธรรมยูนนานไว้ ตั้งห่างจากตัวเมืองคุณหมิง 8 กิโลเมตร ทางทิศตะวันออกเฉียงใต้  เมืองโบราณมีขนาดไม่ใหญ่และไม่เล็ก มีเส้นทางให้เดินชมระยะทางประมาณ  2 กิโลเมตร ตลอดทางมีร้านขายของที่ระลึกมากมาย อาหารการกินก็มีให้เลือกชิมได้ตลอดทาง"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ค่ำ",
+              "day_description": "รับประทานอาหารค่ำ ณ ภัตตาคาร (มื้อที่ 11)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ที่พัก",
+              "day_description": "METROPOLO JINJIANG HOTEL หรือเทียบเท่า 4 ดาว"
+            }
+          ]
+        },
+        {
+          "day_num": 5,
+          "day_topics": "วัดหยวนทง - ตำหนักทอง- อิสระช้อปปิ้งหนานผิงเจี่ย+ POP MART",
+          "day_picture": [],
+          "day_list": [
+            {
+              "day_icon": "",
+              "day_title": "เช้า",
+              "day_description": "รับประทานอาหารเช้า ณ ห้องอาหารของโรงแรม (มื้อที่ 12)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "",
+              "day_description": "นำคณะเข้าชม วัดหยวนทง ซึ่งเป็นวัดที่ใหญ่และเก่าแก่ของมณฑลยูนนานตั้งอยู่ที่ถนนหยวนทงเจียงเป็นอารามทางพระพุทธศาสนาที่ใหญ่ที่สุดในคุนหมิงอายุเก่าแก่กว่าพันปีภายในวัดตกแต่งร่มรื่นสวยงามกลางลานมีสระน้ำขนาดใหญ่ มีสะพานข้ามไปสู่ศาลาแปดเหลี่ยมกลางสระด้านหลังวัดเป็นอาคารสร้างใหม่ประดิษฐานพระพุทธรูปพระพุทธชินราช(จำลอง)ซึ่งพลเอกเกรียงศักดิ์ ชมะนันทน์นายกรัฐมนตรีคนที่ 15 ของไทยให้อัญเชิญไปประดิษฐานไว้ ณ ที่วัดหยวนทงแห่งนี้\nนำท่านชม ตำหนักทองจินเตี้ยน ในอดีตเคยเป็นที่พักของอู๋ซันกุ้ย “ขุนศึกผู้ขายชาติ” และนางงามเฉินหยวนหยวน เป็นตำหนักที่มีฝาผนังและหลังคาสร้างด้วยทองเหลืองถึง 380 ตัน จึงทำให้ตำหนักมีความสวยเด่น แลดูเสมือนทอง จึงได้ชื่อว่า “ตำหนักทอง” นับได้ว่าเป็นตำหนักที่ใหญ่ที่สุดของจีน"
+            },
+            {
+              "day_icon": "",
+              "day_title": "กลางวัน",
+              "day_description": "รับประทานอาหารกลางวัน ณ ภัตตาคาร (มื้อที่ 13)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "บ่าย",
+              "day_description": "นำท่านเดินทางสู่ อิสระช้อปปิ้งหนานผิงเจีย หรือที่รู้จักกันในอีกชื่อเรียก ถนนคนเดินจินปี้ลู่ ถือว่าเป็นถนนที่เก่าแก่ที่สุดในคุนหมิง ถนนจินปี้ลู่ ตั้งอยู่ใจกลางเมืองคุนหมิง ความพิเศษของสถานที่แห่งนี้คือ ตอนกลางของถนนมีซุ้มประตูม้าทองและซุ้มประตูไก่มรกต ซึ่งภาษาจีนเรียกว่าจินหม่าและปี้จี จึงเอาคำย่อ “จินปี้”มาขนานนามถนนว่าจินปี้ลู่ซึ่งก็คือ“ถนน(ม้า)ทอง(ไก่)มรกต” พิเศษ โดนใจสาวก POP MART ท่านสามารถเลือกชมสินค้า POP MART ได้ ณ POPMART (顺城购物中心店) หลากหลายคอลเลคชั่นให้ท่านได้ช้อปปิ้งอย่างจุใจ"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ค่ำ",
+              "day_description": "รับประทานอาหารค่ำ ณ ภัตตาคาร (มื้อที่ 14)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "ที่พัก",
+              "day_description": "METROPOLO JINJIANG HOTEL หรือเทียบเท่า 4 ดาว"
+            }
+          ]
+        },
+        {
+          "day_num": 6,
+          "day_topics": "คุนหมิง – กรุงเทพฯ (สนามบินดอนเมือง) (FD583 : 12.30 – 13.50)",
+          "day_picture": [],
+          "day_list": [
+            {
+              "day_icon": "",
+              "day_title": "เช้า",
+              "day_description": "รับประทานอาหารเช้า ณ ห้องอาหารของโรงแรม (มื้อที่ 15)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "12.30 น.",
+              "day_description": "อำลา นครคุนหมิง เดินทางกลับ กรุงเทพฯ โดยเที่ยวบินที่ FD583 \n* น้ำหนักกระเป๋า 20 กิโลกรัม/ท่าน  \n* ไม่มีอาหารบริการบนเครื่อง (ท่านสามารถเลือกซื้อได้ที่พนักงานบริการบนเครื่องบิน)"
+            },
+            {
+              "day_icon": "",
+              "day_title": "13.50 น.",
+              "day_description": "เดินทางกลับถึงสนามบินดอนเมือง โดยสวัสดิ์ภาพ พร้อมความประทับใจในการเดินทาง"
+            }
+          ]
+        }
+      ],
+      "tour_remark": [
+        {
+          "title": "อัตรานี้รวม",
+          "text": "<p class=\"MsoNormalCxSpFirst\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 10pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px; background: rgb(254, 254, 254);\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">1.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">ค่าตั๋วโดยสารเครื่องบินไป-กลับ ชั้นประหยัดพร้อมค่าภาษีสนามบินทุกแห่งตามรายการทัวร์ข้างต้น</span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px; background: rgb(254, 254, 254);\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">2.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">ค่าที่พักห้องละ 2-3 ท่าน ตามโรงแรมที่ระบุไว้ในรายการ หรือ ระดับเทียบเท่า</span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" color:red\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">- กรณีห้อง </span><span times=\"\" new=\"\" roman\";color:red\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">TWIN BED (<span lang=\"TH\" style=\"box-sizing: inherit;\">เตียงเดี่ยว 2 เตียง) ซึ่งโรงแรมไม่มีหรือเต็ม ทางบริษัทขอปรับเป็นห้อง </span>DOUBLE BED <span lang=\"TH\" style=\"box-sizing: inherit;\">แทนโดยมิต้องแจ้งให้ทราบล่วงหน้า</span><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" color:red\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">- หากต้องการห้องพักแบบ </span><span times=\"\" new=\"\" roman\";color:red\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">DOUBLE BED <span lang=\"TH\" style=\"box-sizing: inherit;\">ซึ่งโรงแรมไม่มีหรือเต็ม ทางบริษัทขอปรับเป็นห้อง </span>TWIN BED <span lang=\"TH\" style=\"box-sizing: inherit;\">แทนโดยมิต้องแจ้งให้ทราบล่วงหน้า เช่นกัน</span><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" color:red\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">- กรณีพักแบบ </span><span times=\"\" new=\"\" roman\";color:red\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">TRIPLE ROOM  <span lang=\"TH\" style=\"box-sizing: inherit;\">3 ท่าน 1 ห้อง ท่านที่ 3 อาจเป็นเสริมเตียง หรือ </span>SOFA BED <span lang=\"TH\" style=\"box-sizing: inherit;\">หรือ เสริมฟูกที่นอน ทั้งนี้ขึ้นอยู่กับรูปแบบการจัดห้องพักของโรงแรมนั้นๆ</span><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">3.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">ค่าอาหาร ค่าเข้าชม และ ค่ายานพาหนะทุกชนิด ตามที่ระบุไว้ในรายการทัวร์ข้างต้น</span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">4.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">เจ้าหน้าที่บริษัท ฯ คอยอำนวยความสะดวกทุกท่านตลอดการเดินทาง</span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">5.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">ค่าน้ำหนักกระเป๋าเดินทางในกรณีที่เกินกว่าสายการบินกำหนด </span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">2<span lang=\"TH\" style=\"box-sizing: inherit;\">0 กิโลกรัม / ท่าน / ใบ</span><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">6.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\"> ค่าประกันวินาศภัยเครื่องบินตามเงื่อนไขของแต่ละสายการบิน</span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"MsoNormalCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin: 0cm -1.35pt 0.0001pt 7.1pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 10.9pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-family: Sarabun;\">7.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">ค่าประกันอุบัติเหตุวงเงิน 2</span><span times=\"\" new=\"\" roman\"\"=\"\" style=\"box-sizing: inherit; font-family: Sarabun;\">,000,000<span lang=\"TH\" style=\"box-sizing: inherit;\"> บาท (เงื่อนไขตามกรมธรรม์) เงื่อนไขประกันการเดินทาง ค่าประกันอุบัติเหตุและค่ารักษาพยาบาล 500,000 บาท คุ้มครองเฉพาะกรณีที่ได้รับอุบัติเหตุระหว่างการเดินทาง ไม่คุ้มครองถึงการสูญเสียทรัพย์สินส่วนตัวและไม่คุ้มครองโรคประจำตัวของผู้เดินทางและคุ้มครองเฉพาะผู้เดินทางไป-กลับพร้อมกรุ๊ปเท่านั้น</span></span></p>"
+        },
+        {
+          "title": "อัตรานี้ไม่รวม",
+          "text": "<p class=\"1CxSpFirst\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 54pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-align: justify; text-indent: -36pt; line-height: 22.5px;\"><a name=\"_Hlk146806027\" style=\"box-sizing: inherit; color: rgb(71, 71, 71); -webkit-tap-highlight-color: transparent;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">1.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าทำหนังสือเดินทางไทย และเอกสารต่างด้าว</span></a><span times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 36pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-align: justify; text-indent: -18pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">2.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าเอกสารเดินทางเข้าประเทศจีนสำหรับผู้ถือพาสปอร์ตต่างประเทศ</span><span times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 18pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 0cm; text-align: justify; line-height: 22.5px;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">3.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าน้ำหนักกระเป๋าเดินทางในกรณีที่เกินกว่าสายการบินกำหนด</span><span times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 36pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-align: justify; text-indent: -18pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">4.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าใช้จ่ายส่วนตัวนอกเหนือจากรายการ เช่น ค่าเครื่องดื่ม</span><span times=\"\" new=\"\" roman\";mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">, <span lang=\"TH\" style=\"box-sizing: inherit;\">ค่าอาหารที่สั่งเพิ่มเอง</span>, <span lang=\"TH\" style=\"box-sizing: inherit;\">ค่าโทรศัพท์</span>,<o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 36pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-align: justify; line-height: 22.5px;\"><span lang=\"TH\" times=\"\" new=\"\" roman\";mso-fareast-language:=\"\" en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าซักรีดฯลฯ</span><span times=\"\" new=\"\" roman\";mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 36pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-align: justify; line-height: 22.5px;\"><span times=\"\" new=\"\" roman\";background:yellow;=\"\" mso-highlight:yellow;mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">*<span lang=\"TH\" style=\"box-sizing: inherit;\">สำหรับท่านที่รับประทานอาหารพิเศษ อาหารเจ หรือไม่ทานเนื้อสัตว์ ไม่ทานหมู ไม่ทานไก่ และมีความจำเป็นให้ทางบริษัทจัดเตรียมอาหารไว้ให้ท่านเป็นพิเศษนอกเหนือจากที่กรุ๊ปจัดไว้ในรายการ ขอสงวนสิทธิ์ในการเรียกเก็บค่าใช้จ่ายเพิ่มเติมตามจริงหน้างาน</span></span><span times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 18pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 0cm; text-align: justify; line-height: 22.5px;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">5.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าภาษีน้ำมัน ที่สายการบินเรียกเก็บเพิ่มภายหลังจากทางบริษัทฯ ได้ออกตั๋วเครื่องบิน</span><span times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpMiddle\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 18pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 0cm; text-align: justify; line-height: 22.5px;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; color: rgb(0, 0, 0);\">6.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";background:yellow;mso-highlight:yellow;=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ค่าทิปมัคคุเทศก์ท้องถิ่นและคนขับรถ รวม </span><span times=\"\" new=\"\" roman\";=\"\" background:yellow;mso-highlight:yellow;mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">2<span lang=\"TH\" style=\"box-sizing: inherit;\">,</span>0<span lang=\"TH\" style=\"box-sizing: inherit;\">00 บาท/ท่าน/ทริป (เด็กชำระทิปเท่ากับผู้ใหญ่) ชำระที่สนามบิน</span><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p class=\"1CxSpLast\" style=\"box-sizing: inherit; margin: 0cm -1.45pt 0.0001pt 18pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: 0cm; text-align: justify; line-height: 22.5px;\"><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun; color: rgb(13, 13, 13);\">7.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" times=\"\" new=\"\" roman\";mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">ภาษีมูลค่าเพิ่ม </span><span times=\"\" new=\"\" roman\";=\"\" mso-fareast-language:en-us\"=\"\" style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun;\">7%<span lang=\"TH\" style=\"box-sizing: inherit;\"> และหัก ณ ที่จ่าย </span>3%</span><span style=\"box-sizing: inherit; line-height: 22.5px; font-family: Sarabun; color: rgb(13, 13, 13);\"><o:p style=\"box-sizing: inherit;\"></o:p></span></p><p style=\"box-sizing: inherit; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px;\"></p><p class=\"MsoNormal\" style=\"box-sizing: inherit; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px;\"><o:p style=\"box-sizing: inherit;\"> </o:p></p>"
+        },
+        {
+          "title": "เงื่อนไข",
+          "text": "<blockquote style=\"margin: 0 0 0 40px; border: none; padding: 0px;\"><p class=\"MsoListParagraphCxSpFirst\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: -18pt; line-height: 22.5px;\"><a name=\"_Hlk146806062\" style=\"box-sizing: inherit; color: rgb(71, 71, 71); -webkit-tap-highlight-color: transparent;\"><span style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">1.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">การเดินทางในแต่ละครั้งจะต้องมีผู้โดยสารจำนวน 15 ท่านขึ้นไป ถ้าผู้โดยสารไม่ครบจำนวนดังกล่าว ทางบริษัทฯ ขอสงวนสิทธิ์ในการเปลี่ยนแปลงราคาหรือยกเลิกการเดินทาง</span></a></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: -18pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">2.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">ในกรณีที่ลูกค้าต้องออกตั๋วโดยสารภายในประเทศ กรุณาติดต่อเจ้าหน้าที่ของบริษัทฯ เพื่อเช็คว่ากรุ๊ปมีการคอนเฟิร์มเดินทางก่อนทุกครั้ง เนื่องจากสายการบินอาจมีการปรับเปลี่ยนไฟล์ทบิน หรือเวลาบิน โดยไม่ได้แจ้งให้ทราบล่วงหน้า ทางบริษัทฯ จะไม่รับผิดชอบใด ๆ ในกรณี ถ้าท่านออกตั๋วภายในโดยไม่แจ้งให้ทราบและหากไฟล์ทบินมีการปรับเปลี่ยนเวลาบินเพราะถือว่าท่านยอมรับในเงื่อนไขดังกล่าว</span></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: -18pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">3.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">การชำระค่าบริการ</span></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; line-height: 22.5px;\"><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun; color: red; background: yellow;\">3.1 กรุณาชำระมัดจำ ท่านละ 10,000 บาท</span></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; line-height: 22.5px;\"><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">3.2 กรุณาชำระค่าทัวร์เต็มจำนวน  ในกรณีที่ค่าทัวร์ราคาต่ำกว่า 10,000 บาท</span></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; line-height: 22.5px;\"><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">3.3 กรุณาชำระค่าทัวร์ส่วนที่เหลือ 30 วันก่อนออกเดินทาง **45 วันก่อนเดินทางสำหรับช่วงสงกรานต์และปีใหม่**</span></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; line-height: 22.5px;\"><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">3.4 กรณีวันเดินทางน้อยกว่า 21 วัน หรือราคาทัวร์โปรโมชั่น ต้องชำระค่าทัวร์เต็มจำนวนเท่านั้น</span></p><p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.45pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: -18pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">4.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">กรณีผู้เดินทางที่ต้องการความช่วยเหลือเป็นพิเศษ เช่น การขอใช้วีลแชร์ที่สนามบิน กรุณาแจ้งบริษัทฯ อย่างน้อย 7 วันก่อนการเดินทาง หรือเริ่มตั้งแต่ท่านจองทัวร์ มิฉะนั้นทางบริษัทฯไม่สามารถจัดการได้ล่วงหน้า ทางบริษัทฯขอสงวนสิทธิ์ในการเรียกเก็บค่าใช้จ่ายตามจริงที่เกิดขึ้นกับผู้เดินทาง (ถ้ามี)</span></p><p class=\"MsoListParagraphCxSpLast\" style=\"text-align: left; box-sizing: inherit; margin-right: -1.35pt; color: rgb(51, 51, 51); font-family: Tahoma; font-size: 15px; text-indent: -18pt; line-height: 22.5px;\"><span style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">5.<span times=\"\" new=\"\" roman\";\"=\"\" style=\"box-sizing: inherit; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; font-size: 7pt; line-height: normal;\">      </span></span><span lang=\"TH\" style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">กรณีใช้หนังสือเดินทางราชการ (เล่มน้ำเงิน) เดินทางเพื่อการท่องเที่ยวกับคณะทัวร์ หากท่านถูกปฏิเสธในการเข้า </span><span style=\"box-sizing: inherit; font-size: 11pt; line-height: 22px; font-family: Sarabun;\">– <span lang=\"TH\" style=\"box-sizing: inherit;\">ออกประเทศใด ๆ ก็ตาม ทางบริษัทฯ ขอสงวนสิทธิ์ไม่คืนค่าทัวร์และรับผิดชอบใด ๆ ทั้งสิ้น</span></span></p></blockquote>"
+        },
+        {
+          "title": "หมายเหตุแบบย่อ",
+          "text": "<div>\n\n<table cellspacing=\"0\" cellpadding=\"0\" hspace=\"0\" vspace=\"0\" align=\"left\">\n <tbody><tr>\n  <td valign=\"top\" align=\"left\" style=\"padding-top:0cm;padding-right:9.0pt;\n  padding-bottom:0cm;padding-left:9.0pt\">\n  <p class=\"BasicParagraph\" align=\"center\" style=\"margin-right:-5.75pt;mso-add-space:\n  auto;text-align:center;line-height:115%;background:#FFFFCC;mso-element:frame;\n  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:\n  paragraph;mso-element-anchor-horizontal:column;mso-element-left:-2.2pt;\n  mso-element-top:33.55pt;mso-height-rule:exactly\"><b><span lang=\"TH\" style=\"font-size:11.0pt;line-height:115%;font-family:Sarabun;color:red\">ราคาทัวร์ข้างต้นยังไม่รวมค่าทิปมัคคุเทศน์ท้องถิ่นและคนขับรถ\n  </span></b><b><span lang=\"EN-US\" style=\"font-size:11.0pt;line-height:115%;\n  font-family:Sarabun;color:red\">2</span></b><b><span lang=\"EN-US\" style=\"font-size:11.0pt;line-height:115%;font-family:Sarabun;color:red;\n  mso-fareast-language:ZH-CN\">,0</span></b><b><span lang=\"TH\" style=\"font-size:\n  11.0pt;line-height:115%;font-family:Sarabun;color:red\">00 บาท/ท่าน/ทริป</span></b><span lang=\"TH\" style=\"font-size:11.0pt;line-height:115%;font-family:Sarabun;\n  color:red\"><br>\n  </span><b><span lang=\"TH\" style=\"font-size:11.0pt;line-height:115%;font-family:\n  Sarabun\">*ราคานี้เป็นราคาพิเศษไม่มีราคาเด็ก*</span></b><b><span lang=\"EN-US\" style=\"font-size:11.0pt;line-height:115%;font-family:Sarabun\"><o:p></o:p></span></b></p>\n  </td>\n </tr>\n</tbody></table>\n\n</div>"
+        }
+      ],
+      "tour_website_id": 38,
+      "tour_website_name": "go365travel.com",
+      "tour_visible": 1,
+      "tour_date_update": "2025-12-03 17:41:56"
+    }
+  ]
+}

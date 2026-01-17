@@ -506,10 +506,10 @@ class Flight(models.Model):
     program = models.ForeignKey(ProgramTour, related_name="flights", on_delete=models.CASCADE, blank=True, null=True)
     period = models.ForeignKey(Period, related_name="flights", on_delete=models.CASCADE, blank=True, null=True)
 
-    airline_code = models.CharField(max_length=50)
-    airline_name = models.CharField(max_length=255)
-    flight_no = models.CharField(max_length=50)
-    route = models.CharField(max_length=255)
+    airline_code = models.CharField(max_length=50, blank=True, default='')
+    airline_name = models.CharField(max_length=255, blank=True, default='')
+    flight_no = models.CharField(max_length=50, blank=True, default='')
+    route = models.CharField(max_length=255, blank=True, default='')
     departure_time = models.TimeField(blank=True, null=True)
     arrival_time = models.TimeField(blank=True, null=True)
 
@@ -525,7 +525,7 @@ class Itinerary(models.Model):
     external_id = models.CharField(max_length=100)  # e.g., Zego's ItinID
     program = models.ForeignKey(ProgramTour, related_name="itineraries", on_delete=models.CASCADE)
 
-    day = models.PositiveIntegerField()
+    day = models.PositiveIntegerField(default=1)
     description = models.TextField(blank=True, null=True)
     hotel = models.CharField(max_length=255, blank=True, null=True)
     hotel_star = models.CharField(max_length=10, blank=True, null=True)
@@ -595,3 +595,106 @@ class RawVendorData(models.Model):
     def __str__(self):
         status = "✓" if self.processed else "○"
         return f"{status} {self.provider.code} - {self.external_id} (Cat: {self.category})"
+
+
+import uuid
+
+
+class AdapterEvaluationSession(models.Model):
+    """
+    Tracks provider adapter evaluation sessions.
+    Stores sample data, analysis results, and generated adapter code.
+    """
+    # Session metadata
+    session_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    provider_name = models.CharField(max_length=100)
+    provider_code = models.CharField(max_length=50)
+    base_url = models.URLField()
+
+    # Authentication Configuration
+    auth_type = models.CharField(
+        max_length=50,
+        choices=[
+            ('none', 'No Authentication'),
+            ('api_token', 'API Token'),
+            ('api_key_header', 'API Key (Header)'),
+            ('bearer_token', 'Bearer Token'),
+            ('basic_auth', 'Basic Auth (Username/Password)'),
+            ('email_param', 'Email (URL Parameter)'),
+            ('custom', 'Custom'),
+        ],
+        default='none',
+        help_text="Authentication method type"
+    )
+    auth_token = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True,
+        help_text="API token, key, or password"
+    )
+    auth_username = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Username or email for authentication"
+    )
+    auth_header_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Custom header name (for custom auth type)"
+    )
+    auth_extra_config = models.JSONField(
+        blank=True,
+        null=True,
+        help_text="Extra auth configuration (e.g., secret keys, param names)"
+    )
+
+    # Sample data (stored as JSON)
+    sample_countries = models.JSONField(null=True, blank=True)
+    sample_tours = models.JSONField(null=True, blank=True)
+    sample_periods = models.JSONField(null=True, blank=True)
+    sample_flights = models.JSONField(null=True, blank=True)
+    sample_itineraries = models.JSONField(null=True, blank=True)
+
+    # Analysis results
+    analysis_results = models.JSONField(null=True, blank=True)
+    # Structure: {
+    #   'zego': {'score': 85, 'matches': [...], 'missing': [...]},
+    #   'unique_inter': {'score': 45, ...},
+    #   'recommendation': 'REUSE_ZEGO',
+    #   'requires_normalizer': True,
+    #   'estimated_quality_score': 80
+    # }
+
+    # Generated code
+    generated_service_code = models.TextField(null=True, blank=True)
+    generated_mapper_code = models.TextField(null=True, blank=True)
+    generated_normalizer_code = models.TextField(null=True, blank=True)
+    generated_command_code = models.TextField(null=True, blank=True)
+    generated_mappings_config = models.TextField(null=True, blank=True)
+
+    # Status
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('analyzing', 'Analyzing'),
+        ('complete', 'Complete'),
+        ('implemented', 'Implemented'),
+    ]
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='draft'
+    )
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Adapter Evaluation Session'
+        verbose_name_plural = 'Adapter Evaluation Sessions'
+
+    def __str__(self):
+        return f"{self.provider_name} ({self.status})"

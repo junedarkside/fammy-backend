@@ -421,71 +421,191 @@ class Go365Mapper(ProviderMapper):
         """
         Map Go365 tour data to standard format.
 
-        Note: This is a placeholder implementation as Go365 API
-        endpoints were returning 404 during testing.
-        Adjust field mappings based on actual API response structure.
+        Updated to match actual Go365 API structure from https://api.kaikongservice.com
         """
+        # Extract country from tour_country array
+        tour_countries = raw_data.get('tour_country', [])
+        country_name = tour_countries[0].get('country_name_en', '') if tour_countries else ''
+        country_code = tour_countries[0].get('country_code_2', '') if tour_countries else ''
+
+        # Extract airline from tour_airline object
+        tour_airline = raw_data.get('tour_airline', {})
+        airline_name = tour_airline.get('airline_name', '') if tour_airline else ''
+        airline_code = tour_airline.get('airline_iata', '') if tour_airline else ''
+
+        # Extract file URLs from tour_file object
+        tour_file = raw_data.get('tour_file', {})
+        file_pdf = tour_file.get('file_pdf', '') if tour_file else ''
+        file_word = tour_file.get('file_doc', '') if tour_file else ''
+
         return {
             'provider': self.provider.id,
             'external_id': str(raw_data.get('tour_id', '')),
             'code': raw_data.get('tour_code', ''),
             'name': raw_data.get('tour_name', ''),
-            'days': self.normalizer.normalize_integer(raw_data.get('duration_days')),
-            'nights': self.normalizer.normalize_integer(raw_data.get('duration_nights')),
-            'country': self._get_or_create_country(raw_data.get('country_name')),
-            'country_name': raw_data.get('country_name', ''),
-            'airline_name': raw_data.get('airline', ''),
-            'file_pdf': raw_data.get('pdf_url', ''),
-            'image_url': raw_data.get('image_url', ''),
-            'highlight': raw_data.get('description', ''),
-            # Data completeness - Go365 likely has partial data
-            'has_flights': True,  # May have partial flight data
-            'has_itineraries': True,  # May have partial itineraries
-            'has_full_pricing': False,  # Likely limited pricing
-            'data_quality_score': 80,  # Middle ground
+            'days': self.normalizer.normalize_integer(raw_data.get('tour_num_day')),
+            'nights': self.normalizer.normalize_integer(raw_data.get('tour_num_night')),
+            'country': self._get_or_create_country(country_name, country_code),
+            'country_name': country_name,
+            'airline_name': airline_name,
+            'airline_code': airline_code,
+            'file_pdf': file_pdf,
+            'file_word': file_word,
+            'image_url': raw_data.get('tour_cover_image', ''),
+            'highlight': raw_data.get('tour_description', ''),
+            # Data completeness
+            'has_flights': True,
+            'has_itineraries': bool(raw_data.get('tour_daily')),
+            'has_full_pricing': True,  # Go365 has comprehensive pricing
+            'data_quality_score': 85,
         }
 
     def map_period_data(self, raw_data: Dict, program_tour=None) -> Dict:
-        """Map Go365 period data to standard format."""
-        # Placeholder - adjust based on actual API structure
+        """
+        Map Go365 period data to standard format.
+
+        Go365 API provides:
+        - period_id, period_code
+        - period_date (start), period_back (end)
+        - period_price_start (base adult price)
+        - period_commission, period_commission_special
+        - period_available (seats available)
+        - period_quota (total capacity)
+        - period_airline (nested object with airline details)
+        - period_flight (array of flight details)
+        - period_visible_text (status in Thai)
+        """
+        # Helper to convert Decimal to float
+        def to_float(value):
+            if value is None:
+                return None
+            return float(value)
+
+        # Extract airline information
+        airline_data = raw_data.get('period_airline', {})
+        airline_code = airline_data.get('airline_iata', '')
+        airline_name = airline_data.get('airline_name', '')
+        airport = airline_data.get('airport_iata', '')
+
+        # Build base_prices with metadata
         base_prices = {
-            'adult': self.normalizer.normalize_price(raw_data.get('price_adult')),
-            'child': self.normalizer.normalize_price(raw_data.get('price_child')),
+            'adult': to_float(self.normalizer.normalize_price(raw_data.get('period_price_start'))),
+            # Store additional pricing info in _meta
+            '_meta': {
+                'price_min': to_float(self.normalizer.normalize_price(raw_data.get('period_price_min'))),
+                'price_promotion': to_float(self.normalizer.normalize_price(raw_data.get('period_price_promotion'))),
+                'price_discount': to_float(self.normalizer.normalize_price(raw_data.get('period_price_discount'))),
+                'quota': raw_data.get('period_quota'),
+                'total_capacity': raw_data.get('period_total'),
+                'seats_on_hold': raw_data.get('period_seat_hold'),
+                'order_deadline_hours': raw_data.get('period_order_time'),
+                'unpaid_deadline_hours': raw_data.get('period_unpaid_time'),
+                'visible': raw_data.get('period_visible'),
+                # Store flight info for reference
+                'flights': raw_data.get('period_flight', []),
+            }
         }
+
+        # Calculate booked seats
+        total = self.normalizer.normalize_integer(raw_data.get('period_total'))
+        available = self.normalizer.normalize_integer(raw_data.get('period_available'))
+        booked = total - available if (total is not None and available is not None) else None
+
+        # Map status
+        status_text = raw_data.get('period_visible_text', '')
+        if 'soldout' in status_text.lower() or available == 0:
+            status = 'Soldout'
+        elif 'waitlist' in status_text.lower() or (available is not None and available <= 5):
+            status = 'Waitlist'
+        else:
+            status = 'Book'
 
         return {
             'provider': self.provider.id,
-            'external_id': str(raw_data.get('departure_id', '')),
-            'code': raw_data.get('departure_code', ''),
+            'external_id': str(raw_data.get('period_id', '')),
+            'code': raw_data.get('period_code', ''),
             'program_id': program_tour.id if program_tour else None,
-            'start_date': self.normalizer.normalize_date(raw_data.get('departure_date')),
-            'end_date': self.normalizer.normalize_date(raw_data.get('return_date')),
+            'start_date': self.normalizer.normalize_date(raw_data.get('period_date')),
+            'end_date': self.normalizer.normalize_date(raw_data.get('period_back')),
+            'airline_code': airline_code,
+            'airline_name': airline_name,
+            'airport': airport,
+            'seats': self.normalizer.normalize_integer(raw_data.get('period_available')),
+            'booked': booked,
+            'status': status,
             'base_prices': base_prices,
-            'seats': self.normalizer.normalize_integer(raw_data.get('available_seats')),
-            'status': raw_data.get('status', 'Book'),
+            'com_agent': self.normalizer.normalize_price(raw_data.get('period_commission')),
+            'com_agent_end': self.normalizer.normalize_price(raw_data.get('period_commission_special')),
         }
 
     def map_flight_data(self, raw_data: Dict, period=None) -> Dict:
         """Map Go365 flight data to standard format."""
-        # Placeholder - adjust based on actual API structure
+        # Parse departure and arrival times
+        departure_time = self.normalizer.clean_flight_time(raw_data.get('flight_from_time'))
+        arrival_time = self.normalizer.clean_flight_time(raw_data.get('flight_to_time'))
+
         return {
             'provider': self.provider.id,
             'period_id': period.id if period else None,
-            'airline_name': raw_data.get('airline', ''),
-            'flight_no': raw_data.get('flight_number', ''),
-            'route': raw_data.get('route', ''),
+            'airline_code': raw_data.get('flight_airline_iata', ''),
+            'airline_name': raw_data.get('flight_airline_name', ''),
+            'flight_no': raw_data.get('flight_code', ''),
+            'route': raw_data.get('flight_route', ''),
+            'departure_time': departure_time,
+            'arrival_time': arrival_time,
         }
 
     def map_itinerary_data(self, raw_data: Dict, program_tour=None) -> Dict:
         """Map Go365 itinerary data to standard format."""
-        # Placeholder - adjust based on actual API structure
+        # Extract day_list items
+        day_list = raw_data.get('day_list', [])
+        descriptions = []
+        hotel = ''
+        breakfast = False
+        lunch = False
+        dinner = False
+
+        for item in day_list:
+            title = item.get('day_title', '').strip()
+            desc = item.get('day_description', '').strip()
+
+            # Combine title and description
+            if title and desc:
+                descriptions.append(f"{title} {desc}")
+            elif desc:
+                descriptions.append(desc)
+
+            # Extract hotel information
+            if 'ที่พัก' in title.lower() or 'hotel' in desc.lower():
+                hotel = desc
+
+            # Detect meals
+            desc_lower = desc.lower()
+            title_lower = title.lower()
+            if 'เช้า' in desc_lower or 'breakfast' in desc_lower or 'เช้า' in title_lower:
+                breakfast = True
+            if 'กลางวัน' in desc_lower or 'lunch' in desc_lower or 'กลางวัน' in title_lower:
+                lunch = True
+            if 'ค่ำ' in desc_lower or 'dinner' in desc_lower or 'ค่ำ' in title_lower or 'เย็น' in desc_lower:
+                dinner = True
+
+        # Combine all descriptions
+        full_description = '\n\n'.join(descriptions)
+
+        # Create external_id from tour external_id + day number
+        day_num = raw_data.get('day_num', 0)
+        external_id = f"{program_tour.external_id}_day_{day_num}" if program_tour else f"day_{day_num}"
+
         return {
             'provider': self.provider.id,
-            'external_id': str(raw_data.get('itinerary_id', '')),
+            'external_id': external_id,
             'program_id': program_tour.id if program_tour else None,
-            'day': self.normalizer.normalize_integer(raw_data.get('day_number')),
-            'description': raw_data.get('description', ''),
-            'hotel': raw_data.get('hotel_name', ''),
+            'day': self.normalizer.normalize_integer(day_num),
+            'description': full_description,
+            'hotel': hotel,
+            'breakfast': breakfast,
+            'lunch': lunch,
+            'dinner': dinner,
         }
 
 

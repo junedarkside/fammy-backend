@@ -51,8 +51,9 @@ class Command(BaseCommand):
             raise CommandError(f'Failed to connect to CheckIn Group API: {str(e)}')
 
         # Fetch tours
-        if options['tour_id']:
-            tours = [service.get_program_tour_details(options['tour_id'])]
+        tour_id = options.get('tour_id')
+        if tour_id:
+            tours = [service.get_program_tour_details(tour_id)]
         else:
             tours = service.get_program_tours()
 
@@ -62,7 +63,7 @@ class Command(BaseCommand):
 
         self.stdout.write(f"Found {len(tours)} tour(s)")
 
-        if options['dry_run']:
+        if options.get('dry_run'):
             self.stdout.write(self.style.WARNING('DRY RUN - No changes will be saved'))
             return
 
@@ -90,7 +91,7 @@ class Command(BaseCommand):
                     tours_updated += 1
 
                 # Sync periods if not tours-only
-                if not options['tours_only'] and 'periods' in tour_data:
+                if not options.get('tours_only') and 'periods' in tour_data:
                     for period_data in tour_data['periods']:
                         period_fields = mapper.map_period_data(period_data, tour)
                         # Remove provider from period_fields as it's already set in lookup

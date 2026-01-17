@@ -406,6 +406,39 @@ class Go365Normalizer(FieldNormalizer):
 
         return language, cleaned
 
+    @staticmethod
+    def clean_flight_time(raw_time: str) -> Optional[str]:
+        """
+        Normalize flight time format.
+
+        Go365 returns times in various formats:
+        - "14:30"
+        - "2:30 PM"
+        - "1430"
+
+        Args:
+            raw_time: Raw time string from API
+
+        Returns:
+            Normalized time string (HH:MM) or None
+        """
+        if not raw_time:
+            return None
+
+        try:
+            # Already in correct format
+            if ':' in raw_time:
+                return raw_time.strip()
+
+            # Try military time (1430 -> 14:30)
+            if len(raw_time) == 4 and raw_time.isdigit():
+                return f"{raw_time[:2]}:{raw_time[2:]}"
+
+        except (ValueError, AttributeError):
+            pass
+
+        return None
+
 
 class CheckInGroupNormalizer(FieldNormalizer):
     """
@@ -496,3 +529,41 @@ class CheckInGroupNormalizer(FieldNormalizer):
                 return location
 
         return ''
+
+
+class FieldNormalizerFactory:
+    """
+    Factory class for creating appropriate normalizers based on provider.
+
+    This factory is used when implementing Path 2 (REUSE_WITH_NORMALIZER)
+    of the post-evaluation implementation plan.
+    """
+
+    @staticmethod
+    def create_normalizer(provider_code: str, target_adapter: str) -> FieldNormalizer:
+        """
+        Create a normalizer for transforming provider data to target adapter format.
+
+        Args:
+            provider_code: The new provider's code
+            target_adapter: The adapter to normalize to (e.g., 'checkingroup', 'zego')
+
+        Returns:
+            Appropriate normalizer instance
+
+        Raises:
+            ValueError: If target_adapter is not supported
+        """
+        # Return existing normalizers for known providers
+        normalizer_map = {
+            'zego': ZegoNormalizer(),
+            'unique_inter': UniqueInterNormalizer(),
+            'go365': Go365Normalizer(),
+            'checkingroup': CheckInGroupNormalizer(),
+        }
+
+        if target_adapter in normalizer_map:
+            return normalizer_map[target_adapter]
+
+        # Return base normalizer for unknown adapters
+        return FieldNormalizer()

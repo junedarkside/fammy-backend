@@ -1,0 +1,463 @@
+{% extends "wholesale/evaluation/base.html" %}
+{% load wholesale_filters %}
+
+{% block title %}Provider Comparison - Provider Adapter Tool{% endblock %}
+
+{% block extra_css %}
+<style>
+.comparison-table {
+    font-size: 0.9rem;
+}
+.comparison-table th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.comparison-table td, .comparison-table th {
+    border-color: #dee2e6;
+}
+.field-present {
+    color: #10b981;
+    font-weight: 500;
+}
+.field-missing {
+    color: #ef4444;
+}
+.field-extracted {
+    color: #f59e0b;
+}
+.provider-badge {
+    min-width: 100px;
+    text-align: center;
+}
+.progress-bar {
+    transition: width 0.3s ease;
+}
+.recommendation-card {
+    border-left: 4px solid #667eea;
+}
+.entity-tab {
+    cursor: pointer;
+}
+.entity-tab.active {
+    background-color: #667eea;
+    color: white;
+}
+.comparison-section {
+    display: none;
+}
+.comparison-section.active {
+    display: block;
+}
+.api-field-name {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+.missing-fields-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>Provider Comparison Tool</h1>
+                <p class="text-muted">Compare providers against standard models and find the best solution for your needs</p>
+            </div>
+            <a href="{% url 'wholesale:evaluation_home' %}" class="btn btn-outline-secondary">
+                < Back to Evaluation Home
+            </a>
+        </div>
+
+        <!-- Provider Selection Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" id="comparisonForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Select Providers</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for code, provider in available_providers.items %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="providers" value="{{ code }}" id="provider_{{ code }}"
+                                           {% if code in selected_providers %}checked{% endif %}>
+                                    <label class="form-check-label" for="provider_{{ code }}">
+                                        {{ provider.name }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Entity Types to Compare</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="entities" value="tour" id="entity_tour"
+                                           {% if 'tour' in entity_types %}checked{% endif %}>
+                                    <label class="form-check-label" for="entity_tour">Tours</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="entities" value="period" id="entity_period"
+                                           {% if 'period' in entity_types %}checked{% endif %}>
+                                    <label class="form-check-label" for="entity_period">Periods</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="entities" value="flight" id="entity_flight"
+                                           {% if 'flight' in entity_types %}checked{% endif %}>
+                                    <label class="form-check-label" for="entity_flight">Flights</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="entities" value="itinerary" id="entity_itinerary"
+                                           {% if 'itinerary' in entity_types %}checked{% endif %}>
+                                    <label class="form-check-label" for="entity_itinerary">Itineraries</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                Update Comparison
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if comparison_data %}
+        <!-- Overall Scores Summary -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="mb-3">Overall Scores</h3>
+                <div class="row">
+                    {% for provider_code, score_data in provider_scores.items %}
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ available_providers|dict_get:provider_code|default:provider_code }}</h5>
+                                <div class="display-4 mb-2 {% if score_data.overall_score >= 80 %}text-success{% elif score_data.overall_score >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ score_data.overall_score }}%
+                                </div>
+                                <div class="mb-3">
+                                    <small class="text-muted">Overall Score</small>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar {% if score_data.overall_score >= 80 %}bg-success{% elif score_data.overall_score >= 60 %}bg-warning{% else %}bg-danger{% endif %}"
+                                             role="progressbar" style="width: {{ score_data.overall_score }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-around text-start small">
+                                    <div>
+                                        <strong>Field Coverage:</strong><br>
+                                        {{ score_data.field_coverage }}%
+                                    </div>
+                                    <div>
+                                        <strong>Quality Score:</strong><br>
+                                        {{ score_data.quality_score }}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Completeness Comparison -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Data Completeness Comparison</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Provider</th>
+                                        <th>Has Flights</th>
+                                        <th>Has Itineraries</th>
+                                        <th>Full Pricing</th>
+                                        <th>Pricing Types</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for provider_code, score_data in provider_scores.items %}
+                                    <tr>
+                                        <td><strong>{{ available_providers|dict_get:provider_code|default:provider_code }}</strong></td>
+                                        <td>
+                                            {% if score_data.has_flights %}
+                                            <span class="badge bg-success">Yes</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary">No</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if score_data.has_itineraries %}
+                                            <span class="badge bg-success">Yes</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary">No</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if score_data.has_full_pricing %}
+                                            <span class="badge bg-success">Yes</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary">No</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ score_data.pricing_types }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coverage Summary by Entity Type -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="mb-3">Field Coverage Summary</h3>
+
+                <!-- Entity Type Tabs -->
+                <ul class="nav nav-tabs mb-3" id="entityTabs">
+                    {% for entity_type in entity_types %}
+                    <li class="nav-item">
+                        <button class="nav-link entity-tab {% if forloop.first %}active{% endif %}"
+                                data-bs-toggle="tab" data-bs-target="#{{ entity_type }}-tab"
+                                type="button">
+                            {{ entity_type|title }}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    {% for entity_type in entity_types %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                         id="{{ entity_type }}-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Coverage Progress Bars -->
+                                <div class="row mb-4">
+                                    {% for provider_code in selected_providers %}
+                                    {% if provider_code in coverage_summary %}
+                                    {% with coverage=coverage_summary|dict_get:provider_code %}
+                                    {% if entity_type in coverage %}
+                                    <div class="col-md-3">
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-between">
+                                                <small>{{ available_providers|dict_get:provider_code|default:provider_code }}</small>
+                                                <small class="text-muted">{{ coverage|dict_get:entity_type|dict_get:'available' }}/{{ coverage|dict_get:entity_type|dict_get:'total' }}</small>
+                                            </div>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar {% if coverage|dict_get:entity_type|dict_get:'percentage' >= 80 %}bg-success{% elif coverage|dict_get:entity_type|dict_get:'percentage' >= 50 %}bg-warning{% else %}bg-danger{% endif %}"
+                                                     role="progressbar"
+                                                     style="width: {{ coverage|dict_get:entity_type|dict_get:'percentage' }}%">
+                                                    {{ coverage|dict_get:entity_type|dict_get:'percentage' }}%
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Detailed Comparison Table -->
+                                <div class="table-responsive comparison-table">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th style="min-width: 200px;">Standard Field</th>
+                                                <th>Description</th>
+                                                {% for provider_code in selected_providers %}
+                                                {% if provider_code in comparison_data %}
+                                                <th class="provider-badge">{{ available_providers|dict_get:provider_code|default:provider_code }}</th>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for field_name, field_desc in entity_field_lists|dict_get:entity_type %}
+                                            <tr>
+                                                <td><code>{{ field_name }}</code></td>
+                                                <td><small>{{ field_desc }}</small></td>
+                                                {% for provider_code in selected_providers %}
+                                                {% if provider_code in comparison_data %}
+                                                <td class="text-center">
+                                                    {% with mapping=comparison_data|dict_get:provider_code|dict_get:'mappings'|dict_get:entity_type|dict_get:field_name %}
+                                                    {% if mapping %}
+                                                        <span class="field-present">
+                                                            &check; <span class="api-field-name">{{ mapping }}</span>
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="field-missing">&mdash;</span>
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                </td>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Missing Fields Summary -->
+                                <div class="row mt-4">
+                                    {% for provider_code in selected_providers %}
+                                    {% if provider_code in coverage_summary %}
+                                    {% with coverage=coverage_summary|dict_get:provider_code %}
+                                    {% if entity_type in coverage %}
+                                    {% with missing=coverage|dict_get:entity_type|dict_get:'missing' %}
+                                    {% if missing %}
+                                    <div class="col-md-3">
+                                        <div class="alert alert-warning small">
+                                            <strong>{{ available_providers|dict_get:provider_code|default:provider_code }}</strong><br>
+                                            <small>Missing {{ missing|length }} fields:</small>
+                                            <div class="missing-fields-list mt-1">
+                                                <ul class="mb-0 ps-3">
+                                                    {% for field in missing %}
+                                                    <li><code>{{ field }}</code></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        {% if recommendations %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="mb-3">Recommendations</h3>
+                <div class="row">
+                    {% for rec in recommendations %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card recommendation-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ rec.title }}
+                                </h5>
+                                <p class="card-text">{{ rec.description }}</p>
+                                {% if rec.provider %}
+                                <span class="badge bg-primary">{{ available_providers|dict_get:rec.provider|default:rec.provider }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Constraints Summary -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Constraints & Limitations</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Main Constraints</th>
+                                    <th>Best Use Case</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for provider_code, score_data in provider_scores.items %}
+                                <tr>
+                                    <td><strong>{% for code, provider in available_providers.items %}{% if code == provider_code %}{{ provider.name }}{% endif %}{% endfor %}</strong></td>
+                                    <td>
+                                        {% if not score_data.has_flights %}
+                                        <span class="badge bg-warning">No Flight Schedules</span>
+                                        {% endif %}
+                                        {% if not score_data.has_itineraries %}
+                                        <span class="badge bg-warning">No Daily Itineraries</span>
+                                        {% endif %}
+                                        {% if not score_data.has_full_pricing %}
+                                        <span class="badge bg-warning">Limited Pricing</span>
+                                        {% endif %}
+                                        {% if score_data.pricing_types == 0 %}
+                                        <span class="badge bg-danger">No Pricing Data</span>
+                                        {% endif %}
+                                        {% if score_data.has_flights and score_data.has_itineraries and score_data.has_full_pricing %}
+                                        <span class="badge bg-success">Complete Data</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>
+                                        {% if provider_code == 'zego' %}
+                                            Complete tour packages with flights and itineraries
+                                        {% elif provider_code == 'unique_inter' %}
+                                            Simple tour listings, price-focused departures
+                                        {% elif provider_code == 'checkingroup' %}
+                                            High-quality Thai B2B, real-time pricing
+                                        {% elif provider_code == 'go365' %}
+                                            Manual entry or limited API integration
+                                        {% endif %}
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="alert alert-info">
+            <h4>No providers selected</h4>
+            <p>Please select at least one provider to compare.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scroll to tables when entity tabs are clicked
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.entity-tab').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(e) {
+            // Optional: scroll to top of comparison section
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "wholesale/evaluation/base.html" %}
+
+{% block title %}Reuse Existing Adapter - {{ session.provider_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="step-indicator">
+            <div class="step complete">1. Create Session</div>
+            <div class="step complete">2. Upload Samples</div>
+            <div class="step complete">3. Analyze</div>
+            <div class="step active">4. Implementation Guide</div>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>✓ No New Code Needed!</h4>
+            <p>Your provider is {{ recommendation.best_match_score }}% compatible with the existing
+            <strong>{{ recommendation.recommended_adapter }}</strong> adapter.</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Implementation Guide</h3>
+            </div>
+            <div class="card-body">
+                <!-- Display guidance from recommendation -->
+                {% if recommendation.guidance %}
+                <ol>
+                    {% for step in recommendation.guidance.steps %}
+                    <li class="mb-4">
+                        <h5>{{ step.title }}</h5>
+                        <p>{{ step.description }}</p>
+                        {% if step.example %}
+                        <pre class="bg-light p-3"><code>{{ step.example }}</code></pre>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mb-4">
+            <a href="{% url 'wholesale:evaluation_home' %}" class="btn btn-success btn-lg">
+                Done - Return to Home
+            </a>
+            <a href="{% url 'wholesale:evaluation_analyze' session.session_id %}" class="btn btn-outline-secondary">
+                Back to Analysis
+            </a>
+            <button class="btn btn-outline-info" onclick="copyAIPrompt()" data-bs-toggle="tooltip" title="Copy prompt for AI assistant">
+                📋 Copy AI Helper Prompt
+            </button>
+        </div>
+
+        <script>
+        const sessionData = {
+            provider_name: "{{ session.provider_name }}",
+            provider_code: "{{ session.provider_code }}",
+            base_url: "{{ session.base_url }}",
+            recommended_adapter: "{{ recommendation.recommended_adapter }}",
+            score: {{ recommendation.best_match_score }}
+        };
+
+        function copyAIPrompt() {
+            const prompt = `# Task: Configure Provider to Use Existing Adapter
+
+## Evaluation Result
+- Action: {{ recommendation.action }}
+- Recommended Adapter: ${sessionData.recommended_adapter}
+- Compatibility: {{ recommendation.best_match_score }}%
+- Provider Name: ${sessionData.provider_name}
+
+## What I Need
+1. Register provider in Django Admin to use ${sessionData.recommended_adapter} adapter
+2. Configure API credentials
+3. Test connection
+4. Run sync command
+
+## Provider Details
+- Name: ${sessionData.provider_name}
+- Code: ${sessionData.provider_code}
+- Base URL: ${sessionData.base_url}
+
+Please provide:
+1. Django shell commands to register the provider
+2. Command to test API connection
+3. Command to run sync: python manage.py sync_${sessionData.recommended_adapter}
+4. Any additional configuration needed`;
+
+            navigator.clipboard.writeText(prompt).then(() => {
+                alert('AI helper prompt copied! Paste it into your AI assistant.');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                // Fallback: show textarea with prompt
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('AI helper prompt copied! Paste it into your AI assistant.');
+            });
+        }
+        </script>
+    </div>
+</div>
+{% endblock %}

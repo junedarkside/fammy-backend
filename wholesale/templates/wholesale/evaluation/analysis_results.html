@@ -1,0 +1,329 @@
+{% extends "wholesale/evaluation/base.html" %}
+
+{% block title %}Analysis Results - {{ session.provider_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="step-indicator">
+            <div class="step complete">1. Create Session</div>
+            <div class="step complete">2. Upload Samples</div>
+            <div class="step active">3. Analyze</div>
+            <div class="step">4. Generate Code</div>
+        </div>
+
+        <!-- Recommendation Card -->
+        <div class="card mb-4">
+            <div class="card-header {% if recommendation.action == 'PERFECT_MATCH' or recommendation.action == 'REUSE' %}bg-success{% elif recommendation.action == 'REUSE_WITH_NORMALIZER' %}bg-warning{% else %}bg-danger{% endif %} text-white">
+                <h3 class="mb-0">
+                    {% if recommendation.action == 'PERFECT_MATCH' %}
+                        Recommendation: PERFECT MATCH
+                    {% elif recommendation.action == 'REUSE_WITH_NORMALIZER' %}
+                        Recommendation: REUSE WITH NORMALIZER
+                    {% else %}
+                        Recommendation: {{ recommendation.action|upper }}
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <h5>Reasoning:</h5>
+                <p class="lead">{{ recommendation.reasoning }}</p>
+
+                {% if recommendation.recommended_adapter %}
+                <div class="alert alert-info">
+                    <strong>Recommended Adapter:</strong>
+                    <code>{{ recommendation.recommended_adapter }}</code>
+                </div>
+                {% endif %}
+
+                <p><strong>Estimated Quality Score: {{ recommendation.estimated_quality_score }}/100</strong></p>
+
+                {% if recommendation.guidance %}
+                <div class="mt-4">
+                    <h5>{{ recommendation.guidance.title }}</h5>
+
+                    <!-- Perfect Match: No Code Needed -->
+                    {% if recommendation.guidance.no_code_needed %}
+                    <div class="alert alert-success">
+                        <strong>✓ No code changes needed!</strong>
+                        Use the existing {{ recommendation.recommended_adapter }} adapter.
+                    </div>
+                    {% endif %}
+
+                    <!-- Step-by-step guidance -->
+                    <div class="mt-3">
+                        <h6>Implementation Steps:</h6>
+                        <ol>
+                            {% for step in recommendation.guidance.steps %}
+                            <li class="mb-3">
+                                <strong>{{ step.title }}</strong>
+                                <p class="text-muted mb-1">{{ step.description }}</p>
+                                {% if step.example %}
+                                <pre class="bg-light p-2"><code>{{ step.example }}</code></pre>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+
+                    <!-- Field Mapping Table (for normalizer scenario) -->
+                    {% if recommendation.guidance.field_mappings %}
+                    <div class="mt-4">
+                        <h6>Field Mapping Reference:</h6>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>{{ recommendation.recommended_adapter|title }} Field</th>
+                                    <th>Your Field</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mapping in recommendation.guidance.field_mappings %}
+                                <tr>
+                                    <td><code>{{ mapping.adapter_field }}</code></td>
+                                    <td><code>{{ mapping.your_field }}</code></td>
+                                    <td>
+                                        {% if mapping.matched %}
+                                        <span class="badge bg-success">✓ Match</span>
+                                        {% else %}
+                                        <span class="badge bg-warning">⚠ Map Needed</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    <!-- Differences Summary (for new adapter scenario) -->
+                    {% if recommendation.guidance.differences %}
+                    <div class="mt-4">
+                        <h6>Key Differences from Existing Adapters:</h6>
+                        <ul>
+                            {% for diff in recommendation.guidance.differences %}
+                            <li>{{ diff }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Compatibility Scores -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Compatibility Scores</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for adapter_name, result in compatibility_scores.items %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>{{ adapter_name|title }}</h5>
+                                <div class="progress mb-3" style="height: 25px;">
+                                    <div class="progress-bar {% if result.score >= 80 %}bg-success{% elif result.score >= 50 %}bg-warning{% else %}bg-danger{% endif %}"
+                                         style="width: {{ result.score }}%">
+                                        {{ result.score }}%
+                                    </div>
+                                </div>
+                                <ul class="list-unstyled mb-0">
+                                    <li>{{ result.matching_fields|length }} matching fields</li>
+                                    <li>{{ result.missing_fields|length }} missing fields</li>
+                                    <li>{{ result.extra_fields|length }} extra fields</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Field Structure -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Detected Field Structure</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Total Fields:</strong> {{ tour_structure.total_fields }}</p>
+                <p><strong>Fields Found:</strong> {{ tour_structure.fields_found|join:", " }}</p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-grid gap-2 mb-4">
+            <a href="{% url 'wholesale:evaluation_generate' session.session_id %}" class="btn btn-primary btn-lg">
+                {% if recommendation.action == 'PERFECT_MATCH' or recommendation.action == 'REUSE' %}
+                    View Implementation Guide
+                {% else %}
+                    Generate Adapter Code
+                {% endif %}
+            </a>
+
+            <!-- AI Helper Prompt Button -->
+            <button class="btn btn-outline-info" onclick="copyAIPrompt()" data-bs-toggle="tooltip" title="Copy prompt for AI assistant">
+                📋 Copy AI Helper Prompt
+            </button>
+        </div>
+
+        <!-- Hidden data for JavaScript -->
+        <script>
+        const sessionData = {
+            provider_name: "{{ session.provider_name }}",
+            provider_code: "{{ session.provider_code }}",
+            base_url: "{{ session.base_url }}",
+            recommended_adapter: "{{ recommendation.recommended_adapter|default:'' }}",
+            action: "{{ recommendation.action }}",
+            score: {{ recommendation.best_match_score|default:0 }},
+            sample_data: {{ session.sample_tours|safe|default:'[]' }}
+        };
+
+        const recommendationGuidance = {{ recommendation.guidance|safe|default:'{}' }};
+
+        function copyAIPrompt() {
+            let prompt = '';
+
+            if (sessionData.action === 'PERFECT_MATCH') {
+                prompt = `# Task: Configure Provider to Use Existing Adapter
+
+## Evaluation Result
+- Action: PERFECT_MATCH
+- Recommended Adapter: ${sessionData.recommended_adapter}
+- Provider Name: ${sessionData.provider_name}
+
+## What I Need
+1. Register provider in Django Admin to use ${sessionData.recommended_adapter} adapter
+2. Configure API credentials
+3. Test connection
+4. Run sync command
+
+## Provider Details
+- Name: ${sessionData.provider_name}
+- Code: ${sessionData.provider_code}
+- Base URL: ${sessionData.base_url}
+
+Please provide:
+1. Django shell commands to register the provider
+2. Command to test API connection
+3. Command to run sync: python manage.py sync_${sessionData.recommended_adapter}
+4. Any additional configuration needed`;
+            } else if (sessionData.action === 'REUSE') {
+                prompt = `# Task: Configure Provider with Minor Changes
+
+## Evaluation Result
+- Compatibility: ${sessionData.score}%
+- Recommended Adapter: ${sessionData.recommended_adapter}
+- Action: REUSE
+
+## What I Need
+1. Create Provider in Django Admin
+2. Review field mappings
+3. Run sync command
+
+## Provider Details
+- Name: ${sessionData.provider_name}
+- Code: ${sessionData.provider_code}
+- Base URL: ${sessionData.base_url}
+
+Please provide:
+1. Django shell commands to register the provider
+2. Configuration steps
+3. Testing and sync commands`;
+            } else if (sessionData.action === 'REUSE_WITH_NORMALIZER') {
+                const fieldMappings = recommendationGuidance.field_mappings || [];
+                let fieldTable = fieldMappings.map(m =>
+                    `- ${m.adapter_field}: Your field '${m.your_field || 'TODO'}'`
+                ).join('\n');
+
+                prompt = `# Task: Create Field Normalizer for Provider
+
+## Evaluation Result
+- Compatibility: ${sessionData.score}%
+- Recommended Adapter: ${sessionData.recommended_adapter}
+- Action: REUSE_WITH_NORMALIZER
+
+## Field Differences
+The tool found these field mapping differences:
+${fieldTable}
+
+## Sample API Response
+\`\`\`json
+${JSON.stringify(sessionData.sample_data[0] || {}, null, 2)}
+\`\`\`
+
+## Target Adapter Format
+The ${sessionData.recommended_adapter} adapter expects standard field names.
+
+Please create:
+1. A FieldNormalizer class that transforms my provider's format to ${sessionData.recommended_adapter} format
+2. A custom Mapper class that extends ${sessionData.recommended_adapter}Mapper
+3. Registration in APIServiceFactory
+4. Example of how to run the sync
+
+Follow the patterns in:
+- wholesale/field_normalizers.py
+- wholesale/provider_mappers.py
+- wholesale/api_service.py`;
+            } else {
+                prompt = `# Task: Create New Provider Adapter
+
+## Evaluation Result
+- Compatibility: ${sessionData.score}%
+- Action: CREATE_NEW
+- Reasoning: Data structure is significantly different
+
+## Provider API Details
+- Base URL: ${sessionData.base_url}
+- Authentication: TODO
+- Endpoints:
+  - Tours: TODO
+  - Periods: TODO
+
+## Sample API Responses
+\`\`\`json
+${JSON.stringify(sessionData.sample_data[0] || {}, null, 2)}
+\`\`\`
+
+## What I Need
+1. Review and customize the generated API Service class
+2. Review and customize the generated Mapper class
+3. Complete field mappings in provider_mappings.py
+4. Register in APIServiceFactory
+5. Create Provider in Django Admin
+6. Test the implementation
+
+Please:
+1. Review the generated code and identify TODO items
+2. Help me implement the missing pieces
+3. Provide testing commands
+4. Suggest any improvements or error handling
+
+Reference existing implementations:
+- wholesale/api_service.py (ZegoAPIService, CheckInGroupAPIService)
+- wholesale/provider_mappers.py (ZegoMapper, CheckInGroupMapper)
+- wholesale/provider_mappings.py (existing mappings)`;
+            }
+
+            navigator.clipboard.writeText(prompt).then(() => {
+                alert('AI helper prompt copied! Paste it into your AI assistant.');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                // Fallback: show textarea with prompt
+                const textarea = document.createElement('textarea');
+                textarea.value = prompt;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('AI helper prompt copied! Paste it into your AI assistant.');
+            });
+        }
+        </script>
+    </div>
+</div>
+{% endblock %}

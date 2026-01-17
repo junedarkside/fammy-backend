@@ -56,6 +56,51 @@ A **Provider Adapter** connects external tour operator APIs to our B2B platform.
 
 ---
 
+## Before You Start: Use the Evaluation Tool
+
+**⚡ New!** Before manually creating an adapter, use the [Provider Adapter Evaluation Tool](evaluation-tool.md) to:
+- **Check compatibility** with existing adapters (Zego, Unique Inter, Go365, CheckIn Group)
+- **Get automatic code generation** for new adapters
+- **Receive step-by-step guidance** for implementation
+- **Save development time** by identifying reuse opportunities
+
+The evaluation tool analyzes your provider's API structure and recommends the best integration approach.
+
+### Access the Tool
+
+```
+http://localhost:8000/wholesale/evaluation/
+```
+
+### When to Use the Evaluation Tool
+
+✅ **Use the tool when:**
+- You have a new provider API to integrate
+- You want to check compatibility before committing to an approach
+- You need help deciding on adapter architecture
+- You want boilerplate code generation
+
+❌ **Skip the tool when:**
+- Making minor tweaks to existing adapters
+- You already know the provider uses identical structure to an existing one
+- Working with non-standard integration requirements
+
+### Quick Evaluation Workflow
+
+1. **Gather API samples** from your provider
+2. **Access evaluation tool** at http://localhost:8000/wholesale/evaluation/
+3. **Upload API responses** (use Smart Paste Helper for nested data)
+4. **Review analysis** and compatibility scores
+5. **Follow recommendations:**
+   - 95-100% match → Reuse existing adapter (no code!)
+   - 80-94% match → Reuse with minor changes
+   - 50-79% match → Create field normalizer
+   - <50% match → Create new adapter (code generated for you)
+
+See [Evaluation Tool Guide](evaluation-tool.md) for complete instructions.
+
+---
+
 ## Simple Architecture
 
 ```
@@ -817,7 +862,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        provider_code = options['provider_code']
+        provider_code = options.get('provider_code', 'example')
 
         # Get provider
         try:
@@ -847,11 +892,11 @@ class Command(BaseCommand):
             return
 
         # Sync tours (unless --periods-only)
-        if not options['periods_only']:
+        if not options.get('periods_only'):
             self.sync_tours(provider, api_service, options.get('tour_id'))
 
         # Sync periods (unless --tours-only)
-        if not options['tours_only']:
+        if not options.get('tours_only'):
             self.sync_periods(provider, api_service, options.get('tour_id'))
 
         self.stdout.write(
@@ -1102,6 +1147,116 @@ if periods.exists():
 - [ ] Available seats calculated correctly
 - [ ] No duplicate records (check `unique_together`)
 - [ ] Error handling works for invalid data
+
+---
+
+## Best Practices: Management Commands
+
+### Always Use Safe Dictionary Access for Optional Arguments
+
+When writing Django management commands that may be called from multiple contexts (CLI, Django Admin, programmatic), always use `.get()` method for accessing optional arguments:
+
+```python
+def handle(self, *args, **options):
+    # ✅ GOOD - Safe access, works in all contexts
+    tour_id = options.get('tour_id')
+    if tour_id:
+        tours = [service.get_program_tour_details(tour_id)]
+    else:
+        tours = service.get_program_tours()
+
+    # ❌ BAD - Raises KeyError when called from Django Admin
+    if options['tour_id']:
+        tours = [service.get_program_tour_details(options['tour_id'])]
+```
+
+**Why This Matters:**
+
+When a management command is called from different contexts:
+- **CLI**: `python manage.py sync_provider` - All arguments present (with defaults)
+- **Django Admin**: `cmd.handle()` - Optional arguments may NOT exist in dict
+- **Programmatic**: `command.handle()` - Same as Admin
+- **Celery Tasks**: May not pass all arguments
+
+**The Problem:**
+Direct dictionary access `options['key']` raises `KeyError` if the key doesn't exist. When Django Admin calls `handle()` without arguments, the `options` dict may not contain keys for optional arguments.
+
+**The Solution:**
+Use `options.get('key')` which returns `None` if the key doesn't exist, preventing the `KeyError`.
+
+### Required vs Optional Arguments
+
+**Required Arguments:**
+```python
+def add_arguments(self, parser):
+    parser.add_argument('provider-code',  # No leading dashes = required
+                       type=str,
+                       help='Provider code (required)')
+```
+
+**Optional Arguments:**
+```python
+def add_arguments(self, parser):
+    parser.add_argument('--tour-id',  # Leading dashes = optional
+                       type=int,
+                       help='Sync specific tour by ID')
+```
+
+### Access Pattern
+
+```python
+def handle(self, *args, **options):
+    # Required: Can use direct access (but .get() is still safer)
+    provider_code = options.get('provider_code')
+
+    # Optional: ALWAYS use .get()
+    tour_id = options.get('tour_id')
+    dry_run = options.get('dry_run', False)
+    tours_only = options.get('tours_only', False)
+
+    # Check for truthiness
+    if tour_id:
+        # Sync specific tour
+        pass
+    else:
+        # Sync all tours
+        pass
+```
+
+### Real-World Example: CheckIn Group Fix
+
+**Issue:** When syncing CheckIn Group from Django Admin, the command failed with:
+```
+Error syncing 'CheckIn Group': 'tour_id'
+```
+
+**Root Cause:**
+```python
+# Line 54 in sync_checkingroup.py (BEFORE)
+if options['tour_id']:  # KeyError when key doesn't exist
+    tours = [service.get_program_tour_details(options['tour_id'])]
+```
+
+**Fix Applied:**
+```python
+# Line 54-56 in sync_checkingroup.py (AFTER)
+tour_id = options.get('tour_id')
+if tour_id:
+    tours = [service.get_program_tour_details(tour_id)]
+```
+
+Also fixed similar issues on lines 66 and 94 for `dry_run` and `tours_only` arguments.
+
+### Checklist for Management Commands
+
+Before deploying a new management command, verify:
+
+- [ ] All optional arguments accessed via `.get()`
+- [ ] Required arguments have fallback values in `.get()` if needed
+- [ ] Command works from CLI with no arguments
+- [ ] Command works from Django Admin "Sync Now" button
+- [ ] Command works when called programmatically
+- [ ] No direct dictionary access like `options['key']` for optional args
 
 ---
 

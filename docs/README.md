@@ -18,6 +18,11 @@ Welcome to the documentation for the B2B Travel Platform for Thai Customers. Thi
 - [API Endpoints](api/endpoints.md) - Complete endpoint reference
 
 ### Provider Integration
+- **[Evaluation Tool](provider-integration/evaluation-tool.md)** ⚡ - Analyze provider APIs and get recommendations (NEW)
+- **[Claude Code Skills](../.claude/README.md)** 🤖 - AI-powered debugging and integration tools
+  - `/debug-provider-sync` - Diagnose sync failures
+  - `/integrate-provider` - Add new providers
+  - `/validate-models` - Prevent constraint violations
 - [Adapter Guide](provider-integration/adapter-guide.md) - Comprehensive guide for integrating tour operators
 - [Quick Start](provider-integration/quick-start.md) - Fast track for provider integration
 - [CheckIn Group Guide](provider-integration/checkingroup-guide.md) - CheckIn Group API integration

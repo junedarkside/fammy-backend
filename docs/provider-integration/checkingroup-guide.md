@@ -794,6 +794,52 @@ IntegrityError: duplicate key value violates unique constraint
 - Use `update_or_create()` instead of `create()`
 - Sync command uses `update_or_create()` by default
 
+### Issue: KeyError 'tour_id' When Syncing from Django Admin
+
+**Error:**
+```
+Error syncing 'CheckIn Group': 'tour_id'
+```
+
+**Cause:**
+When the sync command is called from Django Admin's "Sync Now" button, optional command arguments are not provided. Direct dictionary access like `options['tour_id']` raises a `KeyError` when the key doesn't exist.
+
+**Solution:**
+The management command has been fixed to use safe dictionary access with `.get()` method:
+
+```python
+# Before (raises KeyError):
+if options['tour_id']:
+    tours = [service.get_program_tour_details(options['tour_id'])]
+
+# After (safe access):
+tour_id = options.get('tour_id')
+if tour_id:
+    tours = [service.get_program_tour_details(tour_id)]
+```
+
+**Status:** ✅ Fixed in `wholesale/management/commands/sync_checkingroup.py`
+
+**Best Practice for Management Commands:**
+Always use `.get()` method for accessing optional arguments in Django management commands:
+
+```python
+# ✅ GOOD - Safe access
+tour_id = options.get('tour_id')
+if tour_id:
+    # Process specific tour
+
+# ❌ BAD - Will raise KeyError if key doesn't exist
+if options['tour_id']:
+    # Process specific tour
+```
+
+This ensures commands work correctly whether called from:
+- CLI: `python manage.py sync_checkingroup`
+- Django Admin: "Sync Now" button
+- Programmatic: `cmd.handle()`
+- Celery tasks: `sync_checkingroup.delay()`
+
 ---
 
 ## Performance Considerations

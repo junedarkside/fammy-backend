@@ -4,8 +4,9 @@ from django.urls import path, reverse
 from django.utils.html import format_html
 from django.db.models import Q, Count, Prefetch
 from django.utils import timezone
-from .models import Provider, Country, ProgramTour, Period, Flight, Itinerary, ProviderCategory, RawVendorData
+from .models import Provider, Country, ProgramTour, Period, Flight, Itinerary, ProviderCategory, RawVendorData, AdapterEvaluationSession
 from .data_sync_service import DataSyncService
+from .forms import ProviderAdminForm
 
 def sync_data_for_provider(modeladmin, request, queryset):
     for provider in queryset:
@@ -91,12 +92,106 @@ def sync_unique_inter_data(modeladmin, request, queryset):
 sync_unique_inter_data.short_description = "Sync Unique Inter data (category-based)"
 
 
+def sync_checkingroup_data(modeladmin, request, queryset):
+    """Sync CheckIn Group providers using dedicated sync command."""
+    for provider in queryset:
+        if provider.code != 'checkingroup':
+            modeladmin.message_user(
+                request,
+                f"'{provider.name}' is not CheckIn Group. Use 'Sync data' action instead.",
+                messages.WARNING
+            )
+            continue
+
+        if not provider.is_active:
+            modeladmin.message_user(
+                request,
+                f"Provider '{provider.name}' is not active.",
+                messages.WARNING
+            )
+            continue
+
+        # Import here to avoid circular imports
+        from .management.commands.sync_checkingroup import Command as SyncCommand
+
+        try:
+            cmd = SyncCommand()
+            # Run sync (fetches and processes tours with periods, pricing, etc.)
+            cmd.handle()
+
+            modeladmin.message_user(
+                request,
+                f"CheckIn Group sync completed for '{provider.name}'. Check ProgramTour and Period models for results.",
+                messages.SUCCESS
+            )
+        except Exception as e:
+            modeladmin.message_user(
+                request,
+                f"Error syncing '{provider.name}': {str(e)}",
+                messages.ERROR
+            )
+
+sync_checkingroup_data.short_description = "Sync CheckIn Group data"
+
+
+def sync_go365_data(modeladmin, request, queryset):
+    """Sync Go365 providers using MultiProviderSyncService."""
+    for provider in queryset:
+        if provider.code != 'go365':
+            modeladmin.message_user(
+                request,
+                f"'{provider.name}' is not Go365. Use 'Sync data' action instead.",
+                messages.WARNING
+            )
+            continue
+
+        if not provider.is_active:
+            modeladmin.message_user(
+                request,
+                f"Provider '{provider.name}' is not active.",
+                messages.WARNING
+            )
+            continue
+
+        try:
+            from .management.commands.sync_go365 import Command as SyncCommand
+            cmd = SyncCommand()
+            cmd.handle()
+            modeladmin.message_user(
+                request,
+                f"Go365 sync completed for '{provider.name}'. Check ProgramTour model for results.",
+                messages.SUCCESS
+            )
+        except Exception as e:
+            modeladmin.message_user(
+                request,
+                f"Error syncing '{provider.name}': {str(e)}",
+                messages.ERROR
+            )
+
+sync_go365_data.short_description = "Sync Go365 data"
+
+
 @admin.register(Provider)
 class ProviderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'is_active', 'base_url', 'api_version', 'tour_count', 'sync_button')
+    form = ProviderAdminForm
+    list_display = ('name', 'code', 'adapter_type_display', 'is_active', 'base_url', 'api_version', 'tour_count', 'sync_button')
     search_fields = ('name', 'code')
     list_filter = ('is_active',)
-    actions = [sync_data_for_provider, sync_unique_inter_data]
+    actions = [sync_data_for_provider, sync_unique_inter_data, sync_checkingroup_data, sync_go365_data]
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'code', 'adapter_type', 'is_active')
+        }),
+        ('API Configuration', {
+            'fields': ('base_url', 'token', 'api_version')
+        }),
+        ('Advanced', {
+            'fields': ('extra',),
+            'classes': ('collapse',)
+        }),
+    )
 
     def get_queryset(self, request):
         """Optimize queryset with tour count annotation."""
@@ -111,6 +206,13 @@ class ProviderAdmin(admin.ModelAdmin):
         return obj.tours_count
     tour_count.short_description = 'Tours'
     tour_count.admin_order_field = 'tours_count'
+
+    def adapter_type_display(self, obj):
+        """Display the adapter type from extra JSON field."""
+        if obj.extra and obj.extra.get('adapter_type'):
+            return obj.extra.get('adapter_type')
+        return 'Not set'
+    adapter_type_display.short_description = 'Adapter Type'
 
     def sync_button(self, obj):
         """Display sync button for active providers."""
@@ -135,8 +237,8 @@ class ProviderAdmin(admin.ModelAdmin):
         """
         Custom admin view for syncing a single provider.
 
-        Handles both standard providers (via DataSyncService) and
-        Unique Inter providers (via management command).
+        Handles standard providers (via DataSyncService), Unique Inter providers,
+        and CheckIn Group providers (via dedicated management commands).
 
         Args:
             request: Django HttpRequest
@@ -158,6 +260,19 @@ class ProviderAdmin(admin.ModelAdmin):
                 cmd = SyncCommand()
                 cmd.handle(provider_code=provider.code, fetch_only=False, process_only=False, category=None)
                 messages.success(request, f"Unique Inter sync completed for '{provider.name}'. Check RawVendorData for results.")
+            elif provider.code == 'checkingroup':
+                # Use CheckIn Group sync
+                from .management.commands.sync_checkingroup import Command as SyncCommand
+                cmd = SyncCommand()
+                cmd.handle()
+                messages.success(request, f"CheckIn Group sync completed for '{provider.name}'. Check ProgramTour and Period models for results.")
+            elif provider.code == 'go365':
+                # Use Go365 sync via dedicated management command
+                from .management.commands.sync_go365 import Command as SyncCommand
+                cmd = SyncCommand()
+                # Call handle without arguments (uses provider from database)
+                cmd.handle()
+                messages.success(request, f"Go365 sync completed for '{provider.name}'. Check ProgramTour model for results.")
             else:
                 # Use standard DataSyncService for Zego and others
                 sync_service = DataSyncService(provider)
@@ -552,3 +667,46 @@ class RawVendorDataAdmin(admin.ModelAdmin):
         return bool(obj.error_message)
     has_error.boolean = True
     has_error.short_description = 'Error'
+
+@admin.register(AdapterEvaluationSession)
+class AdapterEvaluationSessionAdmin(admin.ModelAdmin):
+    """Admin interface for Adapter Evaluation Sessions."""
+    list_display = ('provider_name', 'provider_code', 'status', 'created_at', 'evaluation_link')
+    list_filter = ('status', 'created_at')
+    search_fields = ('provider_name', 'provider_code')
+    readonly_fields = ('session_id', 'created_at', 'updated_at', 'analysis_results')
+
+    fieldsets = (
+        ('Basic Info', {
+            'fields': ('provider_name', 'provider_code', 'base_url', 'status')
+        }),
+        ('Sample Data', {
+            'fields': ('sample_tours', 'sample_periods', 'sample_countries',
+                      'sample_flights', 'sample_itineraries'),
+            'classes': ('collapse',)
+        }),
+        ('Analysis Results', {
+            'fields': ('analysis_results',),
+            'classes': ('collapse',)
+        }),
+        ('Generated Code', {
+            'fields': ('generated_service_code', 'generated_mapper_code',
+                      'generated_command_code', 'generated_mappings_config'),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('session_id', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def evaluation_link(self, obj):
+        """Link to evaluation tool."""
+        if obj.status == 'draft':
+            url = reverse('wholesale:evaluation_upload_samples', args=[obj.session_id])
+            return format_html('<a class="button" href="{}">Continue Evaluation</a>', url)
+        else:
+            url = reverse('wholesale:evaluation_analyze', args=[obj.session_id])
+            return format_html('<a class="button" href="{}">View Results</a>', url)
+
+    evaluation_link.short_description = 'Actions'

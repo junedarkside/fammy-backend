@@ -1,0 +1,739 @@
+{
+  "status": true,
+  "count": 328,
+  "data": [
+    {
+      "tour_id": 13632,
+      "tour_code": "GO1KMG-FD011",
+      "tour_name": "สายลมหวน ชวนให้คิดถึง คุนหมิง ต้าหลี่ ลี่เจียง นั่งรถไฟความเร็วสูง (ไม่ลงร้านช้อปปิ้ง) 6 วัน 5 คืน โดยสายการบินแอร์เอเชีย (FD)",
+      "tour_description": "กรุงเทพฯ (สนามบินดอนเมือง) – คุนหมิง (ท่าอากาศยานนานาชาติคุนหมิงฉางสุ่ย) (FD582: 08:00 - 11:25)-ต้าหลี่-ผ่านชมเจดีย์สามองค์-วัดเจ้าแม่กวนอิม–เมืองโบราณต้าหลี่-ลี่เจียง-สระมังกรดำ-เมืองโบราณลี่เจียง-ภูเขาหิมะมังกรหยก (รวมกระเช้าใหญ่) -โชว์ IMPRESSION LIJIANG – หุบเขาสีน้ำเงิน (รวมรถราง) -เมืองโบราณไป๋ซา+ร้านกาแฟหยุนตี้อัน (ไม่รวมค่าเครื่องดื่ม)-ลี่เจียง-นั่งรถไฟความเร็วสู่คุนหมิง (รวมรถขนกระเป๋า)-คุนหมิง-เมืองโบราณกวนตู้-วัดหยวนทง - ตำหนักทอง- อิสระช้อปปิ้งหนานผิงเจี่ย+ POP MART-คุนหมิง – กรุงเทพฯ (สนามบินดอนเมือง)(FD583 : 12.30 – 13.50)",
+      "tour_cover_image": "http://www.qualityb2bpackage.com/upload_photo/travel/112025/17633514691.jpg",
+      "tour_country": [
+        {
+          "country_id": 48,
+          "country_code_2": "CN",
+          "country_code_3": "CHN",
+          "country_numeric": "156",
+          "country_name": "China",
+          "country_name_th": "จีน",
+          "country_name_en": "China",
+          "country_zone_id": 3,
+          "country_zone_name": "asia"
+        }
+      ],
+      "tour_city": [
+        {
+          "city_id": 4648,
+          "city_name": "Kunming",
+          "country_id": 48
+        },
+        {
+          "city_id": 4654,
+          "city_name": "Lijiang",
+          "country_id": 48
+        },
+        {
+          "city_id": 4726,
+          "city_name": "Dali",
+          "country_id": 48
+        }
+      ],
+      "tour_area": [],
+      "tour_menu": [
+        {
+          "menu_id": 4,
+          "menu_name_th": "จีน",
+          "menu_name_en": "China",
+          "menu_sub": [
+            {
+              "menu_sub_id": 6,
+              "menu_sub_name_th": "คุนหมิง",
+              "menu_sub_name_en": "Kunming"
+            },
+            {
+              "menu_sub_id": 342,
+              "menu_sub_name_th": "ลี่เจียง",
+              "menu_sub_name_en": "Lijiang"
+            },
+            {
+              "menu_sub_id": 707,
+              "menu_sub_name_th": "ต้าหลี่",
+              "menu_sub_name_en": "Dali"
+            }
+          ]
+        }
+      ],
+      "tour_num_day": 6,
+      "tour_num_night": 5,
+      "tour_type_package_title": 0,
+      "tour_type_package": "jointour",
+      "tour_format_package": "Major",
+      "tour_price_start": 19900,
+      "tour_thai_project_id": 0,
+      "tour_thai_project_name": "ไม่ได้เข้าร่วมโครงการของรัฐ",
+      "tour_date_min": "2026-01-17",
+      "tour_date_max": "2026-02-05",
+      "tour_period_count": 6,
+      "tour_airline": {
+        "airline_id": 4937,
+        "airline_iata": "FD",
+        "airline_icao": "AIQ",
+        "airline_name": "Thai AirAsia",
+        "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/FD.png",
+        "airport_iata": "DMK",
+        "airport_name": "Don Mueang International Airport (DMK)"
+      },
+      "tour_flight": [
+        {
+          "flight_id": 244807,
+          "flight_route": "DMK - KMG",
+          "flight_date": "2026-01-17 - 2026-01-17",
+          "flight_time": "08:00 - 11:25",
+          "flight_airline_id": 4937,
+          "flight_airline_name": "Thai AirAsia",
+          "flight_airline_iata": "FD",
+          "flight_code": "FD582",
+          "flight_from_airport": "DMK",
+          "flight_from_date": "2026-01-17",
+          "flight_from_time": "08:00",
+          "flight_to_airport": "KMG",
+          "flight_to_date": "2026-01-17",
+          "flight_to_time": "11:25",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 244808,
+          "flight_route": "KMG - DMK",
+          "flight_date": "2026-01-22 - 2026-01-22",
+          "flight_time": "12:30 - 13:50",
+          "flight_airline_id": 4937,
+          "flight_airline_name": "Thai AirAsia",
+          "flight_airline_iata": "FD",
+          "flight_code": "FD583",
+          "flight_from_airport": "KMG",
+          "flight_from_date": "2026-01-22",
+          "flight_from_time": "12:30",
+          "flight_to_airport": "DMK",
+          "flight_to_date": "2026-01-22",
+          "flight_to_time": "13:50",
+          "flight_remark": "",
+          "system_remark": null
+        }
+      ],
+      "tour_car": "",
+      "tour_format": {
+        "format_id": 1,
+        "format_name_th": "โปรแกรมทัวร์ธรรมดา",
+        "format_name_en": "Defalut Package",
+        "format_drop": "DF"
+      },
+      "tour_file": {
+        "file_doc": "http://www.qualityb2bpackage.com/upload_file/travel/word/112025/1763351692.docx",
+        "file_pdf": "http://www.qualityb2bpackage.com/upload_file/travel/pdf/112025/1763351692.pdf",
+        "file_banner": "http://www.qualityb2bpackage.com/upload_photo/travel/112025/17633514691.jpg"
+      },
+      "tour_agent_id": 0,
+      "tour_product_by_id": 48,
+      "tour_product_by_name": "Go365Travel-GO",
+      "tour_discount_event": {},
+      "tour_website_id": 38,
+      "tour_website_name": "go365travel.com",
+      "tour_date": "2025-08-15 10:43:26",
+      "tour_update": {
+        "date_update": "2026-01-16 15:50:02",
+        "remark": "Update Tour."
+      }
+    },
+    {
+      "tour_id": 14539,
+      "tour_code": "2UHKG-EK003",
+      "tour_name": "ฮ่องกง ดิสนีย์แลนด์ นั่งกระเช้านองปิง ไหว้พระ 3 วัน 2 คืน (เที่ยวเต็ม) โดยสายการบิน Emirates (EK)",
+      "tour_description": "สนุกสนานเต็มอิ่มกับสวนสนุก ดิสนีย์แลนด์ ตลอดทั้งวัน |นั่งกระเช้านองปิงสักการะพระใหญ่โป่วหลิน | ขอพรเจ้าแม่กวนอิมรีพัลส์เบย์ รับพลังงานดี เสริมพลังฮวงจุ้ย",
+      "tour_cover_image": "http://www.qualityb2bpackage.com/upload_photo/travel/122025/17658822851.jpg",
+      "tour_country": [
+        {
+          "country_id": 95,
+          "country_code_2": "HK",
+          "country_code_3": "HKG",
+          "country_numeric": "344",
+          "country_name": "Hong Kong",
+          "country_name_th": "ฮ่องกง",
+          "country_name_en": "Hong Kong",
+          "country_zone_id": 3,
+          "country_zone_name": "asia"
+        }
+      ],
+      "tour_city": [
+        {
+          "city_id": 8263,
+          "city_name": "Hong Kong",
+          "country_id": 95
+        }
+      ],
+      "tour_area": [],
+      "tour_menu": [
+        {
+          "menu_id": 5,
+          "menu_name_th": "ฮ่องกง",
+          "menu_name_en": "Hong Kong",
+          "menu_sub": [
+            {
+              "menu_sub_id": 13,
+              "menu_sub_name_th": "ฮ่องกง",
+              "menu_sub_name_en": "Hong Kong"
+            }
+          ]
+        },
+        {
+          "menu_id": 26,
+          "menu_name_th": "เอเชีย",
+          "menu_name_en": "Asia",
+          "menu_sub": [
+            {
+              "menu_sub_id": 27,
+              "menu_sub_name_th": "ฮ่องกง",
+              "menu_sub_name_en": "Hong Kong"
+            }
+          ]
+        }
+      ],
+      "tour_num_day": 3,
+      "tour_num_night": 2,
+      "tour_type_package_title": 0,
+      "tour_type_package": "jointour",
+      "tour_format_package": "Major",
+      "tour_price_start": 19800,
+      "tour_thai_project_id": 0,
+      "tour_thai_project_name": "ไม่ได้เข้าร่วมโครงการของรัฐ",
+      "tour_date_min": "2026-01-17",
+      "tour_date_max": "2026-05-16",
+      "tour_period_count": 14,
+      "tour_airline": {
+        "airline_id": 2182,
+        "airline_iata": "EK",
+        "airline_icao": "UAE",
+        "airline_name": "Emirates",
+        "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/EK.png",
+        "airport_iata": "BKK",
+        "airport_name": "Suvarnabhumi Airport (BKK)"
+      },
+      "tour_flight": [
+        {
+          "flight_id": 233668,
+          "flight_route": "BKK - HKG",
+          "flight_date": "2026-01-17 - 2026-01-17",
+          "flight_time": "13:45 - 17:40",
+          "flight_airline_id": 2182,
+          "flight_airline_name": "Emirates",
+          "flight_airline_iata": "EK",
+          "flight_code": "EK384",
+          "flight_from_airport": "BKK",
+          "flight_from_date": "2026-01-17",
+          "flight_from_time": "13:45",
+          "flight_to_airport": "HKG",
+          "flight_to_date": "2026-01-17",
+          "flight_to_time": "17:40",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 260982,
+          "flight_route": "HKG - BKK",
+          "flight_date": "2026-01-19 - 2026-01-19",
+          "flight_time": "21:30 - 23:15",
+          "flight_airline_id": 2182,
+          "flight_airline_name": "Emirates",
+          "flight_airline_iata": "EK",
+          "flight_code": "EK 385 ",
+          "flight_from_airport": "HKG",
+          "flight_from_date": "2026-01-19",
+          "flight_from_time": "21:30",
+          "flight_to_airport": "BKK",
+          "flight_to_date": "2026-01-19",
+          "flight_to_time": "23:15",
+          "flight_remark": "",
+          "system_remark": null
+        }
+      ],
+      "tour_car": "",
+      "tour_format": {
+        "format_id": 2,
+        "format_name_th": "โปรแกรมทัวร์ยอดนิยม",
+        "format_name_en": "Hot Package",
+        "format_drop": "HO"
+      },
+      "tour_file": {
+        "file_doc": "http://www.qualityb2bpackage.com/upload_file/travel/word/122025/1765937055.docx",
+        "file_pdf": "http://www.qualityb2bpackage.com/upload_file/travel/pdf/122025/1765937055.pdf",
+        "file_banner": "http://www.qualityb2bpackage.com/upload_photo/travel/122025/17658822851.jpg"
+      },
+      "tour_agent_id": 0,
+      "tour_product_by_id": 63,
+      "tour_product_by_name": "Qebooking-2U",
+      "tour_discount_event": {},
+      "tour_website_id": 41,
+      "tour_website_name": "QeBooking.com by 2uCenter",
+      "tour_date": "2025-11-25 18:50:21",
+      "tour_update": {
+        "date_update": "2026-01-16 09:57:20",
+        "remark": "Update Tour."
+      }
+    },
+    {
+      "tour_id": 13864,
+      "tour_code": "GO1TFU-SL020",
+      "tour_name": "เฉิงตู ฉงชิ่ง มรดกโลกพระหินแกะสลักต้าจู๋ อุทยานหลุมบ่อฟ้า อุทยานเขานางฟ้า อุทยานภูเขาสี่ดรุณี อุทยานปี้เผิงโกว (นั่งรถไฟความเร็วสูง) *ไม่ลงร้านช้อป 7วัน 6คืน โดยสายการบิน Thai Lion Air (SL)",
+      "tour_description": "เฉิงตู – ต้าจู๋ – พระพุทธรูปแกะสลักหินต้าจู๋ เขาเป๋าติ่ง(รวมรถแบตเตอรี่) – เมืองอู่หลง – อุทยานหลุมบ่อฟ้าสะพานสวรรค์(รวมรถอุทยาน+ลิฟต์+รถแบตเตอรี่+ระเบียงแก้ว – อุทยานเขานางฟ้า(รวมรถไฟเล็ก) – หงหยาต้ง – เมืองฉงชิ่ง – ตึกขุยซิง ชั้น 22 – ชมรถไฟรถไฟฟ้าทะลุตึก – นั่งรถไฟความเร็วสูงกลับเฉิงตู – สะพานโบราณหนานเฉียว – เมืองโบราณกวนเซี่ยน – เมืองตูเจียงเยี่ยน – อุทยานภูเขาสี่ดรุณี ซวงเฉียวโกว(รวมรถอุทยาน) – อุทยานปี้เผิงโกว(รวมรถอุทยาน) – เมืองเฉิงตู – ถนนโบราณซอยกว้างซอยแคบ – วัดต้าฉือ – ถนนคนเดินซุนซีลู่ – หมีแพนด้าปีนตึกIFS – ถนนไท่กู๋หลี่ – สนามบินเฉิงตูเทียนฟู่ (SL933: 20.30-22.35) – กรุงเทพฯ (สนามบินดอนเมือง) \nเมนูพิเศษ:  สุกี้หม้อไฟหมาล่า / เป็ดปักกิ่ง",
+      "tour_cover_image": "http://www.qualityb2bpackage.com/upload_photo/travel/122025/17663979131.jpg",
+      "tour_country": [
+        {
+          "country_id": 48,
+          "country_code_2": "CN",
+          "country_code_3": "CHN",
+          "country_numeric": "156",
+          "country_name": "China",
+          "country_name_th": "จีน",
+          "country_name_en": "China",
+          "country_zone_id": 3,
+          "country_zone_name": "asia"
+        }
+      ],
+      "tour_city": [
+        {
+          "city_id": 4584,
+          "city_name": "Chengdu",
+          "country_id": 48
+        },
+        {
+          "city_id": 4587,
+          "city_name": "Chongqing",
+          "country_id": 48
+        }
+      ],
+      "tour_area": [],
+      "tour_menu": [
+        {
+          "menu_id": 4,
+          "menu_name_th": "จีน",
+          "menu_name_en": "China",
+          "menu_sub": [
+            {
+              "menu_sub_id": 10,
+              "menu_sub_name_th": "เฉิงตู",
+              "menu_sub_name_en": "Chengdu"
+            },
+            {
+              "menu_sub_id": 96,
+              "menu_sub_name_th": "ฉงชิ่ง",
+              "menu_sub_name_en": "Chongqing"
+            }
+          ]
+        }
+      ],
+      "tour_num_day": 7,
+      "tour_num_night": 6,
+      "tour_type_package_title": 0,
+      "tour_type_package": "jointour",
+      "tour_format_package": "Major",
+      "tour_price_start": 25900,
+      "tour_thai_project_id": 0,
+      "tour_thai_project_name": "ไม่ได้เข้าร่วมโครงการของรัฐ",
+      "tour_date_min": "2026-01-18",
+      "tour_date_max": "2026-03-21",
+      "tour_period_count": 7,
+      "tour_airline": {
+        "airline_id": 5984,
+        "airline_iata": "SL",
+        "airline_icao": null,
+        "airline_name": "Thai Lion Air",
+        "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/SL.png",
+        "airport_iata": "DMK",
+        "airport_name": "Don Mueang International Airport (DMK)"
+      },
+      "tour_flight": [
+        {
+          "flight_id": 248436,
+          "flight_route": "DMK - TFU",
+          "flight_date": "2026-01-18 - 2026-01-18",
+          "flight_time": "15:30 - 19:30",
+          "flight_airline_id": 5984,
+          "flight_airline_name": "Thai Lion Air",
+          "flight_airline_iata": "SL",
+          "flight_code": "SL932",
+          "flight_from_airport": "DMK",
+          "flight_from_date": "2026-01-18",
+          "flight_from_time": "15:30",
+          "flight_to_airport": "TFU",
+          "flight_to_date": "2026-01-18",
+          "flight_to_time": "19:30",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 248437,
+          "flight_route": "TFU - DMK",
+          "flight_date": "2026-01-24 - 2026-01-24",
+          "flight_time": "20:30 - 22:35",
+          "flight_airline_id": 5984,
+          "flight_airline_name": "Thai Lion Air",
+          "flight_airline_iata": "SL",
+          "flight_code": "SL933",
+          "flight_from_airport": "TFU",
+          "flight_from_date": "2026-01-24",
+          "flight_from_time": "20:30",
+          "flight_to_airport": "DMK",
+          "flight_to_date": "2026-01-24",
+          "flight_to_time": "22:35",
+          "flight_remark": "",
+          "system_remark": null
+        }
+      ],
+      "tour_car": "",
+      "tour_format": {
+        "format_id": 2,
+        "format_name_th": "โปรแกรมทัวร์ยอดนิยม",
+        "format_name_en": "Hot Package",
+        "format_drop": "HO"
+      },
+      "tour_file": {
+        "file_doc": "http://www.qualityb2bpackage.com/upload_file/travel/word/112025/1764132947.docx",
+        "file_pdf": "http://www.qualityb2bpackage.com/upload_file/travel/pdf/112025/1764132947.pdf",
+        "file_banner": "http://www.qualityb2bpackage.com/upload_photo/travel/122025/17663979131.jpg"
+      },
+      "tour_agent_id": 0,
+      "tour_product_by_id": 48,
+      "tour_product_by_name": "Go365Travel-GO",
+      "tour_discount_event": {},
+      "tour_website_id": 38,
+      "tour_website_name": "go365travel.com",
+      "tour_date": "2025-09-11 15:15:15",
+      "tour_update": {
+        "date_update": "2026-01-14 11:41:34",
+        "remark": "Update Tour."
+      }
+    },
+    {
+      "tour_id": 14353,
+      "tour_code": "2UCKG-3U003",
+      "tour_name": "บินตรงฉงชิ่ง เฉิงตู พุทธศิลป์ต้าจู๋ ภูเขาหิมะวาวู่ซาน 6 วัน 5 คืน โดยสายการบินเสฉวน แอร์ไลน์ (3U)",
+      "tour_description": "เริ่มต้นการเดินทางในมหานครสามมิติ “ฉงชิ่ง” เมืองแห่งขุนเขาและแสงนีออน |ล่องกระเช้าเหนือแม่น้ำแยงซี ชมวิวสองฟากฝั่งเมืองที่เชื่อมด้วยสายน้ำและสะพานทอง |\nเดินชมตรอกโบราณเซี่ยฮ่าวหลี่ และ “หงหยาต้ง” ที่ตึกซ้อนตึกกลายเป็นตำนานแห่งวิศวกรรม |ตามรอยศรัทธาสู่ง้อไบ๊ แช่น้ำแร่ร้อนท่ามกลางขุนเขา และสัมผัส “ผาหินแกะสลักต้าจู๋” มรดกโลกที่เล่าเรื่องพุทธศิลป์ด้วยปลายสิ่วของกาลเวลา | ขึ้นสู่ “หว่าอูซาน” ภูเขาศักดิ์สิทธิ์ที่หมอกโอบขุนเขาไว้อย่างนุ่มนวล |เดินเล่น “เมืองโบราณเหมยซาน” เมืองเล็กที่หอมกลิ่นชาและเสียงลมจากอดีต |ปิดท้ายที่ “เฉิงตู” เมืองแห่งชา วรรณกรรม และศิลปะร่วมสมัย—",
+      "tour_cover_image": "http://www.qualityb2bpackage.com/upload_photo/travel/122025/17658773041.jpg",
+      "tour_country": [
+        {
+          "country_id": 48,
+          "country_code_2": "CN",
+          "country_code_3": "CHN",
+          "country_numeric": "156",
+          "country_name": "China",
+          "country_name_th": "จีน",
+          "country_name_en": "China",
+          "country_zone_id": 3,
+          "country_zone_name": "asia"
+        }
+      ],
+      "tour_city": [
+        {
+          "city_id": 4584,
+          "city_name": "Chengdu",
+          "country_id": 48
+        },
+        {
+          "city_id": 4587,
+          "city_name": "Chongqing",
+          "country_id": 48
+        }
+      ],
+      "tour_area": [],
+      "tour_menu": [
+        {
+          "menu_id": 4,
+          "menu_name_th": "จีน",
+          "menu_name_en": "China",
+          "menu_sub": [
+            {
+              "menu_sub_id": 96,
+              "menu_sub_name_th": "ฉงชิ่ง",
+              "menu_sub_name_en": "Chongqing"
+            },
+            {
+              "menu_sub_id": 186,
+              "menu_sub_name_th": "ฉงชิ่ง-เฉิงตู",
+              "menu_sub_name_en": "Chongqing-Chengdu"
+            }
+          ]
+        }
+      ],
+      "tour_num_day": 6,
+      "tour_num_night": 5,
+      "tour_type_package_title": 0,
+      "tour_type_package": "jointour",
+      "tour_format_package": "Major",
+      "tour_price_start": 18900,
+      "tour_thai_project_id": 0,
+      "tour_thai_project_name": "ไม่ได้เข้าร่วมโครงการของรัฐ",
+      "tour_date_min": "2026-01-18",
+      "tour_date_max": "2026-03-29",
+      "tour_period_count": 6,
+      "tour_airline": {
+        "airline_id": 4600,
+        "airline_iata": "3U",
+        "airline_icao": "CSC",
+        "airline_name": "Sichuan Airlines",
+        "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/3U.png",
+        "airport_iata": "BKK",
+        "airport_name": "Suvarnabhumi Airport (BKK)"
+      },
+      "tour_flight": [
+        {
+          "flight_id": 258143,
+          "flight_route": "BKK - CKG",
+          "flight_date": "2026-01-18 - 2026-01-18",
+          "flight_time": "19:20 - 23:50",
+          "flight_airline_id": 4600,
+          "flight_airline_name": "Sichuan Airlines",
+          "flight_airline_iata": "3U",
+          "flight_code": "3U3772",
+          "flight_from_airport": "BKK",
+          "flight_from_date": "2026-01-18",
+          "flight_from_time": "19:20",
+          "flight_to_airport": "CKG",
+          "flight_to_date": "2026-01-18",
+          "flight_to_time": "23:50",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 258144,
+          "flight_route": "TFU - BKK",
+          "flight_date": "2026-01-23 - 2026-01-23",
+          "flight_time": "15:25 - 17:45",
+          "flight_airline_id": 4600,
+          "flight_airline_name": "Sichuan Airlines",
+          "flight_airline_iata": "3U",
+          "flight_code": "3U3935",
+          "flight_from_airport": "TFU",
+          "flight_from_date": "2026-01-23",
+          "flight_from_time": "15:25",
+          "flight_to_airport": "BKK",
+          "flight_to_date": "2026-01-23",
+          "flight_to_time": "17:45",
+          "flight_remark": "",
+          "system_remark": null
+        }
+      ],
+      "tour_car": "",
+      "tour_format": {
+        "format_id": 1,
+        "format_name_th": "โปรแกรมทัวร์ธรรมดา",
+        "format_name_en": "Defalut Package",
+        "format_drop": "DF"
+      },
+      "tour_file": {
+        "file_doc": "http://www.qualityb2bpackage.com/upload_file/travel/word/122025/1765877304.docx",
+        "file_pdf": "http://www.qualityb2bpackage.com/upload_file/travel/pdf/122025/1765877304.pdf",
+        "file_banner": "http://www.qualityb2bpackage.com/upload_photo/travel/122025/17658773041.jpg"
+      },
+      "tour_agent_id": 0,
+      "tour_product_by_id": 63,
+      "tour_product_by_name": "Qebooking-2U",
+      "tour_discount_event": {},
+      "tour_website_id": 41,
+      "tour_website_name": "QeBooking.com by 2uCenter",
+      "tour_date": "2025-11-03 15:38:38",
+      "tour_update": {
+        "date_update": "2026-01-16 10:51:15",
+        "remark": "Update Tour."
+      }
+    },
+    {
+      "tour_id": 14393,
+      "tour_code": "GO1URC-UQ004",
+      "tour_name": "ท่องแดนหิมะ ซินเจียง อูลูมู่ฉี คานาสือ สรวงสวรรค์แดนเหนือ หมู่บ้านเหอมู่ ทะเลสาบไซหลี่มู่ 8 วัน 7 คืน โดยการบิน อูลูมู่ฉี แอร์ไลน์ (UQ)",
+      "tour_description": "เปิดประตูสู่ “สรวงสวรรค์แดนเหนือ” แห่งซินเจียง | สัมผัสโลกสีขาวบริสุทธิ์ที่ธรรมชาติรังสรรค์เหนือเส้นขอบฟ้า | ตะลุยเส้นทางหิมะจาก “อูลูมู่ฉี” สู่ “เทือกเขาอัลไต” ดินแดนแห่งแสงและเงา | เดินทางสู่ “หมู่บ้านเหอมู่” ดั่งหมู่บ้านในเทพนิยายที่ถูกห่อหุ้มด้วยม่านหิมะ | ชมความมหัศจรรย์ของ “ทะเลสาบคานาส” ที่กลายเป็นกระจกน้ำแข็งสะท้อนภูผา | เยือน “เมืองปีศาจ” ผลงานแห่งสายลมและกาลเวลา | และปิดท้ายด้วย “ทะเลสาบไซหลี่มู่” ดวงตาสีฟ้าแห่งเทียนซาน—งดงามสงบนิ่งราวสวรรค์บนพื้นน้ำแข็ง |สัมผัสอุณหภูมิแห่งความฝัน…ในแดนที่หิมะไม่เคยละลายจากหัวใจ",
+      "tour_cover_image": "http://www.qualityb2bpackage.com/upload_photo/travel/012026/17684725571.jpg",
+      "tour_country": [
+        {
+          "country_id": 48,
+          "country_code_2": "CN",
+          "country_code_3": "CHN",
+          "country_numeric": "156",
+          "country_name": "China",
+          "country_name_th": "จีน",
+          "country_name_en": "China",
+          "country_zone_id": 3,
+          "country_zone_name": "asia"
+        }
+      ],
+      "tour_city": [
+        {
+          "city_id": 4556,
+          "city_name": "Altay",
+          "country_id": 48
+        },
+        {
+          "city_id": 4576,
+          "city_name": "Burqin",
+          "country_id": 48
+        },
+        {
+          "city_id": 4715,
+          "city_name": "Urumqi",
+          "country_id": 48
+        },
+        {
+          "city_id": 8550,
+          "city_name": "Xinjiang",
+          "country_id": 48
+        }
+      ],
+      "tour_area": [],
+      "tour_menu": [
+        {
+          "menu_id": 4,
+          "menu_name_th": "จีน",
+          "menu_name_en": "China",
+          "menu_sub": [
+            {
+              "menu_sub_id": 243,
+              "menu_sub_name_th": "ซินเจียง",
+              "menu_sub_name_en": "Xinjiang"
+            },
+            {
+              "menu_sub_id": 889,
+              "menu_sub_name_th": "อูหลู่มู่ฉี",
+              "menu_sub_name_en": "Urumqi"
+            },
+            {
+              "menu_sub_id": 1011,
+              "menu_sub_name_th": "ซินเจียงเหนือ",
+              "menu_sub_name_en": "Northern Xinjaing"
+            },
+            {
+              "menu_sub_id": 1024,
+              "menu_sub_name_th": "อัลไต",
+              "menu_sub_name_en": "Altay"
+            }
+          ]
+        }
+      ],
+      "tour_num_day": 8,
+      "tour_num_night": 7,
+      "tour_type_package_title": 0,
+      "tour_type_package": "jointour",
+      "tour_format_package": "Major",
+      "tour_price_start": 44900,
+      "tour_thai_project_id": 0,
+      "tour_thai_project_name": "ไม่ได้เข้าร่วมโครงการของรัฐ",
+      "tour_date_min": "2026-01-18",
+      "tour_date_max": "2026-02-22",
+      "tour_period_count": 2,
+      "tour_airline": {
+        "airline_id": 6070,
+        "airline_iata": "UQ",
+        "airline_icao": "CUH",
+        "airline_name": "Urumqi Air",
+        "airline_logo": "http://www.qualityb2bpackage.com/images/airlogo/UQ.png",
+        "airport_iata": "BKK",
+        "airport_name": "Suvarnabhumi Airport (BKK)"
+      },
+      "tour_flight": [
+        {
+          "flight_id": 258976,
+          "flight_route": "BKK - LYA",
+          "flight_date": "2026-01-18 - 2026-01-18",
+          "flight_time": "17:10 - 22:10",
+          "flight_airline_id": 6070,
+          "flight_airline_name": "Urumqi Air",
+          "flight_airline_iata": "UQ",
+          "flight_code": "UQ2642",
+          "flight_from_airport": "BKK",
+          "flight_from_date": "2026-01-18",
+          "flight_from_time": "17:10",
+          "flight_to_airport": "LYA",
+          "flight_to_date": "2026-01-18",
+          "flight_to_time": "22:10",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 258977,
+          "flight_route": "LYA - URC",
+          "flight_date": "2026-01-18 - 2026-01-18",
+          "flight_time": "23:45 - 03:40",
+          "flight_airline_id": 6070,
+          "flight_airline_name": "Urumqi Air",
+          "flight_airline_iata": "UQ",
+          "flight_code": "UQ2642.",
+          "flight_from_airport": "LYA",
+          "flight_from_date": "2026-01-18",
+          "flight_from_time": "23:45",
+          "flight_to_airport": "URC",
+          "flight_to_date": "2026-01-18",
+          "flight_to_time": "03:40",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 258978,
+          "flight_route": "URC - LYA",
+          "flight_date": "2026-01-25 - 2026-01-25",
+          "flight_time": "07:00 - 10:50",
+          "flight_airline_id": 6070,
+          "flight_airline_name": "Urumqi Air",
+          "flight_airline_iata": "UQ",
+          "flight_code": "UQ2641.",
+          "flight_from_airport": "URC",
+          "flight_from_date": "2026-01-25",
+          "flight_from_time": "07:00",
+          "flight_to_airport": "LYA",
+          "flight_to_date": "2026-01-25",
+          "flight_to_time": "10:50",
+          "flight_remark": "",
+          "system_remark": null
+        },
+        {
+          "flight_id": 258979,
+          "flight_route": "LYA - BKK",
+          "flight_date": "2026-01-25 - 2026-01-25",
+          "flight_time": "12:35 - 15:50",
+          "flight_airline_id": 6070,
+          "flight_airline_name": "Urumqi Air",
+          "flight_airline_iata": "UQ",
+          "flight_code": "UQ2641",
+          "flight_from_airport": "LYA",
+          "flight_from_date": "2026-01-25",
+          "flight_from_time": "12:35",
+          "flight_to_airport": "BKK",
+          "flight_to_date": "2026-01-25",
+          "flight_to_time": "15:50",
+          "flight_remark": "",
+          "system_remark": null
+        }
+      ],
+      "tour_car": "",
+      "tour_format": {
+        "format_id": 2,
+        "format_name_th": "โปรแกรมทัวร์ยอดนิยม",
+        "format_name_en": "Hot Package",
+        "format_drop": "HO"
+      },
+      "tour_file": {
+        "file_doc": "http://www.qualityb2bpackage.com/upload_file/travel/word/012026/1768472557.docx",
+        "file_pdf": "http://www.qualityb2bpackage.com/upload_file/travel/pdf/012026/1768472557.pdf",
+        "file_banner": "http://www.qualityb2bpackage.com/upload_photo/travel/012026/17684725571.jpg"
+      },
+      "tour_agent_id": 0,
+      "tour_product_by_id": 48,
+      "tour_product_by_name": "Go365Travel-GO",
+      "tour_discount_event": {},
+      "tour_website_id": 38,
+      "tour_website_name": "go365travel.com",
+      "tour_date": "2025-11-07 12:19:24",
+      "tour_update": {
+        "date_update": "2026-01-15 17:22:37",
+        "remark": "Update Tour."
+      }
+    }
+  ]
+}

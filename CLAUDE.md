@@ -24,8 +24,19 @@ docker-compose up -d                    # Start all services
 docker-compose exec web python manage.py sync_zego    # Sync Zego data
 docker-compose exec web python manage.py sync_unique_inter  # Sync Unique Inter
 docker-compose exec web python manage.py sync_checkingroup  # Sync CheckIn Group
+docker-compose exec web python manage.py sync_go365   # Sync Go365 data
 docker-compose logs -f web              # View logs
 ```
+
+## Claude Code Skills
+
+Specialized skills for provider integration and debugging:
+
+- **`/debug-provider-sync`** - Diagnose why sync commands don't save data to database
+- **`/integrate-provider`** - Add new tour provider by analyzing API and generating code
+- **`/validate-models`** - Validate models before sync to prevent constraint violations
+
+See [`.claude/README.md`](.claude/README.md) for detailed skill documentation.
 
 ## Development Policies
 
@@ -84,6 +95,42 @@ utils.py          # Helper functions
 - Max line length: 100 characters
 - Validate syntax: `python manage.py check`
 
+### Management Command Best Practices
+
+**CRITICAL: Safe Dictionary Access for Optional Arguments**
+
+When writing Django management commands, ALWAYS use `.get()` method for accessing optional arguments in the `handle()` method:
+
+```python
+def handle(self, *args, **options):
+    # ✅ GOOD - Safe access, works in all contexts
+    tour_id = options.get('tour_id')
+    if tour_id:
+        tours = [service.get_program_tour_details(tour_id)]
+
+    # ❌ BAD - Raises KeyError when called from Django Admin
+    if options['tour_id']:
+        tours = [service.get_program_tour_details(options['tour_id'])]
+```
+
+**Why**: When commands are called from Django Admin's "Sync Now" button or programmatically, optional arguments may not exist in the `options` dict. Direct dictionary access `options['key']` raises `KeyError`, while `options.get('key')` safely returns `None`.
+
+**Contexts where commands are called**:
+- CLI: `python manage.py sync_provider` - All arguments present (with defaults)
+- Django Admin: `cmd.handle()` - Optional arguments may NOT exist in dict
+- Programmatic: `command.handle()` - Same as Admin
+- Celery Tasks: May not pass all arguments
+
+**Real-world fix**: CheckIn Group sync command (2026-01-16)
+- Issue: `KeyError: 'tour_id'` when syncing from Django Admin
+- Fix: Changed `options['tour_id']` to `options.get('tour_id')` on lines 54, 66, and 94
+
+**Before deploying management commands, verify**:
+- [ ] All optional arguments accessed via `.get()`
+- [ ] Command works from CLI with no arguments
+- [ ] Command works from Django Admin "Sync Now" button
+- [ ] No direct dictionary access like `options['key']` for optional args
+
 ### Safety Requirements
 
 - **Backward compatibility** - Don't break existing functionality
@@ -115,9 +162,17 @@ utils.py          # Helper functions
 - Data: Tours, periods, complete pricing, availability, commissions
 - Data Quality: 85/100 (high quality)
 
-**Go365** (Manual entry):
+**Go365** (API-based):
 - Command: `python manage.py sync_go365`
-- Data entry via Django Admin or CSV import
+- Auth: API Key (x-api-key header only)
+- API Endpoint: `https://api.kaikongservice.com`
+- Data: Tours, countries, periods, pricing, multi-language support (Thai, English, Chinese)
+- Features: Search, pagination, detailed tour information
+- Commands:
+  - `python manage.py sync_go365 --test-connection` (test API connectivity)
+  - `python manage.py sync_go365 --tours-only --limit 10` (sync 10 tours)
+  - `python manage.py sync_go365 --countries-only` (sync countries)
+  - `python manage.py sync_go365 --search "Hong Kong"` (search tours)
 
 ### Provider Adapter Pattern
 
@@ -132,11 +187,14 @@ class BaseAPIService:
 ```
 
 **Adding new vendors**:
-1. Create adapter class implementing `BaseAPIService`
-2. Implement vendor-specific auth and data mapping
-3. Create management command for data sync
-4. Configure provider in Django Admin
-5. Set up Celery Beat scheduled tasks
+1. **Check existing adapters first** - If the new provider has the same data structure as an existing provider, reuse the existing adapter
+2. **Create new adapter only if needed** - Only create a new adapter class implementing `BaseAPIService` if the data structure differs
+3. Implement vendor-specific auth and data mapping
+4. Create management command for data sync
+5. Configure provider in Django Admin
+6. Set up Celery Beat scheduled tasks
+
+**Adapter reuse principle**: Create adapters to map data from providers with different data structures. If a new provider has the same data structure as an existing provider, reuse the existing adapter instead of creating a new one.
 
 ### Data Normalization
 

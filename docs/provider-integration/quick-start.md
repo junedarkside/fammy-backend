@@ -4,6 +4,48 @@
 
 This guide shows how to integrate a new tour operator/provider with the TravelApp B2B platform.
 
+## Recommended Workflow
+
+### Option 1: Use Evaluation Tool (Recommended) ⚡
+
+For new provider integrations, start with the **Provider Adapter Evaluation Tool** to save development time:
+
+**Why use the evaluation tool?**
+- Automatically checks compatibility with existing adapters (Zego, Unique Inter, Go365, CheckIn Group)
+- Generates adapter code for you
+- Provides step-by-step implementation guidance
+- Can save hours by identifying reuse opportunities
+
+**Quick evaluation workflow:**
+
+1. **Gather API samples** from your provider
+   ```bash
+   # Use curl, Postman, or provider's test endpoint
+   curl https://api.yourprovider.com/tours > sample_tours.json
+   curl https://api.yourprovider.com/periods > sample_periods.json
+   ```
+
+2. **Access evaluation tool**
+   ```
+   http://localhost:8000/wholesale/evaluation/
+   ```
+
+3. **Upload API responses** using the Smart Paste Helper for nested data
+
+4. **Review analysis** and follow recommendations:
+   - **95-100% match** → Reuse existing adapter (no code needed!)
+   - **80-94% match** → Reuse with minor configuration changes
+   - **50-79% match** → Create field normalizer (code generated)
+   - **<50% match** → Create new adapter (boilerplate generated)
+
+5. **Implement and test** following the tool's step-by-step guidance
+
+See **[Evaluation Tool Guide](evaluation-tool.md)** for detailed instructions.
+
+### Option 2: Manual Implementation
+
+If the evaluation tool recommends creating a new adapter or you prefer manual implementation:
+
 ## Current Implementation Status
 
 The provider integration system is **under development**. The base patterns are established, but data models are being refined.

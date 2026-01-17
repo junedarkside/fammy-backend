@@ -398,16 +398,29 @@ class Go365APIService(BaseAPIService):
         return self._make_request('api/v1/tours/country')
 
     def get_program_tours(self, page: int = 1, limit: int = 10, tour_ids: Optional[List[str]] = None) -> Optional[List[Dict]]:
-        """Fetch tour list with pagination support"""
-        params = {
-            'start_page': page,
-            'limit_page': limit
-        }
+        """
+        Fetch tour list with pagination support.
 
+        Note: The /tours/list endpoint requires tour_id parameter, so we use
+        /tours/search instead for general listing.
+        """
         if tour_ids:
-            params['tour_id'] = tour_ids
+            # Use list endpoint if specific tour IDs are requested
+            params = {
+                'start_page': page,
+                'limit_page': limit,
+                'tour_id': tour_ids
+            }
+            response = self._make_request('api/v1/tours/list', params=params)
+        else:
+            # Use search endpoint for general tour listing
+            response = self.search_tours(page=page, limit=limit)
 
-        return self._make_request('api/v1/tours/list', params=params)
+        # Extract data array from response
+        if isinstance(response, dict) and response.get('status') and 'data' in response:
+            return response['data']
+
+        return response
 
     def get_program_tour_details(self, tour_id: str) -> Optional[Dict]:
         """Fetch detailed information for a specific tour"""
@@ -416,7 +429,7 @@ class Go365APIService(BaseAPIService):
     def get_tour_periods(self, tour_id: str) -> Optional[List[Dict]]:
         """Get available departure dates/periods for a tour"""
         response = self._make_request(f'api/v1/tours/period/{tour_id}')
-        return response.get('periods', []) if response else None
+        return response.get('data', []) if response else None
 
     def search_tours(self, search_query: str = None, rate_start: float = None, rate_end: float = None,
                     sort_by: str = None, page: int = 1, limit: int = 10) -> Optional[List[Dict]]:
@@ -431,9 +444,7 @@ class Go365APIService(BaseAPIService):
             page: Page number for pagination
             limit: Results per page
         """
-        data = {}
-        params = {
-            'start_page': page,
+        data = {
             'limit_page': limit
         }
 
@@ -446,7 +457,7 @@ class Go365APIService(BaseAPIService):
         if sort_by:
             data['sort'] = sort_by
 
-        return self._make_request('api/v1/tours/search', method='POST', data=data, params=params)
+        return self._make_request('api/v1/tours/search', method='POST', data=data)
 
     def set_language(self, language: str):
         """Change API response language"""

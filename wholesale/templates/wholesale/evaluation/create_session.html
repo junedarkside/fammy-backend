@@ -1,0 +1,175 @@
+{% extends "wholesale/evaluation/base.html" %}
+
+{% block title %}Create Evaluation Session{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Create New Evaluation Session</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="provider_name" class="form-label">Provider Name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="provider_name"
+                               name="provider_name"
+                               placeholder="e.g., New Travel Provider"
+                               required>
+                        <small class="form-text text-muted">Human-readable name</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="provider_code" class="form-label">Provider Code</label>
+                        <input type="text"
+                               class="form-control"
+                               id="provider_code"
+                               name="provider_code"
+                               placeholder="e.g., new_provider"
+                               pattern="[a-z_]+"
+                               required>
+                        <small class="form-text text-muted">Lowercase with underscores only</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="base_url" class="form-label">Base API URL</label>
+                        <input type="url"
+                               class="form-control"
+                               id="base_url"
+                               name="base_url"
+                               placeholder="https://api.provider.com/v1"
+                               required>
+                        <small class="form-text text-muted">API base endpoint</small>
+                    </div>
+
+                    <!-- Authentication Configuration -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">API Authentication</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="auth_type" class="form-label">Authentication Method</label>
+                                <select class="form-select" id="auth_type" name="auth_type" onchange="toggleAuthFields()">
+                                    <option value="none" selected>No Authentication (Public API)</option>
+                                    <option value="api_token">API Token</option>
+                                    <option value="api_key_header">API Key (Header)</option>
+                                    <option value="bearer_token">Bearer Token</option>
+                                    <option value="basic_auth">Basic Auth (Username/Password)</option>
+                                    <option value="email_param">Email (URL Parameter)</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <small class="form-text text-muted">
+                                    How does this provider's API authenticate requests?
+                                </small>
+                            </div>
+
+                            <!-- API Token / Key / Password field -->
+                            <div class="mb-3" id="token-field" style="display: none;">
+                                <label for="auth_token" class="form-label">
+                                    <span id="token-label">API Token / Key / Password</span>
+                                </label>
+                                <input type="password" class="form-control" id="auth_token" name="auth_token"
+                                       placeholder="Enter your API token, key, or password">
+                                <small class="form-text text-muted">
+                                    <span id="token-help">This will be used to authenticate API requests</span>
+                                </small>
+                            </div>
+
+                            <!-- Username / Email field -->
+                            <div class="mb-3" id="username-field" style="display: none;">
+                                <label for="auth_username" class="form-label">
+                                    <span id="username-label">Username / Email</span>
+                                </label>
+                                <input type="text" class="form-control" id="auth_username" name="auth_username"
+                                       placeholder="username@example.com">
+                            </div>
+
+                            <!-- Custom Header Name field -->
+                            <div class="mb-3" id="header-field" style="display: none;">
+                                <label for="auth_header_name" class="form-label">Header Name</label>
+                                <input type="text" class="form-control" id="auth_header_name" name="auth_header_name"
+                                       placeholder="X-Custom-Header">
+                                <small class="form-text text-muted">
+                                    Custom HTTP header name for authentication
+                                </small>
+                            </div>
+
+                            <!-- Email Parameter Info (for email_param type) -->
+                            <div class="alert alert-info" id="email-param-info" style="display: none;">
+                                <strong>Unique Inter Style:</strong> Email will be sent as URL parameter
+                                <code>?user=email@example.com</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            Create Session & Continue
+                        </button>
+                        <a href="{% url 'wholesale:evaluation_home' %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAuthFields() {
+    const authType = document.getElementById('auth_type').value;
+    const tokenField = document.getElementById('token-field');
+    const usernameField = document.getElementById('username-field');
+    const headerField = document.getElementById('header-field');
+    const emailInfo = document.getElementById('email-param-info');
+
+    // Hide all by default
+    tokenField.style.display = 'none';
+    usernameField.style.display = 'none';
+    headerField.style.display = 'none';
+    emailInfo.style.display = 'none';
+
+    // Show based on auth type
+    if (authType === 'none') {
+        // No fields needed
+    } else if (authType === 'api_token') {
+        tokenField.style.display = 'block';
+        document.getElementById('token-label').textContent = 'API Token';
+        document.getElementById('token-help').textContent = 'Token sent in auth-token header';
+    } else if (authType === 'api_key_header') {
+        tokenField.style.display = 'block';
+        headerField.style.display = 'block';
+        document.getElementById('token-label').textContent = 'API Key';
+        document.getElementById('token-help').textContent = 'Key sent in X-API-Key header (or custom header)';
+    } else if (authType === 'bearer_token') {
+        tokenField.style.display = 'block';
+        document.getElementById('token-label').textContent = 'Bearer Token';
+        document.getElementById('token-help').textContent = 'Token sent in Authorization: Bearer {token} header';
+    } else if (authType === 'basic_auth') {
+        usernameField.style.display = 'block';
+        tokenField.style.display = 'block';
+        document.getElementById('token-label').textContent = 'Password';
+        document.getElementById('username-label').textContent = 'Username';
+    } else if (authType === 'email_param') {
+        usernameField.style.display = 'block';
+        document.getElementById('username-label').textContent = 'Email Address';
+        emailInfo.style.display = 'block';
+    } else if (authType === 'custom') {
+        tokenField.style.display = 'block';
+        headerField.style.display = 'block';
+        document.getElementById('token-label').textContent = 'Authentication Value';
+        document.getElementById('token-help').textContent = 'Custom authentication value';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', toggleAuthFields);
+</script>
+{% endblock %}
